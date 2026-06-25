@@ -149,3 +149,10 @@ h3 { font-size: 1.35rem; font-weight: 900; letter-spacing: -0.035em; }
   .section { padding: 52px 0; }
   .legal-hero { padding-top: 52px; }
 }
+
+
+/* v3 logo fixes */
+.brand-logo { width: min(300px, 48vw); max-width: 300px; height: auto; display: block; object-fit: contain; }
+.footer-logo { width: 220px; max-width: 56vw; height: auto; display: block; object-fit: contain; }
+.app-icon-glow { width: min(430px, 84vw); height: auto; display: block; object-fit: contain; background: transparent; }
+.hero-visual { overflow: visible; }
