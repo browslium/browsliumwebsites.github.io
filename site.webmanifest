@@ -1,0 +1,16 @@
+{
+  "name": "Browslium",
+  "short_name": "Browslium",
+  "description": "Managed-device, browser, application, and content security for authorized customers across Android, Apple, and Windows.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#03050a",
+  "theme_color": "#03050a",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

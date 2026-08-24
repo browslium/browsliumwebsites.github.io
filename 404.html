@@ -4,53 +4,68 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page Not Found | Browslium</title>
-  <meta name="description" content="The requested Browslium page was not found.">
-  <link rel="icon" href="favicon-32.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <meta name="description" content="The requested Browslium page could not be found.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
-<body class="">
-  <div class="page-shell">
-    
-<header class="site-header">
-  <a class="brand" href="index.html" aria-label="Browslium home">
-    <img src="browslium-logo-header.png" alt="Browslium logo" class="brand-logo">
-  </a>
-  <button class="nav-toggle" aria-label="Open navigation" aria-expanded="false">Menu</button>
-  <nav class="site-nav" aria-label="Main navigation">
-    <a href="index.html">Home</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="support.html">Support</a>
-  </nav>
-</header>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
-    
-<main class="not-found">
-  <section class="legal-hero">
-    <p class="eyebrow">404</p>
-    <h1>Page not found</h1>
-    <p>The page you requested does not exist or has moved.</p>
-    <a class="button primary" href="index.html">Return Home</a>
-  </section>
-</main>
+  <div class="site-header-wrap">
+    <header class="site-header container">
+      <a class="brand" href="index.html" aria-label="Browslium home">
+        <img src="assets/browslium-logo.webp" alt="Browslium" width="1200" height="261">
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">Menu</button>
+      <nav class="site-nav" id="site-navigation" aria-label="Primary navigation">
+        <a href="index.html">Product</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="support.html">Support</a>
+      </nav>
+    </header>
+  </div>
 
-    
-<footer class="site-footer">
-  <div>
-    <img src="browslium-logo-header.png" alt="Browslium" class="footer-logo">
-    <p>AI-assisted content filtering and authorized device policy enforcement.</p>
-  </div>
-  <div class="footer-links">
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms &amp; Conditions</a>
-    <a href="support.html">Support</a>
-    <a href="mailto:support@browslium.com">support@browslium.com</a>
-  </div>
-  <p class="footer-legal">&copy; <span id="year"></span> Browslium LLC. All rights reserved.</p>
-</footer>
+  <main class="not-found container" id="main-content">
+    <div class="not-found-inner">
+      <p class="not-found-code">404</p>
+      <h1>That page is not here.</h1>
+      <p>The address may have changed, or the page may no longer exist. Return to the Browslium product page or contact support.</p>
+      <div class="hero-actions" style="justify-content:center">
+        <a class="button button-primary" href="index.html">Return to product</a>
+        <a class="button button-secondary" href="support.html">Contact support</a>
+      </div>
+    </div>
+  </main>
 
-  </div>
-  <script src="main.js?v=3"></script>
+  <footer class="site-footer container">
+    <div>
+      <a class="footer-brand" href="index.html" aria-label="Browslium home">
+        <img src="assets/browslium-logo.webp" alt="Browslium" width="1200" height="261" loading="lazy">
+      </a>
+      <p class="footer-copy">Managed-device, browser, application, and content security for authorized deployments.</p>
+    </div>
+    <div class="footer-column">
+      <h3>Company</h3>
+      <a href="index.html">Product</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="support.html">Support</a>
+    </div>
+    <div class="footer-column">
+      <h3>Contact</h3>
+      <a href="mailto:admin@browslium.com">admin@browslium.com</a>
+      <span>Browslium LLC</span>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-current-year></span> Browslium LLC. All rights reserved.</span>
+      <span>Authorized device management only.</span>
+    </div>
+  </footer>
+
+  <script src="main.js?v=6" defer></script>
 </body>
 </html>

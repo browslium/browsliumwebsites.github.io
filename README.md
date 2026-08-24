@@ -1,47 +1,42 @@
-# Browslium Website for GitHub Pages
+# Browslium website — Android + Apple + Windows proxy architecture (v6)
 
-This folder contains the public website files for Browslium LLC.
+Static public website for `https://browslium.com`, prepared for GitHub Pages.
 
-## Files
+## Public pages
 
-- `index.html` - main landing page
-- `privacy.html` - Privacy Policy URL for Apple / customers
-- `terms.html` - Terms & Conditions
-- `support.html` - support, privacy requests, account deletion
-- `404.html` - fallback page
-- `styles.css` - visual styling
-- `main.js` - small navigation script
-- `` - optimized Browslium images and icons
-- `robots.txt` and `sitemap.xml` - search engine files
+- `index.html` — product page for individuals, families, businesses, schools, nonprofits, religious and community organizations, and other authorized customers
+- `privacy.html` — Privacy Policy
+- `terms.html` — Terms of Service
+- `support.html` — support contacts and request form
+- `404.html` — page-not-found fallback
+- `privacy/index.html` — clean privacy route redirect (`/privacy`)
+- `support/index.html` — clean support route redirect (`/support`)
+- `terms/index.html` — clean terms route redirect (`/terms`)
 
-## GitHub Pages upload
+## Version 6 changes
 
-1. Create a public repository named `YOURUSERNAME.github.io`.
-2. Upload all files and folders from this package to the root of the repository.
-3. Commit the changes.
-4. Go to Settings > Pages.
-5. Set Source to "Deploy from a branch".
-6. Select branch `main` and folder `/root`.
-7. Save.
+Version 6 updates the public contact to `admin@browslium.com`, makes email the only public support channel, confirms that requests are received 24/7 with normal review Monday through Friday from 9:00 a.m. to 6:00 p.m. America/Mexico_City, removes pilot and waitlist language, changes worldwide claims to selected-region availability, and includes individuals, families, businesses, schools, nonprofits, religious and community organizations, and other authorized customers.
 
-Your site should appear at:
+The Windows disclosure now describes the approved extension-free core architecture: a Windows local agent and service, Windows Filtering Platform enforcement, a transparent local HTTPS proxy, a managed certificate authority, and pre-delivery content controls. It removes Chrome Web Store, Microsoft Edge Add-ons, Mozilla Add-ons, browser-extension identifiers, and browser-store Limited Use language.
 
-`https://YOURUSERNAME.github.io`
+Some platform capabilities described publicly remain under development. Keep the website synchronized with the actual applications, production driver-signing status, platform approvals, retention settings, regional availability, and customer contracts before publication or material product changes.
 
-For Apple, use:
+## Publishing
 
-`https://YOURUSERNAME.github.io/privacy.html`
+Upload every file and folder in this directory to the repository root. Keep the `assets` folder intact. The `CNAME` file preserves the custom domain `browslium.com` and `.nojekyll` tells GitHub Pages to serve the site as plain static files.
 
-After connecting a custom domain, use:
+In GitHub, configure **Settings → Pages → Deploy from a branch → main → /(root)**. Do not upload secrets, certificates, API keys, enrollment tokens, private configuration profiles, or service-account files.
 
-`https://browslium.com/privacy.html`
+## Typography and privacy
 
-## Notes
+The site self-hosts the provided Inter Display font. Titles use weight 900 and body copy uses weight 400. No Google Fonts, advertising trackers, third-party analytics, or remote form processor is included. The support form prepares an email to `admin@browslium.com` in the visitor's local email application. No public telephone number or street address is published.
 
-- Company name is set to Browslium LLC.
-- Support email is set to support@browslium.com.
-- The design uses the Browslium dark palette and Inter 400/900 font weights through CSS with system fallbacks.
-- Do not upload API keys, Apple certificates, private `.mobileconfig` files, or any other secrets to a public GitHub repository.
+After publishing, verify all of these public addresses:
 
-
-Flat upload version: upload all files in this ZIP directly to the repository root. No folders are required.
+- `https://browslium.com/`
+- `https://browslium.com/privacy`
+- `https://browslium.com/privacy.html`
+- `https://browslium.com/support`
+- `https://browslium.com/support.html`
+- `https://browslium.com/terms`
+- `https://browslium.com/terms.html`
