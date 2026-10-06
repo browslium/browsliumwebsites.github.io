@@ -1,0 +1,9 @@
+{
+  "name": "browslium-international-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "qa": "python3 qa.py"
+  }
+}
