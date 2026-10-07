@@ -2,6 +2,7 @@
 """Audit all generated locale routes and reciprocal international SEO links."""
 from html.parser import HTMLParser
 from pathlib import Path
+import hashlib
 import json
 import re
 import sys
@@ -98,11 +99,44 @@ for code,slug in LOCALES.items():
             text=filename.read_text()
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
-            if len(p.find('button',**{'class':'level-choice'}))<13:errors.append(f'levels missing {route}')
+            if len(p.find('section',**{'data-showcase':'image'}))!=1 or len(p.find('section',**{'data-showcase':'video'}))!=1:
+                errors.append(f'photo/video showcases missing {route}')
+            if 'id="demo"' in text or 'Choose the filtering policy' in text:
+                errors.append(f'outdated illustrative demo {route}')
         if page in ('image-filtering','video-filtering'):
             expected_levels=7 if page=='image-filtering' else 6
             if len(p.find('li')) < expected_levels:errors.append(f'explainer levels missing {route}')
-            if page=='video-filtering' and len(p.find('video'))!=2:errors.append(f'test footage missing {route}')
+            kind='image' if page=='image-filtering' else 'video'
+            if len(p.find('section',**{'data-showcase':kind}))!=1:errors.append(f'explainer showcase missing {route}')
+        if page in ('','image-filtering','video-filtering'):
+            for kind, expected in (('image',8),('video',7)):
+                if page and page != f'{kind}-filtering':continue
+                sections=p.find('section',**{'data-showcase':kind})
+                if len(sections)!=1:continue
+                if len([b for b in p.find('button') if 'data-showcase-level' in b]) < expected:
+                    errors.append(f'{kind} policy choices missing {route}')
+                if len([b for b in p.find('button') if 'data-showcase-scene' in b]) < 3:
+                    errors.append(f'{kind} scenes missing {route}')
+                if kind=='video':
+                    if len([x for x in p.find('video') if 'data-showcase-video' in x])!=1:errors.append(f'video player missing {route}')
+                    if not any(x.get('data-locale-slug')==slug for x in sections):errors.append(f'localized blocking video map {route}')
+
+media=ROOT/'assets'/'media'
+manifest=json.loads((media/'manifest.json').read_text())
+if len(manifest)!=68:errors.append(f'media manifest count: {len(manifest)}')
+for item in manifest:
+    filename=ROOT/'assets'/item['file']
+    if not filename.is_file() or filename.stat().st_size!=item['bytes']:
+        errors.append(f'missing or changed media asset: {item["file"]}')
+    elif hashlib.sha256(filename.read_bytes()).hexdigest()!=item['sha256']:
+        errors.append(f'media checksum mismatch: {item["file"]}')
+for number in range(1,4):
+    for level in ('original',*[str(x) for x in range(1,8)]):
+        if not (media/'images'/f'photo-{number}-{level}.webp').is_file():errors.append(f'missing photo {number}-{level}')
+    for level in ('original',*[str(x) for x in range(1,5)]):
+        if not (media/'videos'/f'video-{number}-{level}.mp4').is_file():errors.append(f'missing video {number}-{level}')
+for slug in LOCALES.values():
+    if not (media/'videos'/f'blocked-{slug}.mp4').is_file():errors.append(f'missing localized block video {slug}')
 
 if errors:
     print('\n'.join(errors));sys.exit(1)

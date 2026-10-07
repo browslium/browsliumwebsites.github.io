@@ -81,39 +81,96 @@
     document.querySelectorAll('details.language-menu[open]').forEach(x => { if (!x.contains(event.target)) x.open = false; });
   });
 
-  const demoCard = document.querySelector('.is-filtered');
-  document.querySelectorAll('[data-demo-effect]').forEach(button => button.addEventListener('click', () => {
-    document.querySelectorAll('[data-demo-effect]').forEach(x => x.setAttribute('aria-pressed',String(x===button)));
-    if (demoCard) demoCard.dataset.effect = button.dataset.demoEffect;
-  }));
-  const tabs = [...document.querySelectorAll('[data-level-tab]')];
-  const chooseTab = tab => {
-    tabs.forEach(x => {
-      const active = x===tab;
-      x.setAttribute('aria-selected',String(active));
-      x.tabIndex = active ? 0 : -1;
-      const panel = document.querySelector(`[data-level-panel="${x.dataset.levelTab}"]`);
-      if (panel) panel.hidden = !active;
+  document.querySelectorAll('[data-showcase]').forEach(root => {
+    const kind = root.dataset.showcase;
+    const scenes = [...root.querySelectorAll('[data-showcase-scene]')];
+    const levels = [...root.querySelectorAll('[data-showcase-level]')];
+    const selection = root.querySelector('[data-showcase-selection]');
+    const description = root.querySelector('[data-showcase-description]');
+    let scene = 1;
+    let level = 0;
+    let view = 'original';
+    let imageRequest = 0;
+    const media = name => `/assets/media/${name}`;
+    const press = (buttons, selected) => buttons.forEach(button => button.setAttribute('aria-pressed', String(button === selected)));
+    const preload = url => new Promise(resolve => {
+      const image = new Image();
+      image.onload = () => resolve(true);
+      image.onerror = () => resolve(false);
+      image.src = url;
+      if (image.complete) resolve(image.naturalWidth > 0);
     });
-  };
-  tabs.forEach((tab,index) => {
-    tab.addEventListener('click', () => chooseTab(tab));
-    tab.addEventListener('keydown', event => {
-      let delta = event.key==='ArrowRight'?1:event.key==='ArrowLeft'?-1:0;
-      if (!delta) return;
-      if (document.documentElement.dir==='rtl') delta *= -1;
-      event.preventDefault();
-      const next = tabs[(index+delta+tabs.length)%tabs.length];
-      chooseTab(next); next.focus();
-    });
+
+    const update = () => {
+      const sceneButton = scenes[scene - 1];
+      const levelButton = levels[level];
+      const alt = sceneButton.dataset.sceneAlt;
+      selection.textContent = level ? `${root.dataset.levelWord} ${level}` : root.dataset.originalLabel;
+      description.textContent = level ? levelButton.dataset.description : root.dataset.originalNote;
+      press(scenes, sceneButton);
+      press(levels, levelButton);
+      if (kind === 'image') {
+        const source = root.querySelector('[data-original-image]');
+        const result = root.querySelector('[data-result-image]');
+        const stage = root.querySelector('[data-compare-stage]');
+        const range = root.querySelector('[data-compare-range]');
+        const sourceUrl = media(`images/photo-${scene}-original.webp`);
+        const resultUrl = media(`images/photo-${scene}-${level || 'original'}.webp`);
+        const request = ++imageRequest;
+        stage.setAttribute('aria-busy', 'true');
+        Promise.all([preload(sourceUrl), preload(resultUrl)]).then(loaded => {
+          if (request !== imageRequest) return;
+          if (loaded.every(Boolean)) {
+            source.src = sourceUrl;
+            source.alt = alt;
+            result.src = resultUrl;
+            result.alt = level >= 6 ? `${root.dataset.resultWord} — ${root.dataset.levelWord} ${level}` : level ? `${alt} — ${root.dataset.levelWord} ${level}` : '';
+            stage.dataset.original = String(level === 0);
+            stage.style.setProperty('--split', level ? `${range.value}%` : '100%');
+            range.hidden = level === 0;
+            range.disabled = level === 0;
+            root.querySelector('[data-after-label]').hidden = level === 0;
+          }
+          stage.removeAttribute('aria-busy');
+        });
+      } else {
+        const video = root.querySelector('[data-showcase-video]');
+        const showResult = level > 0 && view === 'result';
+        const suffix = showResult ? (level >= 5 ? `blocked-${root.dataset.localeSlug}` : `video-${scene}-${level}`) : `video-${scene}-original`;
+        const nextSrc = media(`videos/${suffix}.mp4`);
+        if (video.getAttribute('src') !== nextSrc) {
+          video.pause();
+          video.setAttribute('src', nextSrc);
+          video.setAttribute('poster', media(`posters/${suffix}.webp`));
+          video.load();
+        }
+        video.setAttribute('aria-label', showResult && level >= 5 ? `${root.dataset.resultWord} — ${root.dataset.levelWord} ${level}` : `${alt} — ${showResult ? `${root.dataset.levelWord} ${level}` : root.dataset.originalLabel}`);
+        root.querySelector('[data-video-stage-tag]').textContent = showResult ? `${root.dataset.levelWord} ${level}` : root.dataset.originalLabel;
+        const viewButtons = [...root.querySelectorAll('[data-video-view]')];
+        viewButtons.find(button => button.dataset.videoView === 'result').disabled = level === 0;
+        press(viewButtons, viewButtons.find(button => button.dataset.videoView === view));
+      }
+    };
+
+    scenes.forEach(button => button.addEventListener('click', () => {
+      scene = Number(button.dataset.showcaseScene);
+      update();
+    }));
+    levels.forEach(button => button.addEventListener('click', () => {
+      level = Number(button.dataset.showcaseLevel);
+      if (kind === 'video') view = level ? 'result' : 'original';
+      update();
+    }));
+    if (kind === 'image') {
+      const range = root.querySelector('[data-compare-range]');
+      range.addEventListener('input', () => root.querySelector('[data-compare-stage]').style.setProperty('--split', `${range.value}%`));
+    } else {
+      root.querySelectorAll('[data-video-view]').forEach(button => button.addEventListener('click', () => {
+        if (button.disabled) return;
+        view = button.dataset.videoView;
+        update();
+      }));
+    }
+    update();
   });
-  document.querySelectorAll('.level-choice').forEach(button => button.addEventListener('click', () => {
-    const panel = button.closest('.level-panel');
-    if (!panel) return;
-    panel.querySelectorAll('.level-choice').forEach(x => x.setAttribute('aria-pressed',String(x===button)));
-    panel.querySelector('[data-level-number]').textContent = `${document.querySelector('.levels-section')?.dataset.levelWord || ''} ${button.dataset.level}`;
-    panel.querySelector('[data-level-detail]').textContent = button.querySelector('span:last-child').textContent;
-    const n = Number(button.dataset.level);
-    panel.querySelector('.preview-art').dataset.policyEffect = button.dataset.kind==='image' ? (n>=6?'block':n>=4?'distort':'mask') : (n>=5?'block':n>=3?'distort':'mask');
-  }));
 })();

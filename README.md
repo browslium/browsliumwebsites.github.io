@@ -14,7 +14,9 @@ Image policies 1–7 and video policies 1–6 follow the project owner's policy 
 
 The Stripe button links to a one-time voluntary contribution page. Do not add a recurring option or tax-deductibility claim without verification.
 
-The two short, silent video clips on each video explainer are optimized copies of project test footage provided by the owner. They are labelled as controlled tests and use `preload="none"` so the homepage remains light. They are not evidence of general production availability.
+The homepage and the image/video explainers share two interactive galleries based on the owner-approved SAM 3.1 tests: three original photos plus seven results per photo, and three original silent clips plus six policy choices per clip. The photo comparison has a keyboard-accessible draggable divider. Video choices switch one player between the original and the filtered result; only the selected clip loads metadata on arrival. The localized full-block clips come from the seven official language versions in `Archive.zip`. The first second is removed from the couple clip and its levels 1–4; levels 5–6 use the complete branded block clip. These are controlled tests, not evidence of general production availability.
+
+`python3 scripts/prepare_media.py PHOTO_GALLERY VIDEO_GALLERY BRAND_ARCHIVE` rebuilds the 68 compressed web assets from the immutable source galleries. It scales photos to 1600 px WebP and videos to at most 1280 px H.264 with fast-start metadata. It does not rerun SAM 3.1 or change the approved masks. The resulting `assets/media/manifest.json` records file sizes and SHA-256 checksums. The published assets total about 19 MiB, while only the selected video is requested by the browser.
 
 ## Search intent and international SEO
 

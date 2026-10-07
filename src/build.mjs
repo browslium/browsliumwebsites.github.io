@@ -6,6 +6,7 @@ import { policies } from './policies.mjs';
 import { faqs } from './faq.mjs';
 import { legal } from './legal.mjs';
 import { explainers } from './explainers.mjs';
+import { showcase } from './showcase.mjs';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(sourceRoot, 'dist');
@@ -106,37 +107,60 @@ function suggestion(l) {
   return `<aside class="language-suggestion" data-language-suggestion hidden aria-live="polite"><div class="wrap suggestion-inner"><p data-suggestion-message></p><div><a data-suggestion-link href="#"></a><button type="button" data-suggestion-dismiss></button></div></div></aside>`;
 }
 
-function levels(l) {
-  const c = copy[l.code].levels;
-  const p = policies[l.code];
-  const tabs = [['image',c[2],p.image],['video',c[3],p.video]];
-  return `<section class="section section-light levels-section" id="levels" data-level-word="${e(c[4])}"><div class="wrap">
-    <div class="section-intro"><p class="eyebrow">${e(c[4])} 01—07 / 01—06</p><h2>${e(c[0])}</h2><p>${e(c[1])}</p></div>
-    <div class="level-tabs" role="tablist" aria-label="${e(c[0])}">${tabs.map(([id,label],i) => `<button type="button" role="tab" id="tab-${id}" aria-controls="panel-${id}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-level-tab="${id}">${e(label)} <span>${id==='image'?'07':'06'}</span></button>`).join('')}</div>
-    ${tabs.map(([id,label,items],ti) => `<div class="level-panel" id="panel-${id}" role="tabpanel" aria-labelledby="tab-${id}" ${ti?'hidden':''} data-level-panel="${id}">
-      <div class="level-list"><ol>${items.map((detail,i) => `<li><button type="button" class="level-choice" data-level="${i+1}" data-kind="${id}" aria-pressed="${i===0}" aria-label="${e(`${c[4]} ${i+1}: ${detail}`)}"><span class="number">${String(i+1).padStart(2,'0')}</span><span>${e(detail)}</span></button></li>`).join('')}</ol></div>
-      <div class="level-preview"><p class="preview-kicker">${e(id==='image'?c[6]:c[7])}</p><strong data-level-number>${e(c[4])} 1</strong><p data-level-detail>${e(items[0])}</p><div class="preview-art" data-policy-effect="mask"><div class="art-window"><div class="art-sky"></div><div class="art-person"><span class="art-head"></span><span class="art-body"></span></div><span class="art-mask"></span><span class="art-block"></span></div></div><p class="preview-note">${e(c[13])}</p></div>
-    </div>`).join('')}
+const mediaPath = (folder, filename) => `/assets/media/${folder}/${filename}`;
+
+function sceneChoices(names, alts, kind) {
+  return names.map((name, index) => `<button type="button" class="showcase-scene" data-showcase-scene="${index+1}" data-scene-alt="${e(alts[index])}" aria-pressed="${index===0}"><img src="${mediaPath(kind==='image'?'images':'posters', `${kind==='image'?'photo':'video'}-${index+1}-original.webp`)}" width="112" height="74" alt="" loading="lazy"><span>${e(name)}</span></button>`).join('');
+}
+
+function policyChoices(l, kind) {
+  const s=showcase[l.code], items=policies[l.code][kind];
+  return `<button type="button" data-showcase-level="0" aria-pressed="true">${e(s.original)}</button>${items.map((description,index)=>`<button type="button" data-showcase-level="${index+1}" data-description="${e(description)}" aria-pressed="false">${e(s.level)} ${index+1}</button>`).join('')}`;
+}
+
+function photoShowcase(l, id='levels', number='01', link=true) {
+  const s=showcase[l.code], first=mediaPath('images','photo-1-original.webp');
+  return `<section class="section showcase-section photo-showcase" id="${id}" data-showcase="image" data-original-note="${e(s.originalImage)}" data-original-label="${e(s.original)}" data-level-word="${e(s.level)}" data-result-word="${e(s.result)}"><div class="wrap">
+    <div class="section-intro showcase-intro"><p class="eyebrow">${number?`${number} / `:''}${e(copy[l.code].levels[2])}</p><h2>${e(s.imageTitle)}</h2><p>${e(s.imageIntro)}</p></div>
+    <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage compare-stage" data-compare-stage data-original="true" style="--split:50%" dir="ltr">
+      <img class="compare-result" data-result-image src="${first}" width="1600" height="1067" alt="" decoding="async">
+      <div class="compare-source" data-compare-source><img data-original-image src="${first}" width="1600" height="1067" alt="${e(s.photoAlts[0])}" decoding="async"></div>
+      <span class="compare-label compare-label-before" data-before-label>${e(s.before)}</span><span class="compare-label compare-label-after" data-after-label hidden>${e(s.after)}</span>
+      <input class="compare-range" data-compare-range type="range" min="0" max="100" value="50" aria-label="${e(s.drag)}" hidden disabled>
+    </div><div class="showcase-readout" aria-live="polite"><div><span class="showcase-kicker">${e(s.result)}</span><strong data-showcase-selection>${e(s.original)}</strong></div><p data-showcase-description>${e(s.originalImage)}</p></div></div>
+    <div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.photoScenes,s.photoAlts,'image')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'image')}</div></fieldset></div></div>
+    <div class="showcase-foot"><p>${e(s.imageNote)}</p>${link?`<a class="text-link" href="${L(l.slug,'image-filtering')}">${e(s.imageLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
+  </div></section>`;
+}
+
+function videoShowcase(l, id='video-levels', number='02', link=true) {
+  const s=showcase[l.code], first=mediaPath('videos','video-1-original.mp4');
+  return `<section class="section showcase-section video-showcase" id="${id}" data-showcase="video" data-locale-slug="${l.slug}" data-original-note="${e(s.originalVideo)}" data-original-label="${e(s.original)}" data-level-word="${e(s.level)}" data-result-word="${e(s.result)}"><div class="wrap">
+    <div class="section-intro showcase-intro"><p class="eyebrow">${number?`${number} / `:''}${e(copy[l.code].levels[3])}</p><h2>${e(s.videoTitle)}</h2><p>${e(s.videoIntro)}</p></div>
+    <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage video-stage"><video controls playsinline preload="metadata" width="1280" height="720" src="${first}" poster="${mediaPath('posters','video-1-original.webp')}" aria-label="${e(s.videoAlts[0])}" data-showcase-video></video><span class="video-stage-tag" data-video-stage-tag>${e(s.original)}</span></div>
+      <div class="video-view-switch" role="group" aria-label="${e(s.result)}"><button type="button" data-video-view="original" aria-pressed="true">${e(s.playOriginal)}</button><button type="button" data-video-view="result" aria-pressed="false" disabled>${e(s.playFiltered)}</button></div>
+      <div class="showcase-readout" aria-live="polite"><div><span class="showcase-kicker">${e(s.result)}</span><strong data-showcase-selection>${e(s.original)}</strong></div><p data-showcase-description>${e(s.originalVideo)}</p></div>
+    </div><div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset></div></div>
+    <div class="showcase-foot"><p>${e(s.videoNote)}</p>${link?`<a class="text-link" href="${L(l.slug,'video-filtering')}">${e(s.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
 }
 
 function home(l) {
-  const c = copy[l.code], u = explainers[l.code].ui;
+  const c = copy[l.code];
   const canonical = L(l.slug);
   const serviceSchema = webPageSchema(l,c.title,c.description,canonical);
   return `${head(l,c.title,c.description,canonical)}<body data-locale="${l.code}">
   ${suggestion(l)}${header(l)}<main id="main">
   <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="status-pill"><span class="status-dot"></span>${e(c.hero[4])}</span><h1>${e(c.hero[0])}</h1><p>${e(c.hero[1])}</p><div class="button-row"><a class="button button-primary" href="#how">${e(c.hero[2])}<span aria-hidden="true">↗</span></a><a class="button button-outline" href="#levels">${e(c.hero[3])}</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div><img src="/assets/browslium-icon.webp" width="430" height="430" alt=""></div></div></section>
-  <section class="section problem-section"><div class="wrap problem-grid"><div><p class="eyebrow">01 / Browslium</p><h2>${e(c.problem[0])}</h2><p class="lead">${e(c.problem[1])}</p></div><div class="benefit-stack">${c.problem.slice(2).map((x,i) => `<div class="benefit"><span class="benefit-icon" aria-hidden="true">${['○','◇','↗'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
-  <section class="section how-section" id="how"><div class="wrap"><div class="section-intro"><p class="eyebrow">02 / ${e(c.nav[0])}</p><h2>${e(c.how[0])}</h2><p>${e(c.how[1])}</p></div><div class="steps">${[2,4,6].map((idx,i) => `<article class="step"><div class="step-top"><span>${String(i+1).padStart(2,'0')}</span><span class="step-symbol" aria-hidden="true">${['□','○','✓'][i]}</span></div><h3>${e(c.how[idx])}</h3><p>${e(c.how[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.how[8])}</p></div></section>
-  <section class="section demo-section" id="demo"><div class="wrap demo-grid"><div><p class="eyebrow">03 / ${e(c.demo[8])}</p><h2>${e(c.demo[0])}</h2><p class="lead">${e(c.demo[1])}</p><div class="demo-controls" role="group" aria-label="${e(c.demo[5])}">${['mask','distort','block'].map((x,i)=>`<button type="button" data-demo-effect="${x}" aria-pressed="${i===0}">${e(c.demo[i+6])}</button>`).join('')}</div></div><div class="demo-card"><div class="demo-card-header"><span>${e(c.demo[2])}</span><span>${e(c.demo[3])}</span></div><div class="demo-scenes"><div class="demo-scene"><div class="demo-landscape"><div class="demo-person"></div></div><span>${e(c.demo[4])}</span></div><div class="demo-scene is-filtered" data-effect="mask"><div class="demo-landscape"><div class="demo-person"></div><div class="demo-cover"></div><div class="demo-stop">×</div></div><span>${e(c.demo[5])}</span></div></div></div></div></section>
-  ${levels(l)}
-  <section class="section media-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">04 / ${e(c.media[0])}</p><h2>${e(c.media[0])}</h2><p>${e(c.media[1])}</p></div><div class="media-grid">${[2,4,6,8].map((idx,i)=>`<article class="media-card"><span class="media-mark" aria-hidden="true">${['□','▶','○','■'][i]}</span><h3>${e(c.media[idx])}</h3><p>${e(c.media[idx+1])}</p>${i<2?`<a class="text-link" href="${L(l.slug,i===0?'image-filtering':'video-filtering')}">${e(i===0?u.imageLink:u.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</article>`).join('')}</div></div></section>
-  <section class="section why-section"><div class="wrap why-grid"><div><p class="eyebrow">05 / Browslium</p><h2>${e(c.why[0])}</h2><p class="lead">${e(c.why[1])}</p></div><ul>${c.why.slice(2).map((x,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><strong>${e(x)}</strong></li>`).join('')}</ul></div></section>
-  <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><p class="eyebrow">06 / ${e(c.nav[2])}</p><h2>${e(c.platforms[0])}</h2><p>${e(c.platforms[1])}</p></div><div class="platform-grid">${[2,4,6].map((idx,i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true">${['●','◇','■'][i]}</span><span class="platform-status">${e(c.platforms[i===0?8:9])}</span></div><h3>${e(c.platforms[idx])}</h3><p>${e(c.platforms[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.platforms[10])}</p></div></section>
-  <section class="section audiences-section"><div class="wrap audience-grid"><div><p class="eyebrow">07 / Browslium</p><h2>${e(c.audiences[0])}</h2><p>${e(c.audiences[1])}</p></div><div class="audience-list">${c.audiences.slice(2).map((x,i)=>`<div><span aria-hidden="true">${['○','□','■','◇'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
-  <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><p class="eyebrow">08 / FAQ</p><h2>${e(c.faq[0])}</h2><p>${e(c.faq[1])}</p></div><div class="faq-list">${faqs[l.code].map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
-  <section class="section donate-section" id="donate"><div class="wrap donate-grid"><div><p class="eyebrow">09 / Browslium</p><h2>${e(c.donate[0])}</h2><p class="lead">${e(c.donate[1])}</p></div><div class="donate-box"><strong>${e(c.donate[2])}</strong><p>${e(c.donate[3])}</p><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></div></section>
+  <section class="section problem-section"><div class="wrap problem-grid"><div><p class="eyebrow">Browslium</p><h2>${e(c.problem[0])}</h2><p class="lead">${e(c.problem[1])}</p></div><div class="benefit-stack">${c.problem.slice(2).map((x,i) => `<div class="benefit"><span class="benefit-icon" aria-hidden="true">${['○','◇','↗'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
+  <section class="section how-section" id="how"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.nav[0])}</p><h2>${e(c.how[0])}</h2><p>${e(c.how[1])}</p></div><div class="steps">${[2,4,6].map((idx,i) => `<article class="step"><div class="step-top"><span>${String(i+1).padStart(2,'0')}</span><span class="step-symbol" aria-hidden="true">${['□','○','✓'][i]}</span></div><h3>${e(c.how[idx])}</h3><p>${e(c.how[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.how[8])}</p></div></section>
+  ${photoShowcase(l)}
+  ${videoShowcase(l)}
+  <section class="section why-section"><div class="wrap why-grid"><div><p class="eyebrow">03 / Browslium</p><h2>${e(c.why[0])}</h2><p class="lead">${e(c.why[1])}</p></div><ul>${c.why.slice(2).map((x,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><strong>${e(x)}</strong></li>`).join('')}</ul></div></section>
+  <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><p class="eyebrow">04 / ${e(c.nav[2])}</p><h2>${e(c.platforms[0])}</h2><p>${e(c.platforms[1])}</p></div><div class="platform-grid">${[2,4,6].map((idx,i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true">${['●','◇','■'][i]}</span><span class="platform-status">${e(c.platforms[i===0?8:9])}</span></div><h3>${e(c.platforms[idx])}</h3><p>${e(c.platforms[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.platforms[10])}</p></div></section>
+  <section class="section audiences-section"><div class="wrap audience-grid"><div><p class="eyebrow">05 / Browslium</p><h2>${e(c.audiences[0])}</h2><p>${e(c.audiences[1])}</p></div><div class="audience-list">${c.audiences.slice(2).map((x,i)=>`<div><span aria-hidden="true">${['○','□','■','◇'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
+  <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><p class="eyebrow">06 / FAQ</p><h2>${e(c.faq[0])}</h2><p>${e(c.faq[1])}</p></div><div class="faq-list">${faqs[l.code].map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
+  <section class="section donate-section" id="donate"><div class="wrap donate-grid"><div><p class="eyebrow">07 / Browslium</p><h2>${e(c.donate[0])}</h2><p class="lead">${e(c.donate[1])}</p></div><div class="donate-box"><strong>${e(c.donate[2])}</strong><p>${e(c.donate[3])}</p><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></div></section>
   </main>${footer(l)}<script type="application/ld+json">${json(serviceSchema)}</script><script src="/assets/site.js" defer></script></body></html>`;
 }
 
@@ -154,12 +178,11 @@ function explainerPage(l, kind) {
   const canonical = L(l.slug,page);
   const schema = webPageSchema(l,d.title,d.description,canonical);
   const list = policies[l.code][kind];
-  const clip = (file,caption) => `<figure class="test-clip"><video controls playsinline preload="none" width="960" height="540" poster="/assets/test-clip-${file}.jpg" aria-label="${e(caption)}"><source src="/assets/test-clip-${file}.mp4" type="video/mp4"></video><figcaption>${e(caption)}</figcaption></figure>`;
   return `${head(l,d.title,d.description,canonical,page)}<body data-locale="${l.code}" data-page="${page}">${suggestion(l)}${header(l,page)}<main id="main" class="explainer-main">
   <section class="explainer-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(isImage?u.imageLabel:u.videoLabel)}</p><h1>${e(d.h1)}</h1><p class="lead">${e(d.lead)}</p><div class="button-row"><a class="button button-primary" href="#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a class="button button-light-outline" href="${L(l.slug)}#platforms">${e(u.statusLink)}</a></div></div></section>
   <section class="section explainer-story"><div class="wrap story-grid"><article><span class="story-number">01</span><h2>${e(d.whyH)}</h2><p>${e(d.whyP)}</p></article><article><span class="story-number">02</span><h2>${e(d.processH)}</h2><p>${e(d.processP)}</p></article></div></section>
   <section class="section explainer-levels" id="levels"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(isImage?u.imageLabel:u.videoLabel)}</p><h2>${e(d.levelsH)}</h2><p>${e(d.levelsP)}</p></div><ol class="policy-grid">${list.map((policy,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><p>${e(policy)}</p></li>`).join('')}</ol></div></section>
-  ${isImage?'':`<section class="section test-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">Browslium</p><h2>${e(u.testsH)}</h2><p>${e(u.testsP)}</p></div><div class="test-grid">${clip('portrait',u.clip1)}${clip('group',u.clip2)}</div></div></section>`}
+  ${isImage?photoShowcase(l,'examples','',false):videoShowcase(l,'examples','',false)}
   <section class="section explainer-status"><div class="wrap status-grid"><div><p class="eyebrow">Browslium</p><h2>${e(d.statusH)}</h2><p>${e(d.statusP)}</p></div><a class="button button-primary" href="${L(l.slug)}#platforms">${e(u.statusLink)} <span aria-hidden="true">↗</span></a></div></section>
   <section class="section related-section"><div class="wrap"><h2>${e(u.relatedH)}</h2><p>${e(u.relatedP)}</p><div class="related-links"><a href="${L(l.slug,otherPage)}">${e(isImage?u.videoLink:u.imageLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#faq">${e(c.nav[3])} <span aria-hidden="true">↗</span></a></div></div></section>
   </main>${footer(l,page)}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;

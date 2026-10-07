@@ -4,7 +4,7 @@ export const explainers = {
   en: {
     image: {
       title: 'Image content filtering: seven policy levels | Browslium',
-      description: 'How Browslium is designed to evaluate supported images, why image-level decisions differ from blocking a whole site, and what its seven policies mean.',
+      description: 'Explore seven image-filtering policies with three real photo comparisons from controlled tests, and learn how Browslium is being developed.',
       h1: 'Image filtering that looks at the image',
       lead: 'A permitted page can still contain an image that does not match someone’s chosen standard. Browslium is being built to evaluate supported images individually and apply the selected image policy.',
       whyH: 'Why a website address is not enough',
@@ -18,7 +18,7 @@ export const explainers = {
     },
     video: {
       title: 'Video content filtering: six policy levels | Browslium',
-      description: 'Explore Browslium’s six video-filtering policies, how moving content differs from a still image, and the current development limits.',
+      description: 'Watch controlled examples of Browslium’s six video-filtering policies across three clips, with original and filtered views and current development limits.',
       h1: 'Video filtering follows what changes over time',
       lead: 'A video is more than its page address or thumbnail. Browslium is being designed to evaluate supported moving content over time using a separate video policy.',
       whyH: 'Why video needs its own policy',
@@ -44,7 +44,7 @@ export const explainers = {
   es: {
     image: {
       title: 'Filtrado de imágenes: siete niveles de protección | Browslium',
-      description: 'Conoce cómo Browslium está diseñado para evaluar imágenes compatibles, qué significan sus siete niveles y en qué fase de desarrollo se encuentra.',
+      description: 'Compara tres fotos originales con los resultados de siete niveles de filtrado de imágenes en pruebas controladas de Browslium.',
       h1: 'Filtrado de imágenes según su contenido',
       lead: 'Una página permitida puede incluir una imagen que no se ajuste a la política elegida. Browslium se desarrolla para evaluar imágenes compatibles por separado y aplicarles el nivel seleccionado.',
       whyH: 'La dirección de una página no cuenta toda la historia',
@@ -58,7 +58,7 @@ export const explainers = {
     },
     video: {
       title: 'Filtrado de video: seis niveles de protección | Browslium',
-      description: 'Explora los seis niveles de filtrado de video de Browslium, por qué el contenido en movimiento requiere un análisis propio y cuál es su estado actual.',
+      description: 'Mira tres vídeos originales y sus resultados en los seis niveles de filtrado de Browslium, con ejemplos de pruebas controladas.',
       h1: 'Filtrado de video a lo largo del tiempo',
       lead: 'Un video es más que la dirección de su página o una miniatura. Browslium se diseña para evaluar el contenido compatible mientras cambia, mediante una política propia para video.',
       whyH: 'El video necesita reglas distintas',
@@ -84,7 +84,7 @@ export const explainers = {
   ru: {
     image: {
       title: 'Фильтрация изображений: семь уровней | Browslium',
-      description: 'Как Browslium планирует проверять поддерживаемые изображения, чем это отличается от блокировки сайта и что означают семь уровней фильтрации.',
+      description: 'Сравните три исходных фото с результатами семи уровней фильтрации изображений Browslium в контролируемых тестах.',
       h1: 'Фильтрация содержимого изображений',
       lead: 'На разрешённом сайте могут быть изображения, которые не соответствуют выбранным правилам. Browslium разрабатывается для отдельной проверки поддерживаемых изображений.',
       whyH: 'Адрес сайта не описывает каждую картинку',
@@ -98,7 +98,7 @@ export const explainers = {
     },
     video: {
       title: 'Фильтрация видео: шесть уровней | Browslium',
-      description: 'Шесть политик фильтрации видео Browslium, особенности анализа меняющихся кадров и текущие ограничения разработки.',
+      description: 'Посмотрите три исходных ролика и результаты шести уровней фильтрации видео Browslium на примерах контролируемых тестов.',
       h1: 'Фильтрация видеоконтента по мере его изменения',
       lead: 'Видео нельзя описать только адресом страницы или обложкой. Browslium разрабатывается для анализа поддерживаемого видеоконтента во времени по отдельной политике.',
       whyH: 'Почему для видео нужны свои правила',
@@ -124,7 +124,7 @@ export const explainers = {
   he: {
     image: {
       title: 'סינון תמונות: שבע רמות סינון | Browslium',
-      description: 'כיצד Browslium מתוכננת לבדוק תמונות נתמכות, מה ההבדל בין סינון תמונה לחסימת אתר ומה משמעות שבע רמות הסינון.',
+      description: 'השוו שלוש תמונות מקור לתוצאות של שבע רמות סינון תמונות בבדיקות מבוקרות של Browslium.',
       h1: 'סינון תמונות לפי התוכן שלהן',
       lead: 'גם אתר שמותר לגלוש בו עשוי להכיל תמונה שאינה מתאימה למדיניות שנבחרה. Browslium נמצאת בפיתוח כדי לבדוק תמונות נתמכות בנפרד ולהחיל עליהן את רמת הסינון הרצויה.',
       whyH: 'כתובת האתר לא מספרת הכול',
@@ -138,7 +138,7 @@ export const explainers = {
     },
     video: {
       title: 'סינון סרטונים: שש רמות סינון | Browslium',
-      description: 'הכירו את שש רמות סינון הווידאו של Browslium, את האתגר שבניתוח תוכן משתנה ואת מצב הפיתוח הנוכחי.',
+      description: 'צפו בשלושה סרטוני מקור ובתוצאות של שש רמות סינון וידאו של Browslium מתוך בדיקות מבוקרות.',
       h1: 'סינון סרטונים לאורך זמן',
       lead: 'סרטון הוא יותר מכתובת הדף או מהתמונה הממוזערת שלו. Browslium מתוכננת לנתח תוכן וידאו נתמך תוך כדי שינויו, באמצעות מדיניות נפרדת לסרטונים.',
       whyH: 'למה סרטון דורש כללים משלו',
@@ -164,7 +164,7 @@ export const explainers = {
   yi: {
     image: {
       title: 'בילדער־פֿילטערונג: זיבן שטאַפּלען | Browslium',
-      description: 'ווי Browslium פּלאַנירט צו קאָנטראָלירן געשטיצטע בילדער, וואָס איז אַנדערש פֿון בלאָקירן אַ גאַנצע וועבזײַט, און וואָס מיינען די זיבן שטאַפּלען.',
+      description: 'פֿאַרגלײַכט דרײַ אָריגינעלע פֿאָטאָס מיט די רעזולטאַטן פֿון זיבן בילד־פֿילטער־ניוואָען אין קאָנטראָלירטע Browslium־פּרוּוון.',
       h1: 'בילדער פֿילטערן לויט זייער אינהאַלט',
       lead: 'אויף אַ דערלויבטער וועבזײַט קען זיך געפֿינען אַ בילד וואָס פּאַסט נישט צו דער אויסגעקליבענער פּאָליטיק. Browslium ווערט אַנטוויקלט כּדי צו קאָנטראָלירן געשטיצטע בילדער באַזונדער.',
       whyH: 'דער וועב־אַדרעס דערציילט נישט אַלץ',
@@ -178,7 +178,7 @@ export const explainers = {
     },
     video: {
       title: 'ווידעאָ־פֿילטערונג: זעקס שטאַפּלען | Browslium',
-      description: 'די זעקס ווידעאָ־פּאָליטיקן פֿון Browslium, פֿאַר וואָס באַוועגלעכע בילדער דאַרפֿן אַן אייגענעם אַנאַליז, און וואָס איז דער איצטיקער אַנטוויקלונג־סטאַטוס.',
+      description: 'זעט דרײַ אָריגינעלע קליפּס און די רעזולטאַטן פֿון זעקס ווידעאָ־פֿילטער־ניוואָען אין קאָנטראָלירטע Browslium־פּרוּוון.',
       h1: 'ווידעאָס פֿילטערן בשעת דער אינהאַלט ענדערט זיך',
       lead: 'אַ ווידעאָ איז מער ווי זײַן וועב־אַדרעס אָדער פֿאָרויסבילד. Browslium ווערט אַנטוויקלט צו קאָנטראָלירן געשטיצטן באַוועגלעכן אינהאַלט איבער דער צײַט, מיט אַן אייגענער ווידעאָ־פּאָליטיק.',
       whyH: 'פֿאַר וואָס ווידעאָ דאַרף באַזונדערע כּללים',
@@ -204,7 +204,7 @@ export const explainers = {
   'pt-BR': {
     image: {
       title: 'Filtro de imagens: sete níveis de proteção | Browslium',
-      description: 'Entenda como o Browslium foi pensado para analisar imagens compatíveis, o significado dos sete níveis e o estágio atual de desenvolvimento.',
+      description: 'Compare três fotos originais com os resultados dos sete níveis de filtro de imagens do Browslium em testes controlados.',
       h1: 'Filtro de imagens pelo que elas mostram',
       lead: 'Um site permitido também pode conter uma imagem que não combina com a política escolhida. O Browslium está sendo desenvolvido para avaliar imagens compatíveis individualmente.',
       whyH: 'O endereço do site não revela cada imagem',
@@ -218,7 +218,7 @@ export const explainers = {
     },
     video: {
       title: 'Filtro de vídeos: seis níveis de proteção | Browslium',
-      description: 'Conheça os seis níveis do filtro de vídeos do Browslium, por que conteúdo em movimento precisa de análise própria e quais são os limites atuais.',
+      description: 'Assista a três clipes originais e aos resultados dos seis níveis de filtro de vídeos do Browslium em testes controlados.',
       h1: 'Filtro de vídeos para conteúdo que muda',
       lead: 'Um vídeo é mais do que o endereço da página ou sua miniatura. O Browslium está sendo projetado para analisar conteúdo compatível ao longo do tempo com uma política específica para vídeos.',
       whyH: 'Por que vídeos precisam de regras próprias',
@@ -244,7 +244,7 @@ export const explainers = {
   fr: {
     image: {
       title: 'Filtrage des images : sept niveaux | Browslium',
-      description: 'Découvrez comment Browslium est conçu pour analyser les images compatibles, ce que signifient ses sept niveaux et où en est son développement.',
+      description: 'Comparez trois photos originales aux résultats des sept niveaux de filtrage d’images Browslium lors de tests contrôlés.',
       h1: 'Filtrer les images selon leur contenu',
       lead: 'Une page autorisée peut contenir une image qui ne correspond pas à la règle choisie. Browslium est en développement pour examiner séparément les images compatibles.',
       whyH: 'L’adresse du site ne décrit pas chaque image',
@@ -258,7 +258,7 @@ export const explainers = {
     },
     video: {
       title: 'Filtrage des vidéos : six niveaux | Browslium',
-      description: 'Comprendre les six niveaux de filtrage vidéo de Browslium, l’analyse des images en mouvement et les limites actuelles du projet.',
+      description: 'Regardez trois extraits originaux et les résultats des six niveaux de filtrage vidéo Browslium issus de tests contrôlés.',
       h1: 'Filtrer les vidéos au fil des images',
       lead: 'Une vidéo ne se résume ni à l’adresse de sa page ni à sa miniature. Browslium est conçu pour examiner les contenus vidéo compatibles au fil du temps, avec des règles qui leur sont propres.',
       whyH: 'Pourquoi la vidéo demande ses propres règles',
