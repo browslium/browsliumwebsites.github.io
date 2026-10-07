@@ -1,0 +1,50 @@
+name: Publish Browslium media showcase redesign R2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify archive and publish complete site
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive='Browslium_WEB_MEDIA_SHOWCASE_REDESIGN_7LOCALES_R2_20261007_154213.zip'
+          expected_sha='112a2eb14e1f5b93e3deb86c469a97ad9bb02e86a3871492220179407dd9279a'
+          test -f "$archive"
+          actual_sha="$(sha256sum "$archive" | cut -d ' ' -f1)"
+          test "$actual_sha" = "$expected_sha"
+          stage="$(mktemp -d)"
+          unzip -q "$archive" -d "$stage"
+          test -f "$stage/index.html"
+          test -f "$stage/CNAME"
+          test -f "$stage/sitemap.xml"
+          test -f "$stage/src/showcase.mjs"
+          test -f "$stage/scripts/prepare_media.py"
+          test "$(cat "$stage/CNAME")" = 'browslium.com'
+          test "$(cat "$stage/google80ba342909e82f35.html")" = 'google-site-verification: google80ba342909e82f35.html'
+          for locale in en es ru yi he pt-br fr; do
+            for page in '' image-filtering/ video-filtering/ support/ privacy/ terms/; do
+              test -f "$stage/$locale/$page/index.html"
+            done
+          done
+          ln -s . "$stage/dist"
+          (cd "$stage" && python3 qa.py)
+          rm "$stage/dist"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
+          cp -a "$stage/." .
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Redesign seven-language photo and video showcase'
+          git push origin HEAD:main
