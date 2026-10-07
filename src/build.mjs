@@ -11,6 +11,12 @@ const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '.
 const output = path.join(sourceRoot, 'dist');
 const origin = 'https://browslium.com';
 const donateUrl = 'https://donate.stripe.com/6oU14mgxEgEqgJF7HZ3wQ00';
+const socialProfiles = [
+  ['X', 'https://x.com/Browslium'],
+  ['Instagram', 'https://www.instagram.com/browslium/'],
+  ['YouTube', 'https://www.youtube.com/@Browslium'],
+  ['TikTok', 'https://www.tiktok.com/@browslium'],
+];
 
 const e = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const L = (slug, page = '') => `/${slug}/${page ? `${page}/` : ''}`;
@@ -19,6 +25,26 @@ const altLinks = (page = '', root = false) => `${languages.map(l => `<link rel="
 <link rel="alternate" hreflang="x-default" href="${origin}${root ? '/' : L('en', page)}">`;
 const ogAlt = current => languages.filter(l => l.code !== current.code).map(l => `<meta property="og:locale:alternate" content="${l.og}">`).join('\n');
 const json = data => JSON.stringify(data).replace(/</g, '\\u003c');
+const webPageSchema = (l, name, description, canonical) => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name,
+  description,
+  inLanguage: l.code,
+  url: `${origin}${canonical}`,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Browslium',
+    url: origin,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Browslium',
+      url: origin,
+      logo: `${origin}/assets/browslium-icon.webp`,
+      sameAs: socialProfiles.map(([, url]) => url),
+    },
+  },
+});
 
 function head(l, title, description, canonical, page = '') {
   return `<!doctype html>
@@ -72,7 +98,7 @@ function footer(l, page = '') {
     <div><a class="brand" href="${L(l.slug)}"><img src="/assets/browslium-icon.webp" width="44" height="44" alt=""><span>Browslium</span></a><p>${e(c.footer[6])}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
     <div><h2>${e(c.footer[1])}</h2><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
-    <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a>${languageMenu(l, 'footer-language', page)}</div>
+    <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url]) => `<a href="${e(url)}" dir="ltr" target="_blank" rel="noopener noreferrer">${name}</a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span><span>${e(c.hero[4])}</span></div></footer>`;
 }
 
@@ -97,7 +123,7 @@ function levels(l) {
 function home(l) {
   const c = copy[l.code], u = explainers[l.code].ui;
   const canonical = L(l.slug);
-  const serviceSchema = {'@context':'https://schema.org','@type':'WebPage',name:c.title,description:c.description,inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
+  const serviceSchema = webPageSchema(l,c.title,c.description,canonical);
   return `${head(l,c.title,c.description,canonical)}<body data-locale="${l.code}">
   ${suggestion(l)}${header(l)}<main id="main">
   <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="status-pill"><span class="status-dot"></span>${e(c.hero[4])}</span><h1>${e(c.hero[0])}</h1><p>${e(c.hero[1])}</p><div class="button-row"><a class="button button-primary" href="#how">${e(c.hero[2])}<span aria-hidden="true">↗</span></a><a class="button button-outline" href="#levels">${e(c.hero[3])}</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div><img src="/assets/browslium-icon.webp" width="430" height="430" alt=""></div></div></section>
@@ -116,7 +142,7 @@ function home(l) {
 
 function support(l) {
   const c=copy[l.code], title=`${c.support[0]} | Browslium`, canonical=L(l.slug,'support');
-  const schema = {'@context':'https://schema.org','@type':'WebPage',name:title,description:c.support[1],inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
+  const schema = webPageSchema(l,title,c.support[1],canonical);
   return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support">${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
 }
 
@@ -126,7 +152,7 @@ function explainerPage(l, kind) {
   const page = isImage ? 'image-filtering' : 'video-filtering';
   const otherPage = isImage ? 'video-filtering' : 'image-filtering';
   const canonical = L(l.slug,page);
-  const schema = {'@context':'https://schema.org','@type':'WebPage',name:d.title,description:d.description,inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
+  const schema = webPageSchema(l,d.title,d.description,canonical);
   const list = policies[l.code][kind];
   const clip = (file,caption) => `<figure class="test-clip"><video controls playsinline preload="none" width="960" height="540" poster="/assets/test-clip-${file}.jpg" aria-label="${e(caption)}"><source src="/assets/test-clip-${file}.mp4" type="video/mp4"></video><figcaption>${e(caption)}</figcaption></figure>`;
   return `${head(l,d.title,d.description,canonical,page)}<body data-locale="${l.code}" data-page="${page}">${suggestion(l)}${header(l,page)}<main id="main" class="explainer-main">
@@ -141,7 +167,7 @@ function explainerPage(l, kind) {
 
 function legalPage(l, type) {
   const c = copy[l.code], d = legal[l.code][type], canonical = L(l.slug,type);
-  const schema = {'@context':'https://schema.org','@type':'WebPage',name:`${d.title} | Browslium`,description:d.description,inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
+  const schema = webPageSchema(l,`${d.title} | Browslium`,d.description,canonical);
   return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
 }
 

@@ -14,6 +14,12 @@ if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification:
 ORIGIN = 'https://browslium.com'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
+SOCIAL_URLS = {
+    'https://x.com/Browslium',
+    'https://www.instagram.com/browslium/',
+    'https://www.youtube.com/@Browslium',
+    'https://www.tiktok.com/@browslium',
+}
 
 class Page(HTMLParser):
     def __init__(self):
@@ -42,6 +48,17 @@ sitemap=ET.parse(ROOT/'sitemap.xml').getroot()
 ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','x':'http://www.w3.org/1999/xhtml'}
 sitemap_urls={u.find('s:loc',ns).text for u in sitemap.findall('s:url',ns)}
 if sitemap_urls != {ORIGIN+p for p in all_paths}:errors.append(f'sitemap URLs mismatch: {len(sitemap_urls)} vs {len(all_paths)}')
+for entry in sitemap.findall('s:url',ns):
+    url=entry.find('s:loc',ns).text
+    if url==ORIGIN+'/':continue
+    route=url.removeprefix(ORIGIN)
+    page=next((part for part in PAGES if part and route.endswith('/'+part+'/')),'')
+    expected={**{lang:ORIGIN+f'/{slug}/{page+"/" if page else ""}' for lang,slug in LOCALES.items()},'x-default':ORIGIN+(f'/en/{page}/' if page else '/')}
+    actual={link.attrib.get('hreflang'):link.attrib.get('href') for link in entry.findall('x:link',ns)}
+    if actual!=expected:errors.append(f'sitemap hreflang {route}')
+gateway=Page();gateway.feed((ROOT/'index.html').read_text())
+if gateway.find('link',rel='canonical')[0].get('href')!=ORIGIN+'/':errors.append('gateway canonical')
+if {x['hreflang']:x.get('href') for x in gateway.find('link',rel='alternate')} != {**{lang:ORIGIN+f'/{slug}/' for lang,slug in LOCALES.items()},'x-default':ORIGIN+'/'}:errors.append('gateway hreflang')
 titles=set(); descriptions=set()
 for code,slug in LOCALES.items():
     for page in PAGES:
@@ -65,6 +82,8 @@ for code,slug in LOCALES.items():
         if len(og)!=1 or og[0].get('content')!=ORIGIN+route:errors.append(f'og:url {route}')
         if not p.find('meta',property='og:locale'):errors.append(f'og:locale {route}')
         if not any(x.get('inLanguage')==code for x in p.scripts):errors.append(f'localized structured data {route}')
+        if not any(set(x.get('isPartOf',{}).get('publisher',{}).get('sameAs',[]))==SOCIAL_URLS for x in p.scripts):errors.append(f'official social identity {route}')
+        if not SOCIAL_URLS.issubset({a.get('href') for a in p.find('a')}):errors.append(f'official social links {route}')
         for img in p.find('img'):
             if 'alt' not in img:errors.append(f'img without alt {route}')
         for link in p.find('a'):
