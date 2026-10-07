@@ -154,6 +154,7 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 await cp(path.join(sourceRoot,'assets'),path.join(output,'assets'),{recursive:true});
 await cp(path.join(sourceRoot,'CNAME'),path.join(output,'CNAME'));
+await cp(path.join(sourceRoot,'google80ba342909e82f35.html'),path.join(output,'google80ba342909e82f35.html'));
 await writeFile(path.join(output,'.nojekyll'),'');
 await writeFile(path.join(output,'index.html'),gateway());
 for (const l of languages) {

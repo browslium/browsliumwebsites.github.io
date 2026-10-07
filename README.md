@@ -6,7 +6,7 @@ The published root contains generated HTML for every locale and the source in `s
 
 ## Rebuild
 
-Run `npm run build`, then `npm run qa`. No npm dependencies are required. The generator writes `dist/`, which can be published at the repository root on GitHub Pages. It includes `CNAME`, `.nojekyll`, `robots.txt` and `sitemap.xml`.
+Run `npm run build`, then `npm run qa`. No npm dependencies are required. The generator writes `dist/`, which can be published at the repository root on GitHub Pages. It includes `CNAME`, `.nojekyll`, `robots.txt`, `sitemap.xml` and the HTML file used to verify ownership in Google Search Console. Keep that file at the published root during future deployments.
 
 ## Editorial accuracy
 

@@ -8,6 +8,9 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).parent / 'dist'
+VERIFICATION_FILE = 'google80ba342909e82f35.html'
+if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification: {VERIFICATION_FILE}':
+    raise SystemExit('Google Search Console verification file missing or changed')
 ORIGIN = 'https://browslium.com'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
