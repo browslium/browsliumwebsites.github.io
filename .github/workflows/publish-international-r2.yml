@@ -1,0 +1,48 @@
+name: Publish Browslium international website R2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify archive and publish complete site
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive='Browslium_WEB_INTERNATIONAL_7LOCALES_R2_20261006_181155.zip'
+          expected_sha='7780aeecfe9bf4409802f3b136e04360101b080f8bb2759d41bd9607fc50a998'
+          test -f "$archive"
+          actual_sha="$(sha256sum "$archive" | cut -d ' ' -f1)"
+          test "$actual_sha" = "$expected_sha"
+          stage="$(mktemp -d)"
+          unzip -q "$archive" -d "$stage"
+          test -f "$stage/index.html"
+          test -f "$stage/CNAME"
+          test -f "$stage/sitemap.xml"
+          test -f "$stage/src/build.mjs"
+          test -f "$stage/src/explainers.mjs"
+          test -f "$stage/qa.py"
+          test "$(cat "$stage/CNAME")" = 'browslium.com'
+          for locale in en es ru yi he pt-br fr; do
+            for page in '' image-filtering/ video-filtering/ support/ privacy/ terms/; do
+              test -f "$stage/$locale/$page/index.html"
+            done
+          done
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
+          cp -a "$stage/." .
+          python3 qa.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add localized image and video explainers'
+          git push origin HEAD:main
