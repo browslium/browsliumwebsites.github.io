@@ -38,9 +38,11 @@ jobs:
               test -f "$stage/$locale/$page/index.html"
             done
           done
+          ln -s . "$stage/dist"
+          (cd "$stage" && python3 qa.py)
+          rm "$stage/dist"
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
           cp -a "$stage/." .
-          python3 qa.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
