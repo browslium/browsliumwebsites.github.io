@@ -101,6 +101,12 @@ for code,slug in LOCALES.items():
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
             if len(p.find('section',**{'data-showcase':'image'}))!=1 or len(p.find('section',**{'data-showcase':'video'}))!=1:
                 errors.append(f'photo/video showcases missing {route}')
+            if 'problem-section' in text or 'how-section' in text:
+                errors.append(f'outdated opening sections present {route}')
+            if text.index('data-showcase="image"') > text.index('data-showcase="video"'):
+                errors.append(f'photo showcase must precede video {route}')
+            if 'id="how"' not in text:
+                errors.append(f'how navigation anchor missing {route}')
             if 'id="demo"' in text or 'Choose the filtering policy' in text:
                 errors.append(f'outdated illustrative demo {route}')
         if page in ('image-filtering','video-filtering'):

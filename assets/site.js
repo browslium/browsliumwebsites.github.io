@@ -114,10 +114,12 @@
         const result = root.querySelector('[data-result-image]');
         const stage = root.querySelector('[data-compare-stage]');
         const range = root.querySelector('[data-compare-range]');
+        const loading = root.querySelector('[data-showcase-loading]');
         const sourceUrl = media(`images/photo-${scene}-original.webp`);
         const resultUrl = media(`images/photo-${scene}-${level || 'original'}.webp`);
         const request = ++imageRequest;
         stage.setAttribute('aria-busy', 'true');
+        loading.hidden = false;
         Promise.all([preload(sourceUrl), preload(resultUrl)]).then(loaded => {
           if (request !== imageRequest) return;
           if (loaded.every(Boolean)) {
@@ -132,6 +134,7 @@
             root.querySelector('[data-after-label]').hidden = level === 0;
           }
           stage.removeAttribute('aria-busy');
+          loading.hidden = true;
         });
       } else {
         const video = root.querySelector('[data-showcase-video]');
@@ -154,16 +157,51 @@
 
     scenes.forEach(button => button.addEventListener('click', () => {
       scene = Number(button.dataset.showcaseScene);
+      if (kind === 'image') root.querySelector('[data-compare-range]').value = '15';
       update();
     }));
     levels.forEach(button => button.addEventListener('click', () => {
       level = Number(button.dataset.showcaseLevel);
       if (kind === 'video') view = level ? 'result' : 'original';
+      else root.querySelector('[data-compare-range]').value = '15';
       update();
     }));
     if (kind === 'image') {
       const range = root.querySelector('[data-compare-range]');
-      range.addEventListener('input', () => root.querySelector('[data-compare-stage]').style.setProperty('--split', `${range.value}%`));
+      const stage = root.querySelector('[data-compare-stage]');
+      const setSplit = clientX => {
+        const rect = stage.getBoundingClientRect();
+        range.value = String(Math.max(0, Math.min(100, Math.round((clientX - rect.left) * 100 / rect.width))));
+        stage.style.setProperty('--split', `${range.value}%`);
+      };
+      range.addEventListener('input', () => stage.style.setProperty('--split', `${range.value}%`));
+      range.addEventListener('keydown', event => {
+        const steps = { ArrowLeft:-1, ArrowDown:-1, ArrowRight:1, ArrowUp:1, PageDown:-10, PageUp:10 };
+        let next;
+        if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = 100;
+        else if (event.key in steps) next = Number(range.value) + steps[event.key];
+        else return;
+        event.preventDefault();
+        range.value = String(Math.max(0, Math.min(100, next)));
+        stage.style.setProperty('--split', `${range.value}%`);
+      });
+      stage.addEventListener('pointerdown', event => {
+        if (range.disabled || event.button !== 0) return;
+        event.preventDefault();
+        range.focus({ preventScroll: true });
+        stage.setPointerCapture(event.pointerId);
+        setSplit(event.clientX);
+      });
+      stage.addEventListener('pointermove', event => {
+        if (stage.hasPointerCapture(event.pointerId)) setSplit(event.clientX);
+      });
+      stage.addEventListener('pointerup', event => {
+        if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+      });
+      stage.addEventListener('pointercancel', event => {
+        if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+      });
     } else {
       root.querySelectorAll('[data-video-view]').forEach(button => button.addEventListener('click', () => {
         if (button.disabled) return;

@@ -121,14 +121,17 @@ function policyChoices(l, kind) {
 function photoShowcase(l, id='levels', number='01', link=true) {
   const s=showcase[l.code], first=mediaPath('images','photo-1-original.webp');
   return `<section class="section showcase-section photo-showcase" id="${id}" data-showcase="image" data-original-note="${e(s.originalImage)}" data-original-label="${e(s.original)}" data-level-word="${e(s.level)}" data-result-word="${e(s.result)}"><div class="wrap">
+    ${id==='levels'?'<span id="how" class="section-anchor" aria-hidden="true"></span>':''}
     <div class="section-intro showcase-intro"><p class="eyebrow">${number?`${number} / `:''}${e(copy[l.code].levels[2])}</p><h2>${e(s.imageTitle)}</h2><p>${e(s.imageIntro)}</p></div>
     <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage compare-stage" data-compare-stage data-original="true" style="--split:50%" dir="ltr">
-      <img class="compare-result" data-result-image src="${first}" width="1600" height="1067" alt="" decoding="async">
-      <div class="compare-source" data-compare-source><img data-original-image src="${first}" width="1600" height="1067" alt="${e(s.photoAlts[0])}" decoding="async"></div>
+      <img class="compare-result" data-result-image src="${first}" width="1600" height="1067" alt="" decoding="sync">
+      <div class="compare-source" data-compare-source><img data-original-image src="${first}" width="1600" height="1067" alt="${e(s.photoAlts[0])}" decoding="sync"></div>
       <span class="compare-label compare-label-before" data-before-label>${e(s.before)}</span><span class="compare-label compare-label-after" data-after-label hidden>${e(s.after)}</span>
-      <input class="compare-range" data-compare-range type="range" min="0" max="100" value="50" aria-label="${e(s.drag)}" hidden disabled>
+      <span class="compare-handle" data-compare-handle aria-hidden="true">↔</span>
+      <input class="compare-range" data-compare-range type="range" min="0" max="100" value="15" aria-label="${e(s.drag)}" hidden disabled>
+      <span class="showcase-loading" data-showcase-loading hidden role="status">${e(s.loading)}</span>
     </div><div class="showcase-readout" aria-live="polite"><div><span class="showcase-kicker">${e(s.result)}</span><strong data-showcase-selection>${e(s.original)}</strong></div><p data-showcase-description>${e(s.originalImage)}</p></div></div>
-    <div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.photoScenes,s.photoAlts,'image')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'image')}</div></fieldset></div></div>
+    <div class="showcase-controls"><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'image')}</div></fieldset><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.photoScenes,s.photoAlts,'image')}</div></fieldset></div></div>
     <div class="showcase-foot"><p>${e(s.imageNote)}</p>${link?`<a class="text-link" href="${L(l.slug,'image-filtering')}">${e(s.imageLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
 }
@@ -140,7 +143,7 @@ function videoShowcase(l, id='video-levels', number='02', link=true) {
     <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage video-stage"><video controls playsinline preload="metadata" width="1280" height="720" src="${first}" poster="${mediaPath('posters','video-1-original.webp')}" aria-label="${e(s.videoAlts[0])}" data-showcase-video></video><span class="video-stage-tag" data-video-stage-tag>${e(s.original)}</span></div>
       <div class="video-view-switch" role="group" aria-label="${e(s.result)}"><button type="button" data-video-view="original" aria-pressed="true">${e(s.playOriginal)}</button><button type="button" data-video-view="result" aria-pressed="false" disabled>${e(s.playFiltered)}</button></div>
       <div class="showcase-readout" aria-live="polite"><div><span class="showcase-kicker">${e(s.result)}</span><strong data-showcase-selection>${e(s.original)}</strong></div><p data-showcase-description>${e(s.originalVideo)}</p></div>
-    </div><div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset></div></div>
+    </div><div class="showcase-controls"><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset><fieldset class="showcase-scenes"><legend>${e(s.scene)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset></div></div>
     <div class="showcase-foot"><p>${e(s.videoNote)}</p>${link?`<a class="text-link" href="${L(l.slug,'video-filtering')}">${e(s.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
 }
@@ -151,9 +154,7 @@ function home(l) {
   const serviceSchema = webPageSchema(l,c.title,c.description,canonical);
   return `${head(l,c.title,c.description,canonical)}<body data-locale="${l.code}">
   ${suggestion(l)}${header(l)}<main id="main">
-  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="status-pill"><span class="status-dot"></span>${e(c.hero[4])}</span><h1>${e(c.hero[0])}</h1><p>${e(c.hero[1])}</p><div class="button-row"><a class="button button-primary" href="#how">${e(c.hero[2])}<span aria-hidden="true">↗</span></a><a class="button button-outline" href="#levels">${e(c.hero[3])}</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div><img src="/assets/browslium-icon.webp" width="430" height="430" alt=""></div></div></section>
-  <section class="section problem-section"><div class="wrap problem-grid"><div><p class="eyebrow">Browslium</p><h2>${e(c.problem[0])}</h2><p class="lead">${e(c.problem[1])}</p></div><div class="benefit-stack">${c.problem.slice(2).map((x,i) => `<div class="benefit"><span class="benefit-icon" aria-hidden="true">${['○','◇','↗'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
-  <section class="section how-section" id="how"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.nav[0])}</p><h2>${e(c.how[0])}</h2><p>${e(c.how[1])}</p></div><div class="steps">${[2,4,6].map((idx,i) => `<article class="step"><div class="step-top"><span>${String(i+1).padStart(2,'0')}</span><span class="step-symbol" aria-hidden="true">${['□','○','✓'][i]}</span></div><h3>${e(c.how[idx])}</h3><p>${e(c.how[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.how[8])}</p></div></section>
+  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="status-pill"><span class="status-dot"></span>${e(c.hero[4])}</span><h1>${e(c.hero[0])}</h1><p>${e(c.hero[1])}</p><div class="button-row"><a class="button button-primary" href="#how">${e(c.hero[2])}<span aria-hidden="true">↗</span></a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div><img src="/assets/browslium-icon.webp" width="430" height="430" alt=""></div></div></section>
   ${photoShowcase(l)}
   ${videoShowcase(l)}
   <section class="section why-section"><div class="wrap why-grid"><div><p class="eyebrow">03 / Browslium</p><h2>${e(c.why[0])}</h2><p class="lead">${e(c.why[1])}</p></div><ul>${c.why.slice(2).map((x,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><strong>${e(x)}</strong></li>`).join('')}</ul></div></section>
