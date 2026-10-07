@@ -9,6 +9,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).parent / 'dist'
+CSS_URL = '/assets/site.css?v=' + hashlib.sha256((ROOT/'assets/site.css').read_bytes()).hexdigest()[:12]
+JS_URL = '/assets/site.js?v=' + hashlib.sha256((ROOT/'assets/site.js').read_bytes()).hexdigest()[:12]
 VERIFICATION_FILE = 'google80ba342909e82f35.html'
 if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification: {VERIFICATION_FILE}':
     raise SystemExit('Google Search Console verification file missing or changed')
@@ -58,6 +60,7 @@ for entry in sitemap.findall('s:url',ns):
     actual={link.attrib.get('hreflang'):link.attrib.get('href') for link in entry.findall('x:link',ns)}
     if actual!=expected:errors.append(f'sitemap hreflang {route}')
 gateway=Page();gateway.feed((ROOT/'index.html').read_text())
+if not gateway.find('link',rel='stylesheet',href=CSS_URL) or not gateway.find('script',src=JS_URL):errors.append('gateway asset versions')
 if gateway.find('link',rel='canonical')[0].get('href')!=ORIGIN+'/':errors.append('gateway canonical')
 if {x['hreflang']:x.get('href') for x in gateway.find('link',rel='alternate')} != {**{lang:ORIGIN+f'/{slug}/' for lang,slug in LOCALES.items()},'x-default':ORIGIN+'/'}:errors.append('gateway hreflang')
 titles=set(); descriptions=set()
@@ -67,6 +70,7 @@ for code,slug in LOCALES.items():
         filename=ROOT/slug/page/'index.html' if page else ROOT/slug/'index.html'
         if not filename.exists():errors.append(f'missing {route}');continue
         p=Page();p.feed(filename.read_text())
+        if not p.find('link',rel='stylesheet',href=CSS_URL) or not p.find('script',src=JS_URL):errors.append(f'asset versions {route}')
         html=p.find('html')
         if len(html)!=1 or html[0].get('lang')!=code or html[0].get('dir')!=('rtl' if code in ('he','yi') else 'ltr'):errors.append(f'lang/dir {route}')
         if not p.title or p.title in titles:errors.append(f'missing or duplicate title {route}')

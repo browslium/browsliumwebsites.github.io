@@ -1,6 +1,7 @@
-import { mkdir, writeFile, cp, rm } from 'node:fs/promises';
+import { mkdir, writeFile, cp, rm, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { languages, copy } from './content.mjs';
 import { policies } from './policies.mjs';
 import { faqs } from './faq.mjs';
@@ -11,6 +12,9 @@ import { showcase } from './showcase.mjs';
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(sourceRoot, 'dist');
 const origin = 'https://browslium.com';
+const assetHash = async filename => createHash('sha256').update(await readFile(path.join(sourceRoot,'assets',filename))).digest('hex').slice(0,12);
+const stylesheet = `/assets/site.css?v=${await assetHash('site.css')}`;
+const script = `/assets/site.js?v=${await assetHash('site.js')}`;
 const donateUrl = 'https://donate.stripe.com/6oU14mgxEgEqgJF7HZ3wQ00';
 const socialProfiles = [
   ['X', 'https://x.com/Browslium'],
@@ -70,7 +74,7 @@ function head(l, title, description, canonical, page = '') {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="${stylesheet}">
 </head>`;
 }
 
@@ -162,13 +166,13 @@ function home(l) {
   <section class="section audiences-section"><div class="wrap audience-grid"><div><p class="eyebrow">05 / Browslium</p><h2>${e(c.audiences[0])}</h2><p>${e(c.audiences[1])}</p></div><div class="audience-list">${c.audiences.slice(2).map((x,i)=>`<div><span aria-hidden="true">${['○','□','■','◇'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
   <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><p class="eyebrow">06 / FAQ</p><h2>${e(c.faq[0])}</h2><p>${e(c.faq[1])}</p></div><div class="faq-list">${faqs[l.code].map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
   <section class="section donate-section" id="donate"><div class="wrap donate-grid"><div><p class="eyebrow">07 / Browslium</p><h2>${e(c.donate[0])}</h2><p class="lead">${e(c.donate[1])}</p></div><div class="donate-box"><strong>${e(c.donate[2])}</strong><p>${e(c.donate[3])}</p><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></div></section>
-  </main>${footer(l)}<script type="application/ld+json">${json(serviceSchema)}</script><script src="/assets/site.js" defer></script></body></html>`;
+  </main>${footer(l)}<script type="application/ld+json">${json(serviceSchema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function support(l) {
   const c=copy[l.code], title=`${c.support[0]} | Browslium`, canonical=L(l.slug,'support');
   const schema = webPageSchema(l,title,c.support[1],canonical);
-  return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support">${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
+  return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support">${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function explainerPage(l, kind) {
@@ -186,18 +190,18 @@ function explainerPage(l, kind) {
   ${isImage?photoShowcase(l,'examples','',false):videoShowcase(l,'examples','',false)}
   <section class="section explainer-status"><div class="wrap status-grid"><div><p class="eyebrow">Browslium</p><h2>${e(d.statusH)}</h2><p>${e(d.statusP)}</p></div><a class="button button-primary" href="${L(l.slug)}#platforms">${e(u.statusLink)} <span aria-hidden="true">↗</span></a></div></section>
   <section class="section related-section"><div class="wrap"><h2>${e(u.relatedH)}</h2><p>${e(u.relatedP)}</p><div class="related-links"><a href="${L(l.slug,otherPage)}">${e(isImage?u.videoLink:u.imageLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#faq">${e(c.nav[3])} <span aria-hidden="true">↗</span></a></div></div></section>
-  </main>${footer(l,page)}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
+  </main>${footer(l,page)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function legalPage(l, type) {
   const c = copy[l.code], d = legal[l.code][type], canonical = L(l.slug,type);
   const schema = webPageSchema(l,`${d.title} | Browslium`,d.description,canonical);
-  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
+  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function gateway() {
   const l=locale('en');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="stylesheet" href="/assets/site.css"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-icon.webp" width="100" height="100" alt="Browslium logo"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}">${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav></div></main><script src="/assets/site.js" defer></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="stylesheet" href="${stylesheet}"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-icon.webp" width="100" height="100" alt="Browslium logo"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}">${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav></div></main><script src="${script}" defer></script></body></html>`;
 }
 
 await rm(output,{recursive:true,force:true});
