@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Фильтрация видео: шесть уровней | Browslium</title>
+  <meta name="description" content="Шесть политик фильтрации видео Browslium, особенности анализа меняющихся кадров и текущие ограничения разработки.">
+  <meta name="theme-color" content="#030509">
+  <link rel="canonical" href="https://browslium.com/ru/video-filtering/">
+  <link rel="alternate" hreflang="en" href="https://browslium.com/en/video-filtering/">
+<link rel="alternate" hreflang="es" href="https://browslium.com/es/video-filtering/">
+<link rel="alternate" hreflang="ru" href="https://browslium.com/ru/video-filtering/">
+<link rel="alternate" hreflang="yi" href="https://browslium.com/yi/video-filtering/">
+<link rel="alternate" hreflang="he" href="https://browslium.com/he/video-filtering/">
+<link rel="alternate" hreflang="pt-BR" href="https://browslium.com/pt-br/video-filtering/">
+<link rel="alternate" hreflang="fr" href="https://browslium.com/fr/video-filtering/">
+<link rel="alternate" hreflang="x-default" href="https://browslium.com/en/video-filtering/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Browslium">
+  <meta property="og:title" content="Фильтрация видео: шесть уровней | Browslium">
+  <meta property="og:description" content="Шесть политик фильтрации видео Browslium, особенности анализа меняющихся кадров и текущие ограничения разработки.">
+  <meta property="og:url" content="https://browslium.com/ru/video-filtering/">
+  <meta property="og:image" content="https://browslium.com/assets/browslium-og.webp">
+  <meta property="og:image:alt" content="Логотип Browslium: светящаяся буква B в изумрудных, синих и фиолетовых тонах">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="es_MX">
+<meta property="og:locale:alternate" content="yi_001">
+<meta property="og:locale:alternate" content="he_IL">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head><body data-locale="ru" data-page="video-filtering"><aside class="language-suggestion" data-language-suggestion hidden aria-live="polite"><div class="wrap suggestion-inner"><p data-suggestion-message></p><div><a data-suggestion-link href="#"></a><button type="button" data-suggestion-dismiss></button></div></div></aside><a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="site-header"><div class="wrap header-inner">
+    <a class="brand" href="/ru/" aria-label="Browslium"><img src="/assets/browslium-icon.webp" width="42" height="42" alt=""><span>Browslium</span></a>
+    <nav class="desktop-nav" aria-label="Разделы"><a href="/ru/#how">Как это работает</a><a href="/ru/#levels">Уровни фильтрации</a><a href="/ru/#platforms">Платформы</a><a href="/ru/#faq">Вопросы и ответы</a><a href="/ru/#donate">Поддержать проект</a></nav>
+    <div class="header-actions"><details class="language-menu header-language" data-language-menu>
+    <summary aria-label="Выбрать язык"><span aria-hidden="true">○</span><span>RU</span><span class="caret" aria-hidden="true">⌄</span></summary>
+    <ul aria-label="Язык"><li><a href="/en/video-filtering/" lang="en" dir="ltr" data-language-choice="en" >English</a></li><li><a href="/es/video-filtering/" lang="es" dir="ltr" data-language-choice="es" >Español</a></li><li><a href="/ru/video-filtering/" lang="ru" dir="ltr" data-language-choice="ru" aria-current="page">Русский</a></li><li><a href="/yi/video-filtering/" lang="yi" dir="rtl" data-language-choice="yi" >ייִדיש</a></li><li><a href="/he/video-filtering/" lang="he" dir="rtl" data-language-choice="he" >עברית</a></li><li><a href="/pt-br/video-filtering/" lang="pt-BR" dir="ltr" data-language-choice="pt-BR" >Português (Brasil)</a></li><li><a href="/fr/video-filtering/" lang="fr" dir="ltr" data-language-choice="fr" >Français</a></li></ul>
+  </details><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню"><span></span><span></span><span></span></button></div>
+  </div><nav id="mobile-nav" class="mobile-nav" aria-label="Разделы" hidden><div class="wrap"><a href="/ru/#how">Как это работает</a><a href="/ru/#levels">Уровни фильтрации</a><a href="/ru/#platforms">Платформы</a><a href="/ru/#faq">Вопросы и ответы</a><a href="/ru/#donate">Поддержать проект</a><details class="language-menu mobile-language" data-language-menu>
+    <summary aria-label="Выбрать язык"><span aria-hidden="true">○</span><span>RU</span><span class="caret" aria-hidden="true">⌄</span></summary>
+    <ul aria-label="Язык"><li><a href="/en/video-filtering/" lang="en" dir="ltr" data-language-choice="en" >English</a></li><li><a href="/es/video-filtering/" lang="es" dir="ltr" data-language-choice="es" >Español</a></li><li><a href="/ru/video-filtering/" lang="ru" dir="ltr" data-language-choice="ru" aria-current="page">Русский</a></li><li><a href="/yi/video-filtering/" lang="yi" dir="rtl" data-language-choice="yi" >ייִדיש</a></li><li><a href="/he/video-filtering/" lang="he" dir="rtl" data-language-choice="he" >עברית</a></li><li><a href="/pt-br/video-filtering/" lang="pt-BR" dir="ltr" data-language-choice="pt-BR" >Português (Brasil)</a></li><li><a href="/fr/video-filtering/" lang="fr" dir="ltr" data-language-choice="fr" >Français</a></li></ul>
+  </details></div></nav></header><main id="main" class="explainer-main">
+  <section class="explainer-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / Фильтрация видео</p><h1>Фильтрация видеоконтента по мере его изменения</h1><p class="lead">Видео нельзя описать только адресом страницы или обложкой. Browslium разрабатывается для анализа поддерживаемого видеоконтента во времени по отдельной политике.</p><div class="button-row"><a class="button button-primary" href="#levels">Изучить уровни <span aria-hidden="true">↗</span></a><a class="button button-light-outline" href="/ru/#platforms">Статус платформ</a></div></div></section>
+  <section class="section explainer-story"><div class="wrap story-grid"><article><span class="story-number">01</span><h2>Почему для видео нужны свои правила</h2><p>Сцены и объекты меняются от кадра к кадру. Проверка одного адреса или стоп-кадра может пропустить то, что появится позже. Поэтому для видео предусмотрены шесть уровней, отличных от семи уровней изображений.</p></article><article><span class="story-number">02</span><h2>Как задуман анализ видео</h2><p>Предусмотрено исследование поддерживаемого видео во времени, сопоставление обнаруженного с выбранным уровнем и применение соответствующего действия. Реальное покрытие и поведение зависят от платформы и готовности компонентов.</p></article></div></section>
+  <section class="section explainer-levels" id="levels"><div class="wrap"><div class="section-intro"><p class="eyebrow">Фильтрация видео</p><h2>Шесть уровней фильтрации видео</h2><p>Ниже приведены определения из актуального документа проекта. Это описание замысла, а не заявление о доступности в готовом сервисе.</p></div><ol class="policy-grid"><li><span>01</span><p>Полностью скрывать женщин в видео.</p></li><li><span>02</span><p>Полностью скрывать женщин и женскую одежду в видео.</p></li><li><span>03</span><p>Скрывать женщин с изменением оставшегося контура в видео.</p></li><li><span>04</span><p>Скрывать женщин и женскую одежду с изменением контура в видео.</p></li><li><span>05</span><p>Блокировать видео целиком, если в нём есть женщины.</p></li><li><span>06</span><p>Блокировать видео целиком, если в нём есть женщины или женская одежда.</p></li></ol></div></section>
+  <section class="section test-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">Browslium</p><h2>Примеры испытаний проекта</h2><p>Короткие ролики показывают маскировку в контролируемых испытаниях. Это иллюстрация, а не работающий сервис для всех устройств.</p></div><div class="test-grid"><figure class="test-clip"><video controls playsinline preload="none" width="960" height="540" poster="/assets/test-clip-portrait.jpg" aria-label="Контролируемое испытание: выбранный человек закрыт маской в коротком ролике."><source src="/assets/test-clip-portrait.mp4" type="video/mp4"></video><figcaption>Контролируемое испытание: выбранный человек закрыт маской в коротком ролике.</figcaption></figure><figure class="test-clip"><video controls playsinline preload="none" width="960" height="540" poster="/assets/test-clip-group.jpg" aria-label="Контролируемое испытание: выбранные люди скрыты, остальная сцена видна."><source src="/assets/test-clip-group.mp4" type="video/mp4"></video><figcaption>Контролируемое испытание: выбранные люди скрыты, остальная сцена видна.</figcaption></figure></div></div></section>
+  <section class="section explainer-status"><div class="wrap status-grid"><div><p class="eyebrow">Browslium</p><h2>Что доступно сейчас</h2><p>Фильтрация видео ещё разрабатывается и тестируется. Ролики показывают отдельные испытания проекта; они не подтверждают поддержку всех приложений или выпуск сервиса.</p></div><a class="button button-primary" href="/ru/#platforms">Статус платформ <span aria-hidden="true">↗</span></a></div></section>
+  <section class="section related-section"><div class="wrap"><h2>Узнать больше</h2><p>Сравните другую политику, изучите уровни и проверьте статус платформ.</p><div class="related-links"><a href="/ru/image-filtering/">Фильтрация изображений <span aria-hidden="true">↗</span></a><a href="/ru/#levels">Изучить уровни <span aria-hidden="true">↗</span></a><a href="/ru/#faq">Вопросы и ответы <span aria-hidden="true">↗</span></a></div></div></section>
+  </main><footer class="site-footer"><div class="wrap footer-grid">
+    <div><a class="brand" href="/ru/"><img src="/assets/browslium-icon.webp" width="44" height="44" alt=""><span>Browslium</span></a><p>Для более понятного и безопасного интернета.</p></div>
+    <div><h2>Разделы</h2><a href="/ru/#how">Как это работает</a><a href="/ru/image-filtering/">Фильтрация изображений</a><a href="/ru/video-filtering/">Фильтрация видео</a><a href="/ru/#levels">Уровни фильтрации</a><a href="/ru/#platforms">Платформы</a><a href="/ru/#faq">Вопросы и ответы</a></div>
+    <div><h2>Информация</h2><a href="/ru/privacy/">Политика конфиденциальности</a><a href="/ru/terms/">Условия использования</a><a href="/ru/support/">Поддержка</a></div>
+    <div><h2>Контакты</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><details class="language-menu footer-language" data-language-menu>
+    <summary aria-label="Выбрать язык"><span aria-hidden="true">○</span><span>RU</span><span class="caret" aria-hidden="true">⌄</span></summary>
+    <ul aria-label="Язык"><li><a href="/en/video-filtering/" lang="en" dir="ltr" data-language-choice="en" >English</a></li><li><a href="/es/video-filtering/" lang="es" dir="ltr" data-language-choice="es" >Español</a></li><li><a href="/ru/video-filtering/" lang="ru" dir="ltr" data-language-choice="ru" aria-current="page">Русский</a></li><li><a href="/yi/video-filtering/" lang="yi" dir="rtl" data-language-choice="yi" >ייִדיש</a></li><li><a href="/he/video-filtering/" lang="he" dir="rtl" data-language-choice="he" >עברית</a></li><li><a href="/pt-br/video-filtering/" lang="pt-BR" dir="ltr" data-language-choice="pt-BR" >Português (Brasil)</a></li><li><a href="/fr/video-filtering/" lang="fr" dir="ltr" data-language-choice="fr" >Français</a></li></ul>
+  </details></div>
+  </div><div class="wrap footer-bottom"><span>© 2026 Browslium LLC. Все права защищены.</span><span>В разработке и тестировании</span></div></footer><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Фильтрация видео: шесть уровней | Browslium","description":"Шесть политик фильтрации видео Browslium, особенности анализа меняющихся кадров и текущие ограничения разработки.","inLanguage":"ru","url":"https://browslium.com/ru/video-filtering/","isPartOf":{"@type":"WebSite","name":"Browslium","url":"https://browslium.com"}}</script><script src="/assets/site.js" defer></script></body></html>

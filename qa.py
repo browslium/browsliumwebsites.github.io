@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).parent / 'dist'
 ORIGIN = 'https://browslium.com'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
-PAGES = ('', 'support', 'privacy', 'terms')
+PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
 
 class Page(HTMLParser):
     def __init__(self):
@@ -77,6 +77,10 @@ for code,slug in LOCALES.items():
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
             if len(p.find('button',**{'class':'level-choice'}))<13:errors.append(f'levels missing {route}')
+        if page in ('image-filtering','video-filtering'):
+            expected_levels=7 if page=='image-filtering' else 6
+            if len(p.find('li')) < expected_levels:errors.append(f'explainer levels missing {route}')
+            if page=='video-filtering' and len(p.find('video'))!=2:errors.append(f'test footage missing {route}')
 
 if errors:
     print('\n'.join(errors));sys.exit(1)

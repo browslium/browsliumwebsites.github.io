@@ -5,6 +5,7 @@ import { languages, copy } from './content.mjs';
 import { policies } from './policies.mjs';
 import { faqs } from './faq.mjs';
 import { legal } from './legal.mjs';
+import { explainers } from './explainers.mjs';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(sourceRoot, 'dist');
@@ -66,10 +67,10 @@ function header(l, page = '') {
 }
 
 function footer(l, page = '') {
-  const c = copy[l.code];
+  const c = copy[l.code], u = explainers[l.code].ui;
   return `<footer class="site-footer"><div class="wrap footer-grid">
     <div><a class="brand" href="${L(l.slug)}"><img src="/assets/browslium-icon.webp" width="44" height="44" alt=""><span>Browslium</span></a><p>${e(c.footer[6])}</p></div>
-    <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
+    <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
     <div><h2>${e(c.footer[1])}</h2><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span><span>${e(c.hero[4])}</span></div></footer>`;
@@ -94,7 +95,7 @@ function levels(l) {
 }
 
 function home(l) {
-  const c = copy[l.code];
+  const c = copy[l.code], u = explainers[l.code].ui;
   const canonical = L(l.slug);
   const serviceSchema = {'@context':'https://schema.org','@type':'WebPage',name:c.title,description:c.description,inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
   return `${head(l,c.title,c.description,canonical)}<body data-locale="${l.code}">
@@ -104,7 +105,7 @@ function home(l) {
   <section class="section how-section" id="how"><div class="wrap"><div class="section-intro"><p class="eyebrow">02 / ${e(c.nav[0])}</p><h2>${e(c.how[0])}</h2><p>${e(c.how[1])}</p></div><div class="steps">${[2,4,6].map((idx,i) => `<article class="step"><div class="step-top"><span>${String(i+1).padStart(2,'0')}</span><span class="step-symbol" aria-hidden="true">${['□','○','✓'][i]}</span></div><h3>${e(c.how[idx])}</h3><p>${e(c.how[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.how[8])}</p></div></section>
   <section class="section demo-section" id="demo"><div class="wrap demo-grid"><div><p class="eyebrow">03 / ${e(c.demo[8])}</p><h2>${e(c.demo[0])}</h2><p class="lead">${e(c.demo[1])}</p><div class="demo-controls" role="group" aria-label="${e(c.demo[5])}">${['mask','distort','block'].map((x,i)=>`<button type="button" data-demo-effect="${x}" aria-pressed="${i===0}">${e(c.demo[i+6])}</button>`).join('')}</div></div><div class="demo-card"><div class="demo-card-header"><span>${e(c.demo[2])}</span><span>${e(c.demo[3])}</span></div><div class="demo-scenes"><div class="demo-scene"><div class="demo-landscape"><div class="demo-person"></div></div><span>${e(c.demo[4])}</span></div><div class="demo-scene is-filtered" data-effect="mask"><div class="demo-landscape"><div class="demo-person"></div><div class="demo-cover"></div><div class="demo-stop">×</div></div><span>${e(c.demo[5])}</span></div></div></div></div></section>
   ${levels(l)}
-  <section class="section media-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">04 / ${e(c.media[0])}</p><h2>${e(c.media[0])}</h2><p>${e(c.media[1])}</p></div><div class="media-grid">${[2,4,6,8].map((idx,i)=>`<article class="media-card"><span class="media-mark" aria-hidden="true">${['□','▶','○','■'][i]}</span><h3>${e(c.media[idx])}</h3><p>${e(c.media[idx+1])}</p></article>`).join('')}</div></div></section>
+  <section class="section media-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">04 / ${e(c.media[0])}</p><h2>${e(c.media[0])}</h2><p>${e(c.media[1])}</p></div><div class="media-grid">${[2,4,6,8].map((idx,i)=>`<article class="media-card"><span class="media-mark" aria-hidden="true">${['□','▶','○','■'][i]}</span><h3>${e(c.media[idx])}</h3><p>${e(c.media[idx+1])}</p>${i<2?`<a class="text-link" href="${L(l.slug,i===0?'image-filtering':'video-filtering')}">${e(i===0?u.imageLink:u.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</article>`).join('')}</div></div></section>
   <section class="section why-section"><div class="wrap why-grid"><div><p class="eyebrow">05 / Browslium</p><h2>${e(c.why[0])}</h2><p class="lead">${e(c.why[1])}</p></div><ul>${c.why.slice(2).map((x,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><strong>${e(x)}</strong></li>`).join('')}</ul></div></section>
   <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><p class="eyebrow">06 / ${e(c.nav[2])}</p><h2>${e(c.platforms[0])}</h2><p>${e(c.platforms[1])}</p></div><div class="platform-grid">${[2,4,6].map((idx,i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true">${['●','◇','■'][i]}</span><span class="platform-status">${e(c.platforms[i===0?8:9])}</span></div><h3>${e(c.platforms[idx])}</h3><p>${e(c.platforms[idx+1])}</p></article>`).join('')}</div><p class="small-note">${e(c.platforms[10])}</p></div></section>
   <section class="section audiences-section"><div class="wrap audience-grid"><div><p class="eyebrow">07 / Browslium</p><h2>${e(c.audiences[0])}</h2><p>${e(c.audiences[1])}</p></div><div class="audience-list">${c.audiences.slice(2).map((x,i)=>`<div><span aria-hidden="true">${['○','□','■','◇'][i]}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
@@ -117,6 +118,25 @@ function support(l) {
   const c=copy[l.code], title=`${c.support[0]} | Browslium`, canonical=L(l.slug,'support');
   const schema = {'@context':'https://schema.org','@type':'WebPage',name:title,description:c.support[1],inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
   return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support">${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
+}
+
+function explainerPage(l, kind) {
+  const c = copy[l.code], x = explainers[l.code], d = x[kind], u = x.ui;
+  const isImage = kind === 'image';
+  const page = isImage ? 'image-filtering' : 'video-filtering';
+  const otherPage = isImage ? 'video-filtering' : 'image-filtering';
+  const canonical = L(l.slug,page);
+  const schema = {'@context':'https://schema.org','@type':'WebPage',name:d.title,description:d.description,inLanguage:l.code,url:`${origin}${canonical}`,isPartOf:{'@type':'WebSite',name:'Browslium',url:origin}};
+  const list = policies[l.code][kind];
+  const clip = (file,caption) => `<figure class="test-clip"><video controls playsinline preload="none" width="960" height="540" poster="/assets/test-clip-${file}.jpg" aria-label="${e(caption)}"><source src="/assets/test-clip-${file}.mp4" type="video/mp4"></video><figcaption>${e(caption)}</figcaption></figure>`;
+  return `${head(l,d.title,d.description,canonical,page)}<body data-locale="${l.code}" data-page="${page}">${suggestion(l)}${header(l,page)}<main id="main" class="explainer-main">
+  <section class="explainer-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(isImage?u.imageLabel:u.videoLabel)}</p><h1>${e(d.h1)}</h1><p class="lead">${e(d.lead)}</p><div class="button-row"><a class="button button-primary" href="#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a class="button button-light-outline" href="${L(l.slug)}#platforms">${e(u.statusLink)}</a></div></div></section>
+  <section class="section explainer-story"><div class="wrap story-grid"><article><span class="story-number">01</span><h2>${e(d.whyH)}</h2><p>${e(d.whyP)}</p></article><article><span class="story-number">02</span><h2>${e(d.processH)}</h2><p>${e(d.processP)}</p></article></div></section>
+  <section class="section explainer-levels" id="levels"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(isImage?u.imageLabel:u.videoLabel)}</p><h2>${e(d.levelsH)}</h2><p>${e(d.levelsP)}</p></div><ol class="policy-grid">${list.map((policy,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><p>${e(policy)}</p></li>`).join('')}</ol></div></section>
+  ${isImage?'':`<section class="section test-section"><div class="wrap"><div class="section-intro"><p class="eyebrow">Browslium</p><h2>${e(u.testsH)}</h2><p>${e(u.testsP)}</p></div><div class="test-grid">${clip('portrait',u.clip1)}${clip('group',u.clip2)}</div></div></section>`}
+  <section class="section explainer-status"><div class="wrap status-grid"><div><p class="eyebrow">Browslium</p><h2>${e(d.statusH)}</h2><p>${e(d.statusP)}</p></div><a class="button button-primary" href="${L(l.slug)}#platforms">${e(u.statusLink)} <span aria-hidden="true">↗</span></a></div></section>
+  <section class="section related-section"><div class="wrap"><h2>${e(u.relatedH)}</h2><p>${e(u.relatedP)}</p><div class="related-links"><a href="${L(l.slug,otherPage)}">${e(isImage?u.videoLink:u.imageLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#faq">${e(c.nav[3])} <span aria-hidden="true">↗</span></a></div></div></section>
+  </main>${footer(l,page)}<script type="application/ld+json">${json(schema)}</script><script src="/assets/site.js" defer></script></body></html>`;
 }
 
 function legalPage(l, type) {
@@ -139,6 +159,10 @@ await writeFile(path.join(output,'index.html'),gateway());
 for (const l of languages) {
   const dir=path.join(output,l.slug); await mkdir(dir,{recursive:true});
   await writeFile(path.join(dir,'index.html'),home(l));
+  for (const [page,kind] of [['image-filtering','image'],['video-filtering','video']]) {
+    const explainerDir=path.join(dir,page); await mkdir(explainerDir,{recursive:true});
+    await writeFile(path.join(explainerDir,'index.html'),explainerPage(l,kind));
+  }
   const supportDir=path.join(dir,'support'); await mkdir(supportDir,{recursive:true});
   await writeFile(path.join(supportDir,'index.html'),support(l));
   for (const type of ['privacy','terms']) {
@@ -147,7 +171,7 @@ for (const l of languages) {
   }
 }
 await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
-const pages=['','support','privacy','terms'];
+const pages=['','image-filtering','video-filtering','support','privacy','terms'];
 const paths=['/',...languages.flatMap(l=>pages.map(page=>L(l.slug,page)))];
 const sitemap=`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${paths.map(p=>{const page=pages.find(x=>x && p.endsWith(`/${x}/`))||'';return `<url><loc>${origin}${p}</loc>${p==='/'?'':languages.map(l=>`<xhtml:link rel="alternate" hreflang="${l.code}" href="${origin}${L(l.slug,page)}"/>`).join('')+`<xhtml:link rel="alternate" hreflang="x-default" href="${origin}${page?L('en',page):'/'}"/>`}</url>`}).join('')}</urlset>`;
 await writeFile(path.join(output,'sitemap.xml'),sitemap);
