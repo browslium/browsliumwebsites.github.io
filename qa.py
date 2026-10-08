@@ -63,6 +63,12 @@ gateway=Page();gateway.feed((ROOT/'index.html').read_text())
 if not gateway.find('link',rel='stylesheet',href=CSS_URL) or not gateway.find('script',src=JS_URL):errors.append('gateway asset versions')
 if gateway.find('link',rel='canonical')[0].get('href')!=ORIGIN+'/':errors.append('gateway canonical')
 if {x['hreflang']:x.get('href') for x in gateway.find('link',rel='alternate')} != {**{lang:ORIGIN+f'/{slug}/' for lang,slug in LOCALES.items()},'x-default':ORIGIN+'/'}:errors.append('gateway hreflang')
+if not (ROOT/'favicon.ico').is_file() or not (ROOT/'assets/favicon-64.png').is_file():errors.append('hostname favicon files')
+if not gateway.find('link',rel='icon',href='/favicon.ico'):errors.append('gateway favicon link')
+for asset in ('browslium-wordmark-white.webp','browslium-wordmark-emerald.webp'):
+    if not (ROOT/'assets'/asset).is_file():errors.append(f'missing brand asset {asset}')
+for icon in ('android','ios','macos','windows','x','instagram','youtube','tiktok'):
+    if not (ROOT/'assets/icons'/f'{icon}.svg').is_file():errors.append(f'missing SVG icon {icon}')
 titles=set(); descriptions=set()
 for code,slug in LOCALES.items():
     for page in PAGES:
@@ -86,6 +92,7 @@ for code,slug in LOCALES.items():
         og=p.find('meta',property='og:url')
         if len(og)!=1 or og[0].get('content')!=ORIGIN+route:errors.append(f'og:url {route}')
         if not p.find('meta',property='og:locale'):errors.append(f'og:locale {route}')
+        if not p.find('link',rel='icon',href='/favicon.ico'):errors.append(f'favicon link {route}')
         if not any(x.get('inLanguage')==code for x in p.scripts):errors.append(f'localized structured data {route}')
         if not any(set(x.get('isPartOf',{}).get('publisher',{}).get('sameAs',[]))==SOCIAL_URLS for x in p.scripts):errors.append(f'official social identity {route}')
         if not SOCIAL_URLS.issubset({a.get('href') for a in p.find('a')}):errors.append(f'official social links {route}')
@@ -99,8 +106,9 @@ for code,slug in LOCALES.items():
                 target=href.split('#')[0]
                 if target and target not in all_paths:errors.append(f'broken internal link {route}: {href}')
         if not page:
-            if len(p.find('details'))<23:errors.append(f'FAQ count {route}')
             text=filename.read_text()
+            faq_block=text.split('class="section faq-section"',1)[1].split('class="section donate-section"',1)[0]
+            if faq_block.count('<details>')!=20:errors.append(f'FAQ count {route}')
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
             if len(p.find('section',**{'data-showcase':'image'}))!=1 or len(p.find('section',**{'data-showcase':'video'}))!=1:
@@ -113,6 +121,16 @@ for code,slug in LOCALES.items():
                 errors.append(f'how navigation anchor missing {route}')
             if 'id="demo"' in text or 'Choose the filtering policy' in text:
                 errors.append(f'outdated illustrative demo {route}')
+            if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
+            if 'id="audio-text"' not in text or 'id="android-apps"' not in text:errors.append(f'new content sections {route}')
+            if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
+            if 'browslium-wordmark-white.webp' not in text or 'browslium-wordmark-emerald.webp' not in text:errors.append(f'official brand wordmarks {route}')
+            if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
+                errors.append(f'outdated visible product copy {route}')
+            ids={x.get('id') for _,x in p.tags if x.get('id')}
+            for link in p.find('a'):
+                if 'button-primary' in link.get('class','') and link.get('href','').startswith('#') and link['href'][1:] not in ids:
+                    errors.append(f'broken scroll CTA {route}: {link["href"]}')
         if page in ('image-filtering','video-filtering'):
             expected_levels=7 if page=='image-filtering' else 6
             if len(p.find('li')) < expected_levels:errors.append(f'explainer levels missing {route}')
@@ -150,4 +168,4 @@ for slug in LOCALES.values():
 
 if errors:
     print('\n'.join(errors));sys.exit(1)
-print(f'PASS: {len(all_paths)} URLs, reciprocal hreflang, self canonicals, localized metadata, all FAQs and levels')
+print(f'PASS: {len(all_paths)} URLs, reciprocal hreflang, self canonicals, localized metadata, 20 FAQs per locale, all levels and brand assets')

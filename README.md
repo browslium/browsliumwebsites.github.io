@@ -10,7 +10,7 @@ Run `npm run build`, then `npm run qa`. No npm dependencies are required. The ge
 
 ## Editorial accuracy
 
-Image policies 1–7 and video policies 1–6 follow the project owner's policy document. They describe planned filtering behavior; the website does not claim that all levels are live. The Platforms section summarizes verified development status. Review it against the product before changing availability claims. The informational website's Privacy Policy and Terms do not replace a future product privacy notice or service agreement.
+Image policies 1–7 and video policies 1–6 follow the project owner's policy document. They describe filtering behavior; the website does not claim that all levels are live. Platform cards describe the intended device experience without availability badges. The canonical implementation package does not support a general-release claim for any platform; verify a release before adding one. The informational website's Privacy Policy and Terms do not replace a future product privacy notice or service agreement.
 
 The Stripe button links to a one-time voluntary contribution page. Do not add a recurring option or tax-deductibility claim without verification.
 
@@ -27,3 +27,5 @@ Each language has a homepage plus separate image and video explainers. The resea
 Every edition has its own self-canonical, reciprocal `hreflang`, localized metadata and structured WebPage data. The sitemap lists all 43 URLs. The JavaScript language prompt does not redirect or gate crawlers. Homepage FAQs are visible in HTML; no FAQ rich-result claim or unsupported FAQPage schema is made. Future search work should use Search Console query data and actual user feedback to refine wording rather than add near-duplicate keyword pages.
 
 The four owner-confirmed social profiles (X, Instagram, YouTube and TikTok) appear in every localized footer and in the Organization `sameAs` data embedded with each WebPage. The profiles are linked as the brand's public identity; this markup makes no promise of a search feature. The local QA checks those links, the JSON-LD, sitemap alternates and the language gateway as well as the localized pages.
+
+The owner-provided transparent wordmarks are used directly in optimized WebP form in the header and footer. The hostname root and every locale declare the same 64 px/ICO brand favicon. Search engines may need another crawl before their result icon changes. Android, Apple/macOS, X, Instagram, YouTube and TikTok vector marks come from [Simple Icons](https://simpleicons.org/) (CC0 vector artwork, subject to each brand's trademark rules); the Windows vector comes from [Bootstrap Icons](https://icons.getbootstrap.com/icons/windows/) (MIT). The Yiddish language selector uses a komets-alef glyph rather than a national flag.
