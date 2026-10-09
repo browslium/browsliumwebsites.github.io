@@ -17,6 +17,8 @@ if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification:
 ORIGIN = 'https://browslium.com'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
+PRODUCT_PAGE = 'product-privacy'
+PRODUCT_LOCALES = {'en':'en', 'es':'es'}
 SOCIAL_URLS = {
     'https://x.com/Browslium',
     'https://www.instagram.com/browslium/',
@@ -46,7 +48,7 @@ class Page(HTMLParser):
         return [x for t,x in self.tags if t==tag and all(x.get(k)==v for k,v in attrs.items())]
 
 errors=[]
-all_paths=['/']+[f'/{slug}/{page+"/" if page else ""}' for slug in LOCALES.values() for page in PAGES]
+all_paths=['/']+[f'/{slug}/{page+"/" if page else ""}' for slug in LOCALES.values() for page in PAGES]+[f'/{slug}/{PRODUCT_PAGE}/' for slug in PRODUCT_LOCALES.values()]
 sitemap=ET.parse(ROOT/'sitemap.xml').getroot()
 ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','x':'http://www.w3.org/1999/xhtml'}
 sitemap_urls={u.find('s:loc',ns).text for u in sitemap.findall('s:url',ns)}
@@ -55,8 +57,9 @@ for entry in sitemap.findall('s:url',ns):
     url=entry.find('s:loc',ns).text
     if url==ORIGIN+'/':continue
     route=url.removeprefix(ORIGIN)
-    page=next((part for part in PAGES if part and route.endswith('/'+part+'/')),'')
-    expected={**{lang:ORIGIN+f'/{slug}/{page+"/" if page else ""}' for lang,slug in LOCALES.items()},'x-default':ORIGIN+(f'/en/{page}/' if page else '/')}
+    page=next((part for part in (*PAGES, PRODUCT_PAGE) if part and route.endswith('/'+part+'/')),'')
+    page_locales=PRODUCT_LOCALES if page==PRODUCT_PAGE else LOCALES
+    expected={**{lang:ORIGIN+f'/{slug}/{page+"/" if page else ""}' for lang,slug in page_locales.items()},'x-default':ORIGIN+(f'/en/{page}/' if page else '/')}
     actual={link.attrib.get('hreflang'):link.attrib.get('href') for link in entry.findall('x:link',ns)}
     if actual!=expected:errors.append(f'sitemap hreflang {route}')
 gateway=Page();gateway.feed((ROOT/'index.html').read_text())
@@ -71,7 +74,7 @@ for icon in ('android','ios','macos','windows','x','instagram','youtube','tiktok
     if not (ROOT/'assets/icons'/f'{icon}.svg').is_file():errors.append(f'missing SVG icon {icon}')
 titles=set(); descriptions=set()
 for code,slug in LOCALES.items():
-    for page in PAGES:
+    for page in (*PAGES, *((PRODUCT_PAGE,) if code in PRODUCT_LOCALES else ())):
         route=f'/{slug}/{page+"/" if page else ""}'
         filename=ROOT/slug/page/'index.html' if page else ROOT/slug/'index.html'
         if not filename.exists():errors.append(f'missing {route}');continue
@@ -86,7 +89,8 @@ for code,slug in LOCALES.items():
         if desc:descriptions.add(desc[0].get('content'))
         canon=p.find('link',rel='canonical')
         if len(canon)!=1 or canon[0].get('href')!=ORIGIN+route:errors.append(f'canonical {route}')
-        expected={**{lang:ORIGIN+f'/{s}/{page+"/" if page else ""}' for lang,s in LOCALES.items()},'x-default':ORIGIN+(f'/en/{page}/' if page else '/')}
+        page_locales=PRODUCT_LOCALES if page==PRODUCT_PAGE else LOCALES
+        expected={**{lang:ORIGIN+f'/{s}/{page+"/" if page else ""}' for lang,s in page_locales.items()},'x-default':ORIGIN+(f'/en/{page}/' if page else '/')}
         actual={x['hreflang']:x.get('href') for x in p.find('link',rel='alternate') if 'hreflang' in x}
         if actual!=expected:errors.append(f'hreflang {route}: {actual}')
         og=p.find('meta',property='og:url')
@@ -101,7 +105,7 @@ for code,slug in LOCALES.items():
         for link in p.find('a'):
             href=link.get('href','')
             if href.startswith('/') and not href.startswith(('/assets/','/'+slug+'/')):
-                if 'data-language-choice' not in link:errors.append(f'locale-changing link {route}: {href}')
+                if 'data-language-choice' not in link and href!='/en/product-privacy/':errors.append(f'locale-changing link {route}: {href}')
             if href.startswith('/') and not href.startswith('/assets/'):
                 target=href.split('#')[0]
                 if target and target not in all_paths:errors.append(f'broken internal link {route}: {href}')
@@ -125,6 +129,7 @@ for code,slug in LOCALES.items():
             if 'id="audio-text"' not in text or 'id="android-apps"' not in text:errors.append(f'new content sections {route}')
             if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
             if 'browslium-wordmark-white.webp' not in text or 'browslium-wordmark-emerald.webp' not in text:errors.append(f'official brand wordmarks {route}')
+            if 'audience-account-note' not in text:errors.append(f'adult account note missing {route}')
             if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
                 errors.append(f'outdated visible product copy {route}')
             ids={x.get('id') for _,x in p.tags if x.get('id')}
@@ -136,6 +141,12 @@ for code,slug in LOCALES.items():
             if len(p.find('li')) < expected_levels:errors.append(f'explainer levels missing {route}')
             kind='image' if page=='image-filtering' else 'video'
             if len(p.find('section',**{'data-showcase':kind}))!=1:errors.append(f'explainer showcase missing {route}')
+        if page==PRODUCT_PAGE:
+            text=filename.read_text()
+            if len(p.find('section'))<12:errors.append(f'product notice sections missing {route}')
+            for term in ('Google','Microsoft','Resend','Stripe','DigitalOcean','admin@browslium.com','30 N Gould St'):
+                if term not in text:errors.append(f'product notice missing {term} {route}')
+            if f'/{slug}/privacy/' not in {a.get('href') for a in p.find('a')}:errors.append(f'website privacy crosslink {route}')
         if page in ('','image-filtering','video-filtering'):
             for kind, expected in (('image',8),('video',7)):
                 if page and page != f'{kind}-filtering':continue

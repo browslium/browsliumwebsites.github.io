@@ -6,6 +6,7 @@ import { languages, copy } from './content.mjs';
 import { policies } from './policies.mjs';
 import { faqs } from './faq.mjs';
 import { legal } from './legal.mjs';
+import { productPrivacy } from './product-privacy.mjs';
 import { explainers } from './explainers.mjs';
 import { showcase } from './showcase.mjs';
 import { consumer } from './consumer-copy.mjs';
@@ -30,12 +31,22 @@ const audienceIcons = [
   '<path d="M3 5a3 3 0 0 1 3-3h15v18H6a3 3 0 0 0-3 2z"/><path d="M3 5v14a3 3 0 0 1 3-3h15"/>',
   '<path d="M12 21s-9-5.5-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-9 12-9 12z"/>',
 ];
+const adultAccountNote = {
+  en: 'Product accounts are for adults. An adult may manage devices used by others with the required authority.',
+  es: 'Las cuentas del producto son sólo para adultos. Un adulto puede administrar dispositivos usados por otras personas con la autorización necesaria.',
+  ru: 'Учётные записи продукта предназначены только для взрослых. Взрослый может управлять устройствами других людей при наличии необходимых полномочий.',
+  yi: 'פּראָדוקט־קאָנטעס זענען נאָר פֿאַר דערוואַקסענע. אַ דערוואַקסענער קען פירן אַנדערע מענטשן־מיטלען נאָר מיט דער נויטיקער דערלויבעניש.',
+  he: 'חשבונות המוצר מיועדים למבוגרים בלבד. מבוגר רשאי לנהל מכשירים שאחרים משתמשים בהם רק עם ההרשאה הדרושה.',
+  'pt-BR': 'As contas do produto são apenas para adultos. Um adulto pode gerenciar dispositivos usados por outras pessoas com a autorização necessária.',
+  fr: 'Les comptes du produit sont réservés aux adultes. Un adulte peut gérer les appareils utilisés par d’autres personnes avec les autorisations nécessaires.',
+};
 const lineIcon = content => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`;
 
 const e = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const L = (slug, page = '') => `/${slug}/${page ? `${page}/` : ''}`;
 const locale = slug => languages.find(x => x.slug === slug);
-const altLinks = (page = '', root = false) => `${languages.map(l => `<link rel="alternate" hreflang="${l.code}" href="${origin}${L(l.slug, page)}">`).join('\n')}
+const pageLanguages = page => page === 'product-privacy' ? languages.filter(l => ['en','es'].includes(l.code)) : languages;
+const altLinks = (page = '', root = false) => `${pageLanguages(page).map(l => `<link rel="alternate" hreflang="${l.code}" href="${origin}${L(l.slug, page)}">`).join('\n')}
 <link rel="alternate" hreflang="x-default" href="${origin}${root ? '/' : L('en', page)}">`;
 const ogAlt = current => languages.filter(l => l.code !== current.code).map(l => `<meta property="og:locale:alternate" content="${l.og}">`).join('\n');
 const json = data => JSON.stringify(data).replace(/</g, '\\u003c');
@@ -79,7 +90,7 @@ function head(l, title, description, canonical, page = '') {
   <meta property="og:image" content="${origin}/assets/browslium-og.webp">
   <meta property="og:image:alt" content="${e(copy[l.code].logoAlt)}">
   <meta property="og:locale" content="${l.og}">
-  ${ogAlt(l)}
+  ${page === 'product-privacy' ? pageLanguages(page).filter(x => x.code !== l.code).map(x => `<meta property="og:locale:alternate" content="${x.og}">`).join('\n') : ogAlt(l)}
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="/assets/favicon-64.png" sizes="64x64">
@@ -93,7 +104,7 @@ function languageMenu(l, kind, page = '') {
   const c = copy[l.code];
   return `<details class="language-menu ${kind}" data-language-menu>
     <summary aria-label="${e(c.switchLanguage)}"><span class="language-mark ${l.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[l.code]}</span><span>${e(l.short)}</span><span class="caret" aria-hidden="true">⌄</span></summary>
-    <ul aria-label="${e(c.language)}">${languages.map(x => `<li><a href="${L(x.slug, page)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}" ${x.code === l.code ? 'aria-current="page"' : ''}><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)}</a></li>`).join('')}</ul>
+    <ul aria-label="${e(c.language)}">${pageLanguages(page).map(x => `<li><a href="${L(x.slug, page)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}" ${x.code === l.code ? 'aria-current="page"' : ''}><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)}</a></li>`).join('')}</ul>
   </details>`;
 }
 
@@ -110,10 +121,12 @@ function header(l, page = '') {
 
 function footer(l, page = '') {
   const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code];
+  const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
+  const productSlug = l.code === 'es' ? 'es' : 'en';
   return `<footer class="site-footer"><div class="wrap footer-grid">
     <div><a class="brand brand-wordmark footer-brand" href="${L(l.slug)}" aria-label="Browslium"><img class="brand-normal" src="/assets/browslium-wordmark-white.webp" width="224" height="54" alt="Browslium"><img class="brand-hover" src="/assets/browslium-wordmark-emerald.webp" width="224" height="54" alt="" aria-hidden="true"></a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
-    <div><h2>${e(c.footer[1])}</h2><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
+    <div><h2>${e(c.footer[1])}</h2><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span></div></footer>`;
 }
@@ -174,7 +187,7 @@ function home(l) {
   <section class="section audio-section" id="audio-text"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.media[6])}</p><h2>${e(cc.audio[0])}</h2><p>${e(cc.audio[1])}</p></div><div class="audio-grid"><article><div class="feature-icon">${lineIcon('<path d="M5 9v6M9 5v14M13 3v18M17 6v12M21 9v6"/>')}</div><h3>${e(cc.audio[2])}</h3><p>${e(cc.audio[3])}</p></article><article><div class="feature-icon">${lineIcon('<path d="M5 4h14M5 9h14M5 14h10M5 19h8"/>')}</div><h3>${e(cc.audio[4])}</h3><p>${e(cc.audio[5])}</p></article></div><a class="button button-primary section-cta" href="#android-apps">${e(cc.audio[6])}<span aria-hidden="true">↓</span></a></div></section>
   <section class="section android-section" id="android-apps"><div class="wrap android-grid"><div class="android-copy"><p class="eyebrow">Android</p><h2>${e(cc.android[0])}</h2><p class="lead">${e(cc.android[1])}</p><ul>${cc.android.slice(2,5).map(x=>`<li><span aria-hidden="true">✓</span>${e(x)}</li>`).join('')}</ul><a class="button button-primary" href="#platforms">${e(cc.android[5])}<span aria-hidden="true">↓</span></a></div><div class="android-visual" aria-hidden="true"><div class="android-phone"><div class="phone-top"></div><img src="${mediaPath('images','photo-2-2.webp')}" width="440" height="700" alt=""><span>${e(cc.heroVisual[1])}</span></div><div class="android-app-icon"><img src="/assets/icons/android.svg" width="46" height="46" alt=""></div></div></div></section>
   <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.nav[2])}</p><h2>${e(cc.platforms[0])}</h2><p>${e(cc.platforms[1])}</p></div><div class="platform-grid">${cc.platforms[2].map(([name,description],i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true"><img src="/assets/icons/${['android','ios','macos','windows'][i]}.svg" width="30" height="30" alt=""></span></div><h3>${e(name)}</h3><p>${e(description)}</p></article>`).join('')}</div><a class="button button-primary section-cta" href="#for-you">${e(cc.platforms[3])}<span aria-hidden="true">↓</span></a></div></section>
-  <section class="section audiences-section" id="for-you"><div class="wrap audience-grid"><div><p class="eyebrow">Browslium</p><h2>${e(cc.audiences[0])}</h2><p>${e(cc.audiences[1])}</p><a class="button button-primary section-cta" href="#faq">${e(cc.audiences[3])}<span aria-hidden="true">↓</span></a></div><div class="audience-list">${cc.audiences[2].map((x,i)=>`<div><span class="audience-icon">${lineIcon(audienceIcons[i])}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
+  <section class="section audiences-section" id="for-you"><div class="wrap audience-grid"><div><p class="eyebrow">Browslium</p><h2>${e(cc.audiences[0])}</h2><p>${e(cc.audiences[1])}</p><p class="audience-account-note">${e(adultAccountNote[l.code])}</p><a class="button button-primary section-cta" href="#faq">${e(cc.audiences[3])}<span aria-hidden="true">↓</span></a></div><div class="audience-list">${cc.audiences[2].map((x,i)=>`<div><span class="audience-icon">${lineIcon(audienceIcons[i])}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
   <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><p class="eyebrow">FAQ</p><h2>${e(c.faq[0])}</h2><p>${e(cc.faqIntro)}</p></div><div class="faq-list">${faqs[l.code].filter((_,i)=>![19,20,21].includes(i)).map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
   <section class="section donate-section" id="donate"><div class="wrap donate-grid"><div><p class="eyebrow">Browslium</p><h2>${e(cc.donate[0])}</h2><p class="lead">${e(cc.donate[1])}</p></div><div class="donate-box"><strong>${e(cc.donate[2])}</strong><p>${e(c.donate[3])}</p><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></div></section>
   </main>${footer(l)}<script type="application/ld+json">${json(serviceSchema)}</script><script src="${script}" defer></script></body></html>`;
@@ -205,9 +218,15 @@ function explainerPage(l, kind) {
 }
 
 function legalPage(l, type) {
-  const c = copy[l.code], d = legal[l.code][type], canonical = L(l.slug,type);
+  const c = copy[l.code], d = type === 'product-privacy' ? productPrivacy[l.code] : legal[l.code][type], canonical = L(l.slug,type);
+  const productSlug = l.code === 'es' ? 'es' : 'en';
+  const related = type === 'privacy'
+    ? `<a href="${L(productSlug,'product-privacy')}">${e(l.code === 'es' ? 'Lee el aviso de privacidad del producto' : 'Read the product privacy notice (English)')} <span aria-hidden="true">↗</span></a>`
+    : type === 'product-privacy'
+      ? `<a href="${L(l.slug,'privacy')}">${e(d.websitePolicy)} <span aria-hidden="true">↗</span></a>`
+      : '';
   const schema = webPageSchema(l,`${d.title} | Browslium`,d.description,canonical);
-  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
+  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${related ? `<p class="legal-related">${related}</p>` : ''}${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function gateway() {
@@ -236,11 +255,15 @@ for (const l of languages) {
     const legalDir=path.join(dir,type); await mkdir(legalDir,{recursive:true});
     await writeFile(path.join(legalDir,'index.html'),legalPage(l,type));
   }
+  if (productPrivacy[l.code]) {
+    const productDir=path.join(dir,'product-privacy'); await mkdir(productDir,{recursive:true});
+    await writeFile(path.join(productDir,'index.html'),legalPage(l,'product-privacy'));
+  }
 }
 await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 const pages=['','image-filtering','video-filtering','support','privacy','terms'];
-const paths=['/',...languages.flatMap(l=>pages.map(page=>L(l.slug,page)))];
-const sitemap=`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${paths.map(p=>{const page=pages.find(x=>x && p.endsWith(`/${x}/`))||'';return `<url><loc>${origin}${p}</loc>${p==='/'?'':languages.map(l=>`<xhtml:link rel="alternate" hreflang="${l.code}" href="${origin}${L(l.slug,page)}"/>`).join('')+`<xhtml:link rel="alternate" hreflang="x-default" href="${origin}${page?L('en',page):'/'}"/>`}</url>`}).join('')}</urlset>`;
+const paths=['/',...languages.flatMap(l=>pages.map(page=>L(l.slug,page))),...pageLanguages('product-privacy').map(l=>L(l.slug,'product-privacy'))];
+const sitemap=`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${paths.map(p=>{const page=([...pages,'product-privacy']).find(x=>x && p.endsWith(`/${x}/`))||'';return `<url><loc>${origin}${p}</loc>${p==='/'?'':pageLanguages(page).map(l=>`<xhtml:link rel="alternate" hreflang="${l.code}" href="${origin}${L(l.slug,page)}"/>`).join('')+`<xhtml:link rel="alternate" hreflang="x-default" href="${origin}${page?L('en',page):'/'}"/>`}</url>`}).join('')}</urlset>`;
 await writeFile(path.join(output,'sitemap.xml'),sitemap);
 await writeFile(path.join(output,'404.html'),gateway());
-console.log(`Built ${languages.length} locales × ${pages.length} page types in ${output}`);
+console.log(`Built ${paths.length} URLs in ${output}`);

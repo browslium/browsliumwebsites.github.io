@@ -254,6 +254,8 @@ html[dir=rtl] .level-choice[aria-pressed=true]{box-shadow:inset -4px 0 0 var(--e
 .legal-content section{padding-block:0 28px;margin-block-end:28px;border-block-end:1px solid var(--line);scroll-margin-block-start:24px}
 .legal-content h2{font-size:24px;line-height:1.2;margin-block:0 13px}
 .legal-content p{font-size:15px;line-height:1.75;color:#3c555c;margin:0}
+.legal-content .legal-related{margin-block:0 30px;padding:16px 20px;border:1px solid #b8dedc;border-radius:12px;background:#e8faf5}
+.legal-related a{color:#075d4c;font-weight:750}
 .legal-contact{padding:21px 23px;border-radius:16px;background:#e8faf5;display:flex;gap:18px;align-items:center;flex-wrap:wrap;color:#075d4c}
 .legal-contact a{font-weight:760}
 .gateway{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,rgba(25,223,166,.16),transparent 35%),#030509;padding:24px}
