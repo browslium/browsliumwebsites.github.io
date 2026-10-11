@@ -40,6 +40,17 @@ const adultAccountNote = {
   'pt-BR': 'As contas do produto são apenas para adultos. Um adulto pode gerenciar dispositivos usados por outras pessoas com a autorização necessária.',
   fr: 'Les comptes du produit sont réservés aux adultes. Un adulte peut gérer les appareils utilisés par d’autres personnes avec les autorisations nécessaires.',
 };
+const portalCopy = {
+  en: ['Create an account or sign in', 'Set up a device', 'Pilot access only. New accounts and device enrollment are not yet open to everyone.', 'Client portal'],
+  es: ['Crear cuenta o entrar', 'Preparar un dispositivo', 'Acceso piloto: las cuentas nuevas y la inscripción de dispositivos aún no están abiertas a todo el público.', 'Portal de clientes'],
+  ru: ['Создать аккаунт или войти', 'Подготовить устройство', 'Пилотный доступ: новые аккаунты и регистрация устройств пока доступны не всем.', 'Портал клиентов'],
+  yi: ['שאַפֿן אַ קאָנטע אָדער זיך אָנמעלדן', 'צוגרייטן אַ מיטל', 'פּילאָט־צוטריט: נײַע קאָנטעס און אײַנשרײַבן מכשירים זענען נאָך נישט אָפֿן פֿאַר אַלעמען.', 'קונה־פּאָרטאַל'],
+  he: ['יצירת חשבון או כניסה', 'הכנת מכשיר', 'גישה לפיילוט בלבד: פתיחת חשבונות ורישום מכשירים עדיין אינם פתוחים לכולם.', 'פורטל לקוחות'],
+  'pt-BR': ['Criar conta ou entrar', 'Preparar um dispositivo', 'Acesso piloto: novas contas e cadastro de dispositivos ainda não estão abertos ao público.', 'Portal do cliente'],
+  fr: ['Créer un compte ou se connecter', 'Préparer un appareil', 'Accès pilote : les nouveaux comptes et l’inscription d’appareils ne sont pas encore ouverts à tous.', 'Portail client'],
+};
+const portalLogin = 'https://app.browslium.com/login';
+const portalSetup = 'https://app.browslium.com/setup';
 const lineIcon = content => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`;
 
 const e = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -120,13 +131,13 @@ function header(l, page = '') {
 }
 
 function footer(l, page = '') {
-  const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code];
+  const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code], portal=portalCopy[l.code];
   const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
   const productSlug = l.code === 'es' ? 'es' : 'en';
   return `<footer class="site-footer"><div class="wrap footer-grid">
     <div><a class="brand brand-wordmark footer-brand" href="${L(l.slug)}" aria-label="Browslium"><img class="brand-normal" src="/assets/browslium-wordmark-white.webp" width="224" height="54" alt="Browslium"><img class="brand-hover" src="/assets/browslium-wordmark-emerald.webp" width="224" height="54" alt="" aria-hidden="true"></a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
-    <div><h2>${e(c.footer[1])}</h2><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
+    <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span></div></footer>`;
 }
@@ -176,12 +187,12 @@ function videoShowcase(l, id='video-levels', number='02', link=true) {
 }
 
 function home(l) {
-  const c = copy[l.code], cc=consumer[l.code];
+  const c = copy[l.code], cc=consumer[l.code], portal=portalCopy[l.code];
   const canonical = L(l.slug);
   const serviceSchema = webPageSchema(l,cc.metaTitle,cc.metaDescription,canonical);
   return `${head(l,cc.metaTitle,cc.metaDescription,canonical)}<body data-locale="${l.code}">
   ${suggestion(l)}${header(l)}<main id="main">
-  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1><span class="hero-gradient">${e(cc.hero[0].split(' ')[0])}</span> ${e(cc.hero[0].split(' ').slice(1).join(' '))}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button button-primary" href="#levels">${e(cc.hero[2])}<span aria-hidden="true">↓</span></a><a class="button button-outline" href="#video-levels">${e(cc.hero[3])}</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span><span>${e(cc.heroVisual[2])}</span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[1])}</figcaption></figure></div></div></div></div></section>
+  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1><span class="hero-gradient">${e(cc.hero[0].split(' ')[0])}</span> ${e(cc.hero[0].split(' ').slice(1).join(' '))}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button button-primary" href="${portalLogin}">${e(portal[0])}<span aria-hidden="true">↗</span></a><a class="button button-outline" href="${portalSetup}">${e(portal[1])}<span aria-hidden="true">↗</span></a></div><p class="portal-pilot-note">${e(portal[2])}</p><div class="hero-explore"><a href="#levels">${e(cc.hero[2])} ↓</a><a href="#video-levels">${e(cc.hero[3])} ↓</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span><span>${e(cc.heroVisual[2])}</span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[1])}</figcaption></figure></div></div></div></div></section>
   ${photoShowcase(l)}
   ${videoShowcase(l)}
   <section class="section audio-section" id="audio-text"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.media[6])}</p><h2>${e(cc.audio[0])}</h2><p>${e(cc.audio[1])}</p></div><div class="audio-grid"><article><div class="feature-icon">${lineIcon('<path d="M5 9v6M9 5v14M13 3v18M17 6v12M21 9v6"/>')}</div><h3>${e(cc.audio[2])}</h3><p>${e(cc.audio[3])}</p></article><article><div class="feature-icon">${lineIcon('<path d="M5 4h14M5 9h14M5 14h10M5 19h8"/>')}</div><h3>${e(cc.audio[4])}</h3><p>${e(cc.audio[5])}</p></article></div><a class="button button-primary section-cta" href="#android-apps">${e(cc.audio[6])}<span aria-hidden="true">↓</span></a></div></section>
@@ -231,7 +242,7 @@ function legalPage(l, type) {
 
 function gateway() {
   const l=locale('en');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/assets/favicon-64.png" sizes="64x64"><link rel="stylesheet" href="${stylesheet}"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-wordmark-white.webp" width="320" height="77" alt="Browslium"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}"><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav></div></main><script src="${script}" defer></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/assets/favicon-64.png" sizes="64x64"><link rel="stylesheet" href="${stylesheet}"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-wordmark-white.webp" width="320" height="77" alt="Browslium"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}"><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav><a class="gateway-portal" href="${portalLogin}">Client portal (pilot) ↗</a><p class="gateway-portal-note">${e(portalCopy.en[2])}</p></div></main><script src="${script}" defer></script></body></html>`;
 }
 
 await rm(output,{recursive:true,force:true});

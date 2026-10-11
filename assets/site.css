@@ -353,6 +353,13 @@ html[dir=rtl] .level-choice[aria-pressed=true]{box-shadow:inset -4px 0 0 var(--e
 .hero .hero-copy>p{font-size:clamp(18px,1.8vw,22px);line-height:1.55;max-width:550px;color:#c7dce3}
 .hero .button-row{margin-block-start:38px}
 .hero .button{min-height:58px;font-size:16px;padding-inline:25px}
+.hero .hero-copy>.portal-pilot-note{margin-block:15px 0;color:#aac8d0;font-size:14px;line-height:1.5}
+.hero-explore{display:flex;flex-wrap:wrap;gap:10px 22px;margin-block-start:26px}
+.hero-explore a{color:#b8fff5;font-size:14px;font-weight:700;text-underline-offset:4px}
+.hero-explore a:hover{color:#fff}
+.gateway-portal{display:inline-flex;justify-content:center;align-items:center;min-height:48px;margin-block-start:26px;padding:10px 20px;border:1px solid #19dfa6;border-radius:12px;color:#e6fbff;text-decoration:none;font-weight:750}
+.gateway-portal:hover{background:#17463f}
+.gateway-card .gateway-portal-note{font-size:13px;line-height:1.5}
 .hero .hero-visual{display:grid;min-height:480px}
 .hero-glow{width:76%;background:radial-gradient(circle,rgba(21,201,199,.28),rgba(42,97,247,.2) 50%,transparent 72%);filter:blur(45px)}
 .hero-display{position:relative;z-index:2;width:min(100%,590px);padding:11px;border:1px solid rgba(184,255,245,.3);border-radius:24px;background:rgba(13,33,44,.95);box-shadow:0 32px 80px rgba(0,0,0,.38),0 0 55px rgba(33,184,255,.12);transform:rotate(-2deg)}

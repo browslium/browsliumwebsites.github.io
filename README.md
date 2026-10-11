@@ -4,6 +4,8 @@ Static public website for `browslium.com`, written as seven independent language
 
 The published root contains generated HTML for every locale and the source in `src/`. Browser language detection only suggests an edition; every localized URL renders complete HTML without JavaScript. The locale switcher saves an explicit preference in local storage.
 
+The language gateway and all seven homepages link to the client pilot at `https://app.browslium.com/login`; the localized homepages also link to the authenticated setup screen at `/setup`. These are navigation links, not a claim of public registration or working device enrollment. Keep the pilot-access notice visible until the CPU registration and each device path have been verified and intentionally opened.
+
 ## Rebuild
 
 Run `npm run build`, then `npm run qa`. No npm dependencies are required. The generator writes `dist/`, which can be published at the repository root on GitHub Pages. It includes `CNAME`, `.nojekyll`, `robots.txt`, `sitemap.xml` and the HTML file used to verify ownership in Google Search Console. Keep that file at the published root during future deployments. Generated pages include content-hash versions of the CSS and JavaScript URLs so browsers load each site's matching design and behavior after publication.
