@@ -15,6 +15,7 @@ VERIFICATION_FILE = 'google80ba342909e82f35.html'
 if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification: {VERIFICATION_FILE}':
     raise SystemExit('Google Search Console verification file missing or changed')
 ORIGIN = 'https://browslium.com'
+PORTAL_ENTRY = 'https://app.browslium.com/'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
 PRODUCT_PAGE = 'product-privacy'
@@ -67,6 +68,10 @@ for entry in sitemap.findall('s:url',ns):
     actual={link.attrib.get('hreflang'):link.attrib.get('href') for link in entry.findall('x:link',ns)}
     if actual!=expected:errors.append(f'sitemap hreflang {route}')
 gateway=Page();gateway.feed((ROOT/'index.html').read_text())
+if len(gateway.find('a', href=PORTAL_ENTRY, **{'class':'gateway-portal'}))!=1:
+    errors.append('gateway portal button')
+if not gateway.find('p', **{'class':'gateway-portal-note'}):
+    errors.append('gateway portal availability note')
 if not gateway.find('link',rel='stylesheet',href=CSS_URL) or not gateway.find('script',src=JS_URL):errors.append('gateway asset versions')
 if gateway.find('link',rel='canonical')[0].get('href')!=ORIGIN+'/':errors.append('gateway canonical')
 if {x['hreflang']:x.get('href') for x in gateway.find('link',rel='alternate')} != {**{lang:ORIGIN+f'/{slug}/' for lang,slug in LOCALES.items()},'x-default':ORIGIN+'/'}:errors.append('gateway hreflang')
@@ -83,6 +88,14 @@ for code,slug in LOCALES.items():
         filename=ROOT/slug/page/'index.html' if page else ROOT/slug/'index.html'
         if not filename.exists():errors.append(f'missing {route}');continue
         p=Page();p.feed(filename.read_text())
+        portal_links=p.find('a', href=PORTAL_ENTRY)
+        if len(portal_links)!=(2 if not page else 1):errors.append(f'portal entry links {route}')
+        if any(a.get('href','').startswith(('https://app.browslium.com/login',
+                                           'https://app.browslium.com/setup')) for a in p.find('a')):
+            errors.append(f'outdated direct portal route {route}')
+        if not page and (len([a for a in portal_links if 'button-primary' in a.get('class','')])!=1
+                         or not p.find('p', **{'class':'portal-pilot-note'})):
+            errors.append(f'homepage portal button or availability note {route}')
         if not p.find('link',rel='stylesheet',href=CSS_URL) or not p.find('script',src=JS_URL):errors.append(f'asset versions {route}')
         html=p.find('html')
         if len(html)!=1 or html[0].get('lang')!=code or html[0].get('dir')!=('rtl' if code in ('he','yi') else 'ltr'):errors.append(f'lang/dir {route}')
