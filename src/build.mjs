@@ -260,6 +260,11 @@ for (const l of languages) {
     await writeFile(path.join(productDir,'index.html'),legalPage(l,'product-privacy'));
   }
 }
+// App Store Connect already references /privacy. Serve the same product notice
+// there, with the English product page as its canonical URL.
+const appPrivacyAlias=path.join(output,'privacy');
+await mkdir(appPrivacyAlias,{recursive:true});
+await writeFile(path.join(appPrivacyAlias,'index.html'),legalPage(locale('en'),'product-privacy'));
 await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 const pages=['','image-filtering','video-filtering','support','privacy','terms'];
 const paths=['/',...languages.flatMap(l=>pages.map(page=>L(l.slug,page))),...pageLanguages('product-privacy').map(l=>L(l.slug,'product-privacy'))];

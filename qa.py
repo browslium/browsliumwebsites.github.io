@@ -48,6 +48,10 @@ class Page(HTMLParser):
         return [x for t,x in self.tags if t==tag and all(x.get(k)==v for k,v in attrs.items())]
 
 errors=[]
+app_privacy_alias=ROOT/'privacy/index.html'
+english_product_notice=ROOT/'en/product-privacy/index.html'
+if not app_privacy_alias.is_file() or app_privacy_alias.read_bytes()!=english_product_notice.read_bytes():
+    errors.append('App Store privacy alias must match the English product notice')
 all_paths=['/']+[f'/{slug}/{page+"/" if page else ""}' for slug in LOCALES.values() for page in PAGES]+[f'/{slug}/{PRODUCT_PAGE}/' for slug in PRODUCT_LOCALES.values()]
 sitemap=ET.parse(ROOT/'sitemap.xml').getroot()
 ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','x':'http://www.w3.org/1999/xhtml'}
