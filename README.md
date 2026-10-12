@@ -4,7 +4,7 @@ Static public website for `browslium.com`, written as seven independent language
 
 The published root contains generated HTML for every locale and the source in `src/`. Browser language detection only suggests an edition; every localized URL renders complete HTML without JavaScript. The locale switcher saves an explicit preference in local storage.
 
-The language gateway and all seven homepages have a visible button to `https://app.browslium.com/`; localized footers use the same portal entry. The nearby pilot notice says that sign-in, account creation and device enrollment depend on portal availability and authorization, and that public registration is closed. Keep this notice until the CPU registration and each device path have been verified and intentionally opened. Publishing this website change is a separate GitHub Pages step; the button does not make the portal available.
+The language gateway and all seven homepages link to the client pilot at `https://app.browslium.com/login`; the localized homepages also link to the authenticated setup screen at `/setup`. The first button says “Sign in”; the second says “Set up a device” rather than claiming the filter is ready to install. These are navigation links, not a claim of public registration or working device enrollment. Keep the pilot-access notice visible until the CPU registration and each device path have been verified and intentionally opened.
 
 ## Rebuild
 
