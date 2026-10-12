@@ -12,6 +12,8 @@ Run `npm run build`, then `npm run qa`. No npm dependencies are required. The ge
 
 ## Editorial accuracy
 
+Visible text passes through intact: Browslium does not semantically analyze or filter it, even when a GPU is available. Audio filtering is still in development. This rule is stated on all seven homepages, their image/video explainers and the relevant FAQs; keep it consistent when editing translations.
+
 Image policies 1–7 and video policies 1–6 follow the project owner's policy document. They describe filtering behavior; the website does not claim that all levels are live. Platform cards describe the intended device experience without availability badges. The canonical implementation package does not support a general-release claim for any platform; verify a release before adding one. The informational website's Privacy Policy and Terms are separate from the product privacy notice and a future service agreement. The product notice is available in English at `/en/product-privacy/` and Spanish at `/es/product-privacy/`; the other five editions link to English. Review it against the deployed product before enabling general registration, including feature-specific processing and retention. Registration acknowledgment must be separate from optional consent. Publishing the notice does not establish that any portal feature is live.
 
 App Store Connect currently points to `https://browslium.com/privacy`. The generated `/privacy/` route serves the same English product privacy notice as `/en/product-privacy/`; keep the English route canonical and do not add the alias to the sitemap. This route resolves the link only; the notice still needs a product-data review before an App Store submission.

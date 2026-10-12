@@ -18,6 +18,15 @@ ORIGIN = 'https://browslium.com'
 PORTAL_LOGIN = 'https://app.browslium.com/login'
 PORTAL_SETUP = 'https://app.browslium.com/setup'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
+TEXT_POLICY = {
+    'en': ('Visible text passes through unchanged', 'without semantic analysis'),
+    'es': ('El texto visible pasa intacto', 'sin análisis semántico'),
+    'ru': ('Видимый текст проходит без изменений', 'семантического анализа'),
+    'yi': ('דער זעבאַרער טעקסט גייט דורך אומגעענדערט', 'אָן סעמאַנטישע אַנאַליז'),
+    'he': ('טקסט גלוי עובר ללא שינוי', 'ללא ניתוח סמנטי'),
+    'pt-BR': ('O texto visível passa intacto', 'sem análise semântica'),
+    'fr': ('Le texte visible passe intact', 'sans analyse sémantique'),
+}
 LOGIN_LABELS = {'en':'Sign in','es':'Iniciar sesión','ru':'Войти',
                 'yi':'זיך אָנמעלדן','he':'כניסה','pt-BR':'Entrar',
                 'fr':'Se connecter'}
@@ -93,6 +102,10 @@ for code,slug in LOCALES.items():
         filename=ROOT/slug/page/'index.html' if page else ROOT/slug/'index.html'
         if not filename.exists():errors.append(f'missing {route}');continue
         p=Page();p.feed(filename.read_text())
+        if page in ('', 'image-filtering', 'video-filtering'):
+            visible_text=' '.join(p.text)
+            if not all(marker in visible_text for marker in (*TEXT_POLICY[code], 'GPU')):
+                errors.append(f'text pass-through policy missing {route}')
         portal_links=[a for a in p.find('a') if a.get('href','').startswith('https://app.browslium.com/')]
         if any(a.get('href') not in (PORTAL_LOGIN,PORTAL_SETUP) for a in portal_links):
             errors.append(f'unexpected portal route {route}')
