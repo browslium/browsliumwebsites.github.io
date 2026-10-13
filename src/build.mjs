@@ -129,8 +129,8 @@ function header(l, page = '') {
 
 function closingBands(l) {
   const c = copy[l.code], cc = consumer[l.code], r = redesign[l.code];
-  return `<section class="donation-band" id="donate"><div class="wrap donation-band-inner"><h2>${accentHeading(cc.donate[0])}</h2><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></section>
-  <section class="newsletter-band"><div class="wrap newsletter-inner"><h2>${e(r.newsletter[0])}</h2><form class="newsletter-form" aria-describedby="newsletter-status"><label class="visually-hidden" for="newsletter-email">${e(r.newsletter[1])}</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="${e(r.newsletter[1])}" disabled><button type="submit" disabled title="${e(r.newsletter[3])}">${e(r.newsletter[2])}</button></form><span id="newsletter-status" class="visually-hidden">${e(r.newsletter[3])}</span></div></section>`;
+  return `<div class="closing-band"><div class="wrap closing-grid"><section class="donation-band" id="donate"><h2>${accentHeading(cc.donate[0])}</h2><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></section>
+  <section class="newsletter-band"><h2>${e(r.newsletter[0])}</h2><form class="newsletter-form" aria-describedby="newsletter-status"><label class="visually-hidden" for="newsletter-email">${e(r.newsletter[1])}</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="${e(r.newsletter[1])}" disabled><button type="submit" disabled title="${e(r.newsletter[3])}">${e(r.newsletter[2])}</button></form><span id="newsletter-status" class="visually-hidden">${e(r.newsletter[3])}</span></section></div></div>`;
 }
 
 function footer(l, page = '') {
@@ -138,7 +138,7 @@ function footer(l, page = '') {
   const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
   const productSlug = l.code === 'es' ? 'es' : 'en';
   return `${closingBands(l)}<footer class="site-footer"><div class="wrap footer-grid">
-    <div><a class="footer-logo-slot" href="${L(l.slug)}" aria-label="Browslium">Browslium</a><p>${e(cc.slogan)}</p></div>
+    <div><a class="footer-logo-slot" href="${L(l.slug)}" aria-label="Browslium"><img src="/assets/browslium-wordmark-emerald.webp" width="212" height="51" alt="Browslium"></a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
     <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
@@ -191,38 +191,47 @@ function videoShowcase(l, id='video-levels', number='02', link=true) {
 
 function textVisual(l) {
   const r = redesign[l.code];
-  const [opening, hiddenSentence, closing] = r.textPassage;
-  const masked = maskSentence(l.code, hiddenSentence);
-  const textPosition = l.dir === 'rtl' ? 'x="412" text-anchor="start" direction="rtl"' : 'x="49"';
-  const resultPosition = l.dir === 'rtl' ? 'x="400" text-anchor="start" direction="rtl"' : 'x="59"';
-  return `<svg class="text-concept-svg" viewBox="0 0 720 430" role="img" aria-label="${e(r.textTitle)}: ${e(r.textWritten)}" data-demo-original="${e(hiddenSentence)}" data-demo-masked="${e(masked)}" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="tablet-grad" x2="1" y2="1"><stop stop-color="#e6fbff"/><stop offset="1" stop-color="#ded0ff"/></linearGradient><linearGradient id="photo-grad" x2="1" y2="1"><stop stop-color="#d9e7ff"/><stop offset="1" stop-color="#a9d9d8"/></linearGradient></defs>
-    <rect x="12" y="62" width="452" height="316" rx="29" fill="#06131a" stroke="#49788b" stroke-width="3"/><rect x="27" y="77" width="422" height="286" rx="19" fill="url(#tablet-grad)"/>
-    <circle cx="238" cy="69" r="3" fill="#21b8ff"/><rect x="49" y="99" width="169" height="9" rx="5" fill="#8d4dff" opacity=".65"/>
-    <text ${textPosition} y="138" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(opening)}</text>
-    <text ${textPosition} y="164" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(hiddenSentence)}</text>
-    <text ${textPosition} y="190" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(closing)}</text>
-    <rect x="43" y="207" width="365" height="96" rx="13" fill="#fff" opacity=".85"/>
-    <text ${resultPosition} y="231" fill="#2a4575" font-size="16" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(opening)}</text>
-    <text ${resultPosition} y="257" fill="#2a61f7" font-size="17" font-weight="700" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(masked)}</text>
-    <text ${resultPosition} y="283" fill="#2a4575" font-size="16" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(closing)}</text>
-    <rect x="49" y="324" width="277" height="6" rx="3" fill="#8ba0bd" opacity=".5"/><rect x="49" y="342" width="330" height="6" rx="3" fill="#8ba0bd" opacity=".35"/>
-    <rect x="484" y="12" width="222" height="406" rx="38" fill="#06131a" stroke="#6682a2" stroke-width="3"/><rect x="496" y="43" width="198" height="354" rx="25" fill="#f5faff"/><rect x="557" y="22" width="76" height="9" rx="5" fill="#172a38"/>
-    <rect x="507" y="65" width="176" height="245" rx="19" fill="url(#photo-grad)"/><circle cx="632" cy="108" r="31" fill="#f8e5ae" opacity=".9"/><path d="M507 240 Q558 157 596 222 T683 201 V310 H507Z" fill="#6a90ae"/><path d="M507 262 Q544 223 577 251 T683 226 V310 H507Z" fill="#43777e"/>
-    <rect x="528" y="187" width="136" height="35" rx="5" fill="#e7baf8" opacity=".94"/><rect x="507" y="328" width="131" height="8" rx="4" fill="#829abb" opacity=".55"/><rect x="507" y="345" width="169" height="7" rx="4" fill="#829abb" opacity=".35"/>
+  const hidden = [r.textPassage[4], r.textPassage[7]];
+  const masked = hidden.map(sentence => maskSentence(l.code, sentence));
+  const y = [103, 127, 151, 190, 214, 238, 277, 301, 325];
+  const position = l.dir === 'rtl' ? 'x="409" text-anchor="start" direction="rtl"' : 'x="49"';
+  const pageLines = r.textPassage.map((line, i) => {
+    const hiddenIndex = i === 4 ? 0 : i === 7 ? 1 : -1;
+    const content = hiddenIndex < 0 ? line : masked[hiddenIndex];
+    return `<text ${position} y="${y[i]}" fill="${hiddenIndex < 0 ? '#263b51' : '#6252bd'}" font-size="15" font-weight="${hiddenIndex < 0 ? 500 : 750}" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(content)}</text>`;
+  }).join('');
+  return `<svg class="text-concept-svg" viewBox="0 0 720 440" role="img" aria-label="${e(r.textTitle)}: ${e(r.textWritten)}" data-demo-original="${e(hidden.join(' '))}" data-demo-masked="${e(masked.join(' '))}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="text-paper-grad" x2="1" y2="1"><stop stop-color="#fffefa"/><stop offset="1" stop-color="#e9f1f7"/></linearGradient><linearGradient id="text-mask-grad"><stop stop-color="#d6b8f5"/><stop offset=".58" stop-color="#d5c2f0"/><stop offset="1" stop-color="#b4d7ed"/></linearGradient><clipPath id="text-phone-screen"><rect x="465" y="36" width="226" height="384" rx="30"/></clipPath></defs>
+    <rect x="16" y="41" width="426" height="358" rx="22" fill="#b8c5d5" opacity=".25"/><rect x="12" y="35" width="426" height="358" rx="22" fill="url(#text-paper-grad)" stroke="#d8e0e8" stroke-width="2"/>
+    <path d="M30 35 V393" stroke="#d6e0e9" stroke-width="2" opacity=".7"/><path d="M406 35 Q432 47 438 72 V369 Q432 386 408 393" fill="none" stroke="#e0e9ee" stroke-width="3"/>
+    ${pageLines}
+    <rect x="453" y="8" width="252" height="426" rx="46" fill="#1c2731" stroke="#6d7b8d" stroke-width="3"/><rect x="459" y="14" width="240" height="414" rx="42" fill="#090e15"/>
+    <g clip-path="url(#text-phone-screen)"><image href="/assets/text-page-photo.png" x="465" y="36" width="226" height="384" preserveAspectRatio="xMidYMid slice"/>
+      <path d="M482 194 Q503 190 522 192 L594 191 Q609 191 610 197 Q610 203 594 204 L521 205 Q501 205 482 203 Q476 199 482 194Z" fill="url(#text-mask-grad)" opacity=".98"/>
+      <path d="M483 211 Q497 207 516 209 L647 208 Q664 209 664 215 Q662 220 647 221 L516 222 Q497 222 483 219 Q477 216 483 211Z" fill="url(#text-mask-grad)" opacity=".98"/>
+      <path d="M485 226 Q501 223 519 225 L571 224 Q584 225 583 231 Q582 235 570 236 L518 237 Q501 236 485 234 Q480 231 485 226Z" fill="url(#text-mask-grad)" opacity=".98"/>
+    </g><rect x="544" y="41" width="68" height="12" rx="6" fill="#0b1118" opacity=".96"/><rect x="701" y="105" width="3" height="48" rx="2" fill="#8794a5"/><rect x="451" y="107" width="3" height="36" rx="2" fill="#8794a5"/>
   </svg>`;
 }
 
 function audioVisual(l) {
   const r = redesign[l.code];
+  const muted = x => (x >= 204 && x <= 294) || (x >= 426 && x <= 599);
+  const bars = Array.from({length:123}, (_,i) => {
+    const x = 42 + i * 5.2;
+    if (muted(x)) return '';
+    const height = 15 + Math.abs(Math.sin(i*.63)*24 + Math.sin(i*.17)*22 + Math.cos(i*.39)*18);
+    return `<rect x="${x.toFixed(1)}" y="${(178-height).toFixed(1)}" width="3.3" height="${(height*2).toFixed(1)}" rx="1.65" fill="url(#wave-grad)" opacity=".92"/>`;
+  }).join('');
+  const dots = (start,end,color) => Array.from({length:Math.floor((end-start)/12)},(_,i) => `<circle cx="${start+i*12}" cy="${178+Math.sin(i*1.2)*4}" r="${i%3===0?3.4:2.6}" fill="${color}"/>`).join('');
   return `<svg class="audio-concept-svg" viewBox="0 0 720 380" role="img" aria-label="${e(r.audioTitle)}" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="audio-grad" x2="1" y2="1"><stop stop-color="#192e50"/><stop offset="1" stop-color="#101d36"/></linearGradient><linearGradient id="wave-grad"><stop stop-color="#21b8ff"/><stop offset=".52" stop-color="#8d4dff"/><stop offset="1" stop-color="#19dfa6"/></linearGradient></defs>
+    <defs><linearGradient id="audio-grad" x2="1" y2="1"><stop stop-color="#192e50"/><stop offset="1" stop-color="#101d36"/></linearGradient><linearGradient id="wave-grad"><stop stop-color="#21b8ff"/><stop offset=".52" stop-color="#8d4dff"/><stop offset="1" stop-color="#19dfa6"/></linearGradient><marker id="audio-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 1 L7 4 0 7" fill="none" stroke="#b7c9e9" stroke-width="1.5"/></marker></defs>
     <rect x="10" y="22" width="700" height="338" rx="27" fill="url(#audio-grad)" stroke="#4b6385" stroke-width="2"/>
-    <path d="M35 177 L55 177 65 143 75 207 90 125 104 227 118 155 130 177 149 177 161 102 174 254 188 140 201 211 214 171 233 171 246 95 259 260 270 135 285 223 300 169 315 169 329 111 344 237 359 153 370 190 384 173 400 173 414 91 430 263 444 129 455 223 469 171 483 171 496 119 512 232 524 145 540 193 555 174 572 174 586 122 601 230 613 145 628 198 642 169 655 169 669 143 681 200" fill="none" stroke="url(#wave-grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="209" y="65" width="116" height="226" rx="13" fill="#d4b4f5" opacity=".36" stroke="#d4b4f5" stroke-width="2"/><rect x="468" y="65" width="114" height="226" rx="13" fill="#b8fff5" opacity=".25" stroke="#b8fff5" stroke-width="2"/>
-    <path d="M36 305 H682" stroke="#647ea2" stroke-width="2"/><circle cx="36" cy="305" r="4" fill="#21b8ff"/><circle cx="682" cy="305" r="4" fill="#19dfa6"/>
-    <rect x="206" y="317" width="12" height="12" rx="3" fill="#d4b4f5"/><text x="225" y="328" fill="#e6fbff" font-size="15" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[0])}</text>
-    <rect x="466" y="317" width="12" height="12" rx="3" fill="#b8fff5"/><text x="485" y="328" fill="#e6fbff" font-size="15" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[1])}</text>
+    <path d="M194 128 Q220 112 248 123 T302 128 L302 225 Q267 239 236 226 T194 226Z" fill="#a781ed" opacity=".13"/><path d="M417 131 Q452 110 507 125 T610 130 L610 226 Q561 239 510 225 T417 227Z" fill="#5cd9d0" opacity=".11"/>
+    <path d="M40 178 H680" stroke="#7b91b8" stroke-width="1" opacity=".23"/>${bars}${dots(211,292,'#d4b4f5')}${dots(435,594,'#9cf0e1')}
+    <path d="M243 298 Q240 269 243 246" fill="none" stroke="#b7c9e9" stroke-width="1.5" marker-end="url(#audio-arrow)"/><path d="M515 298 Q518 271 515 247" fill="none" stroke="#b7c9e9" stroke-width="1.5" marker-end="url(#audio-arrow)"/>
+    <text x="243" y="325" text-anchor="middle" direction="${l.dir}" fill="#e8d8ff" font-size="14" font-weight="650" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[0])}</text>
+    <text x="515" y="325" text-anchor="middle" direction="${l.dir}" fill="#c0f7eb" font-size="14" font-weight="650" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[1])}</text>
   </svg>`;
 }
 
