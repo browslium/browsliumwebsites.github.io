@@ -223,7 +223,10 @@ for code,slug in LOCALES.items():
             if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
             if not (text.index('id="text-future"') < text.index('id="audio-text"') < text.index('id="android-apps"')):errors.append(f'text then audio then Android {route}')
             if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
-            if 'footer-logo-slot' not in text or 'browslium-wordmark-emerald.webp' not in text:errors.append(f'footer logo {route}')
+            if ('footer-logo-slot' not in text or 'class="footer-logo-default"' not in text or
+                'class="footer-logo-hover"' not in text or
+                'browslium-wordmark-white.webp' not in text or
+                'browslium-wordmark-emerald.webp' not in text):errors.append(f'footer logo {route}')
             if 'audiences-section' in text or 'id="for-you"' in text:errors.append(f'removed audience section {route}')
             if 'Fully supported' in text:errors.append(f'unsupported platform claim {route}')
             if 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
@@ -234,8 +237,14 @@ for code,slug in LOCALES.items():
                 'tablet-copy' not in text_section or text_section.count('class="phone-mask"') != 2):
                 errors.append(f'tablet and photographic text demo {route}')
             audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
-            if 'data-muted-regions="2"' not in audio_section or audio_section.count('stroke="#ff6676"') != 2:
+            if ('data-muted-regions="2"' not in audio_section or
+                'stroke="#ff788b"' not in audio_section or
+                'stroke="#c994ff"' not in audio_section or
+                'audio-wave-grad' in audio_section):
                 errors.append(f'two outlined audio mute regions {route}')
+            android_section=text.split('id="android-apps"',1)[1].split('id="platforms"',1)[0]
+            if 'button-soft' in android_section:errors.append(f'unwanted Android CTA {route}')
+            if text.count('class="platform-status"') != 4:errors.append(f'compatibility badges {route}')
             if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
                 errors.append(f'outdated visible product copy {route}')
             ids={x.get('id') for _,x in p.tags if x.get('id')}

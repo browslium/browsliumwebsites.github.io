@@ -24,14 +24,16 @@ export function textVisual(locale) {
   return `<svg class="text-concept-svg" viewBox="0 0 760 460" role="img" aria-label="${e(r.textTitle)}: ${e(r.textOcr)}" data-demo-original="${e(hidden.join(' '))}" data-demo-masked="${e(masked.join(' '))}" data-phone-mask-count="2" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="tablet-screen-grad" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#eef4f8"/></linearGradient>
+      <clipPath id="tablet-screen-clip"><rect x="20" y="84" width="428" height="298" rx="17"/></clipPath>
       <clipPath id="photo-phone-screen"><rect x="489" y="17" width="225" height="418" rx="39"/></clipPath>
       <clipPath id="blog-photo-window"><rect x="501" y="125" width="198" height="207" rx="6"/></clipPath>
     </defs>
-    <rect x="9" y="57" width="450" height="360" rx="36" fill="#141c29" stroke="#718094" stroke-width="4"/>
-    <rect x="18" y="66" width="432" height="342" rx="29" fill="#080d14"/>
-    <rect x="27" y="75" width="414" height="324" rx="22" fill="url(#tablet-screen-grad)"/>
-    <circle cx="234" cy="70" r="2.5" fill="#738296"/>
-    <foreignObject x="43" y="91" width="382" height="292"><div xmlns="http://www.w3.org/1999/xhtml" class="tablet-copy" dir="${locale.dir}">${paragraphs}</div></foreignObject>
+    <rect x="9" y="73" width="450" height="320" rx="25" fill="#141c29" stroke="#718094" stroke-width="3"/>
+    <rect x="14" y="78" width="440" height="310" rx="21" fill="#080d14"/>
+    <rect x="20" y="84" width="428" height="298" rx="17" fill="url(#tablet-screen-grad)"/>
+    <circle cx="234" cy="79" r="2.2" fill="#738296"/>
+    <g clip-path="url(#tablet-screen-clip)"><foreignObject x="34" y="96" width="400" height="385"><div xmlns="http://www.w3.org/1999/xhtml" class="tablet-copy" dir="${locale.dir}">${paragraphs}</div></foreignObject></g>
+    <g transform="translate(72 -3) scale(.88 1.025)">
     <rect x="479" y="7" width="245" height="439" rx="48" fill="#202c3a" stroke="#6c7c90" stroke-width="4"/>
     <rect x="485" y="13" width="233" height="426" rx="42" fill="#090d14"/>
     <rect x="489" y="17" width="225" height="418" rx="39" fill="#f9fafb"/>
@@ -63,45 +65,45 @@ export function textVisual(locale) {
     <rect x="563" y="421" width="76" height="5" rx="2.5" fill="#121a25"/>
     <rect x="724" y="111" width="3" height="55" rx="1.5" fill="#708095"/>
     <rect x="476" y="116" width="3" height="43" rx="1.5" fill="#708095"/>
+    </g>
   </svg>`;
 }
 
-const muteIcon = cx => `<g transform="translate(${cx} 176)">
-  <circle r="27" fill="#822b3a" stroke="#ffc0c5" stroke-width="2.5"/>
-  <path d="M-17-7h7l10-9v32L-10 7h-7z" fill="#fff2f1" stroke="#fff2f1" stroke-linejoin="round" stroke-width="1"/>
-  <path d="M9-8L21 8M21-8L9 8" stroke="#fff2f1" stroke-width="3.5" stroke-linecap="round"/>
+// Bootstrap Icons volume-mute-fill (MIT), scaled for the concept illustration.
+const muteIcon = (cx, background, outline) => `<g transform="translate(${cx} 177)">
+  <circle r="32" fill="${background}" stroke="${outline}" stroke-width="2.5"/>
+  <circle r="26" fill="#17243b" fill-opacity=".7"/>
+  <g transform="translate(-20.8 -20.8) scale(2.6)" fill="#fff">
+    <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
+  </g>
 </g>`;
 
 export function audioVisual(locale) {
   const r = redesign[locale.code];
-  const bars = Array.from({ length:153 }, (_, i) => {
-    const x = 42 + i * 4.18;
-    const muted = (x >= 180 && x <= 339) || (x >= 416 && x <= 640);
-    const movement = Math.abs(Math.sin(i * .38) * .5 + Math.sin(i * .13 + 1.2) * .31 + Math.cos(i * .67) * .19);
-    const envelope = .48 + .52 * Math.abs(Math.sin(i * .045 + .3));
-    const height = Math.round(9 + Math.min(70, movement * 79 * envelope));
-    return `<rect x="${x.toFixed(1)}" y="${176 - height}" width="2.8" height="${height * 2}" rx="1.4" fill="${muted ? '#ff8791' : 'url(#audio-wave-grad)'}" opacity="${muted ? '.65' : '.95'}"/>`;
+  const bursts = [[8, 6, .6], [30, 11, 1], [55, 8, .8], [80, 12, 1], [108, 14, .9], [135, 8, .7]];
+  const bars = Array.from({ length:144 }, (_, i) => {
+    const x = 42 + i * 4.45;
+    const region = x >= 174 && x <= 345 ? 1 : x >= 410 && x <= 645 ? 2 : 0;
+    const envelope = Math.max(...bursts.map(([center, spread, peak]) => peak * Math.exp(-(((i - center) / spread) ** 2))));
+    const texture = .32 + .68 * Math.min(1, Math.abs(Math.sin(i * .73) + .24 * Math.cos(i * 1.31)));
+    const height = Math.round(5 + 76 * envelope * texture);
+    return `<rect x="${x.toFixed(1)}" y="${177 - height}" width="3" height="${height * 2}" rx="1.5" fill="${region === 1 ? '#ff9aa8' : region === 2 ? '#d8b0ff' : '#69e2de'}"/>`;
   }).join('');
-  const label = (value, x, width) => {
-    const constrained = Array.from(value).length > 18 ? ` textLength="${width}" lengthAdjust="spacingAndGlyphs"` : '';
-    return `<text x="${x}" y="286" text-anchor="middle" direction="${locale.dir}" fill="#ffe7e9" font-size="13" font-weight="760" font-family="Inter,NotoHebrew,Arial,sans-serif"${constrained}>${e(value)}</text>`;
+  const label = (value, x, width, color) => {
+    const constrained = Array.from(value).length > 15 ? ` textLength="${width}" lengthAdjust="spacingAndGlyphs"` : '';
+    return `<text x="${x}" y="289" text-anchor="middle" direction="${locale.dir}" fill="${color}" font-size="17" font-weight="800" font-family="Inter,NotoHebrew,Arial,sans-serif"${constrained}>${e(value)}</text>`;
   };
   return `<svg class="audio-concept-svg" viewBox="0 0 720 380" role="img" aria-label="${e(r.audioTitle)}: ${e(r.audioLabels.join(', '))}" data-muted-regions="2" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="audio-card-grad" x2="1" y2="1"><stop stop-color="#172b49"/><stop offset="1" stop-color="#101b32"/></linearGradient>
-      <linearGradient id="audio-wave-grad"><stop stop-color="#21b8ff"/><stop offset=".48" stop-color="#8d4dff"/><stop offset="1" stop-color="#19dfa6"/></linearGradient>
     </defs>
     <rect x="10" y="22" width="700" height="338" rx="27" fill="url(#audio-card-grad)" stroke="#516a90" stroke-width="2"/>
-    <rect x="180" y="83" width="159" height="225" rx="18" fill="#ff5b6b" fill-opacity=".10"/>
-    <rect x="416" y="83" width="224" height="225" rx="18" fill="#ff5b6b" fill-opacity=".10"/>
-    <rect x="181" y="138" width="157" height="78" rx="12" fill="#ff5b6b" fill-opacity=".13"/>
-    <rect x="417" y="138" width="222" height="78" rx="12" fill="#ff5b6b" fill-opacity=".13"/>
-    <path d="M42 176H680" stroke="#8ba2c9" stroke-width="1" opacity=".55"/>
+    <rect x="174" y="70" width="171" height="244" rx="18" fill="#9a2e48" fill-opacity=".40" stroke="#ff788b" stroke-width="3"/>
+    <rect x="410" y="70" width="235" height="244" rx="18" fill="#65408f" fill-opacity=".43" stroke="#c994ff" stroke-width="3"/>
+    <path d="M42 177H680" stroke="#8ba2c9" stroke-width="1" opacity=".5"/>
     ${bars}
-    ${muteIcon(259)}${muteIcon(528)}
-    <rect x="180" y="83" width="159" height="225" rx="18" fill="none" stroke="#ff6676" stroke-width="3"/>
-    <rect x="416" y="83" width="224" height="225" rx="18" fill="none" stroke="#ff6676" stroke-width="3"/>
-    ${label(r.audioLabels[0], 259, 137)}
-    ${label(r.audioLabels[1], 528, 201)}
+    ${muteIcon(259, '#9f3b53', '#ffc6ce')}${muteIcon(528, '#7652a9', '#e8d0ff')}
+    ${label(r.audioLabels[0], 259, 148, '#ffe1e5')}
+    ${label(r.audioLabels[1], 528, 206, '#f1e1ff')}
   </svg>`;
 }
