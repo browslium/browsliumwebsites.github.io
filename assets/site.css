@@ -632,3 +632,4 @@ html,body{background:#030509}
 @media(min-width:1101px){.hero h1{font-size:clamp(52px,5.2vw,74px)}}
 @media(max-width:850px){.hero-display{width:min(100%,690px)}.hero .hero-display figure img{aspect-ratio:.95}}
 @media(max-width:600px){.hero .hero-display figure img{aspect-ratio:.98}.hero-display{box-shadow:-3px 3px 0 #19dfa6,5px 6px 0 #078d70,0 24px 48px rgba(0,0,0,.34)}}
+@media(max-width:1439px){.desktop-nav{display:none}.menu-toggle{display:flex}}
