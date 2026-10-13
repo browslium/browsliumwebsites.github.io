@@ -10,6 +10,7 @@ import { productPrivacy } from './product-privacy.mjs';
 import { explainers } from './explainers.mjs';
 import { showcase } from './showcase.mjs';
 import { consumer } from './consumer-copy.mjs';
+import { redesign } from './redesign-copy.mjs';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(sourceRoot, 'dist');
@@ -25,21 +26,6 @@ const socialProfiles = [
   ['TikTok', 'https://www.tiktok.com/@browslium', 'tiktok'],
 ];
 const languageMarks = { en:'🇬🇧', es:'🇪🇸', ru:'🇷🇺', yi:'אָ', he:'🇮🇱', 'pt-BR':'🇧🇷', fr:'🇫🇷' };
-const audienceIcons = [
-  '<circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
-  '<path d="M3 21v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2"/><circle cx="12" cy="7" r="4"/>',
-  '<path d="M3 5a3 3 0 0 1 3-3h15v18H6a3 3 0 0 0-3 2z"/><path d="M3 5v14a3 3 0 0 1 3-3h15"/>',
-  '<path d="M12 21s-9-5.5-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-9 12-9 12z"/>',
-];
-const adultAccountNote = {
-  en: 'Product accounts are for adults. An adult may manage devices used by others with the required authority.',
-  es: 'Las cuentas del producto son sólo para adultos. Un adulto puede administrar dispositivos usados por otras personas con la autorización necesaria.',
-  ru: 'Учётные записи продукта предназначены только для взрослых. Взрослый может управлять устройствами других людей при наличии необходимых полномочий.',
-  yi: 'פּראָדוקט־קאָנטעס זענען נאָר פֿאַר דערוואַקסענע. אַ דערוואַקסענער קען פירן אַנדערע מענטשן־מיטלען נאָר מיט דער נויטיקער דערלויבעניש.',
-  he: 'חשבונות המוצר מיועדים למבוגרים בלבד. מבוגר רשאי לנהל מכשירים שאחרים משתמשים בהם רק עם ההרשאה הדרושה.',
-  'pt-BR': 'As contas do produto são apenas para adultos. Um adulto pode gerenciar dispositivos usados por outras pessoas com a autorização necessária.',
-  fr: 'Les comptes du produit sont réservés aux adultes. Un adulte peut gérer les appareils utilisés par d’autres personnes avec les autorisations nécessaires.',
-};
 const portalCopy = {
   en: ['Sign in', 'Set up a device', 'Pilot access only. New accounts and device enrollment are not yet open to everyone.', 'Client portal'],
   es: ['Iniciar sesión', 'Preparar un dispositivo', 'Acceso piloto: las cuentas nuevas y la inscripción de dispositivos aún no están abiertas a todo el público.', 'Portal de clientes'],
@@ -51,9 +37,20 @@ const portalCopy = {
 };
 const portalLogin = 'https://app.browslium.com/login';
 const portalSetup = 'https://app.browslium.com/setup';
-const lineIcon = content => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`;
-
+// Set both only after the private portal's credentialed session endpoint and
+// dashboard destination work from a new tab. Empty values keep Sign In.
+const verifiedSessionEndpoint = '';
+const verifiedDashboardUrl = '';
 const e = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sessionAttribute = verifiedSessionEndpoint && verifiedDashboardUrl ? ` data-session-endpoint="${e(verifiedSessionEndpoint)}" data-dashboard-url="${e(verifiedDashboardUrl)}"` : '';
+const accentHeading = value => {
+  const [first, ...rest] = String(value).split(' ');
+  return `<span class="headline-accent">${e(first)}</span>${rest.length ? ` ${e(rest.join(' '))}` : ''}`;
+};
+const maskSentence = (locale, value) => Array.from(
+  new Intl.Segmenter(locale, { granularity: 'grapheme' }).segment(value),
+  part => /\s/u.test(part.segment) ? part.segment : '*',
+).join('');
 const L = (slug, page = '') => `/${slug}/${page ? `${page}/` : ''}`;
 const locale = slug => languages.find(x => x.slug === slug);
 const pageLanguages = page => page === 'product-privacy' ? languages.filter(l => ['en','es'].includes(l.code)) : languages;
@@ -120,22 +117,28 @@ function languageMenu(l, kind, page = '') {
 }
 
 function header(l, page = '') {
-  const c = copy[l.code];
+  const c = copy[l.code], r = redesign[l.code];
   const links = ['how', 'levels', 'platforms', 'faq', 'donate'];
   return `<a class="skip-link" href="#main">${e(c.skip)}</a>
   <header class="site-header"><div class="wrap header-inner">
     <a class="brand brand-wordmark" href="${L(l.slug)}" aria-label="Browslium"><img src="/assets/browslium-wordmark-white.webp" width="212" height="51" alt="Browslium"></a>
     <nav class="desktop-nav" aria-label="${e(c.footer[0])}">${links.map((x,i) => `<a href="${L(l.slug)}#${x}">${e(c.nav[i])}</a>`).join('')}</nav>
-    <div class="header-actions">${languageMenu(l, 'header-language', page)}<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="${e(c.menu)}"><span></span><span></span><span></span></button></div>
-  </div><nav id="mobile-nav" class="mobile-nav" aria-label="${e(c.footer[0])}" hidden><div class="wrap">${links.map((x,i) => `<a href="${L(l.slug)}#${x}">${e(c.nav[i])}</a>`).join('')}${languageMenu(l, 'mobile-language', page)}</div></nav></header>`;
+    <div class="header-actions">${languageMenu(l, 'header-language', page)}<a class="header-sign-in" data-session-link data-dashboard-label="${e(r.dashboard)}" href="${portalLogin}">${e(r.signIn)}</a><a class="header-add-device" href="${portalSetup}">${e(r.addDevice)}</a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="${e(c.menu)}"><span></span><span></span><span></span></button></div>
+  </div><nav id="mobile-nav" class="mobile-nav" aria-label="${e(c.footer[0])}" hidden><div class="wrap">${links.map((x,i) => `<a href="${L(l.slug)}#${x}">${e(c.nav[i])}</a>`).join('')}<a class="mobile-sign-in" data-session-link data-dashboard-label="${e(r.dashboard)}" href="${portalLogin}">${e(r.signIn)}</a>${languageMenu(l, 'mobile-language', page)}</div></nav></header>`;
+}
+
+function closingBands(l) {
+  const c = copy[l.code], cc = consumer[l.code], r = redesign[l.code];
+  return `<section class="donation-band" id="donate"><div class="wrap donation-band-inner"><h2>${accentHeading(cc.donate[0])}</h2><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></section>
+  <section class="newsletter-band"><div class="wrap newsletter-inner"><h2>${e(r.newsletter[0])}</h2><form class="newsletter-form" aria-describedby="newsletter-status"><label class="visually-hidden" for="newsletter-email">${e(r.newsletter[1])}</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="${e(r.newsletter[1])}" disabled><button type="submit" disabled title="${e(r.newsletter[3])}">${e(r.newsletter[2])}</button></form><span id="newsletter-status" class="visually-hidden">${e(r.newsletter[3])}</span></div></section>`;
 }
 
 function footer(l, page = '') {
   const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code], portal=portalCopy[l.code];
   const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
   const productSlug = l.code === 'es' ? 'es' : 'en';
-  return `<footer class="site-footer"><div class="wrap footer-grid">
-    <div><a class="brand brand-wordmark footer-brand" href="${L(l.slug)}" aria-label="Browslium"><img class="brand-normal" src="/assets/browslium-wordmark-white.webp" width="224" height="54" alt="Browslium"><img class="brand-hover" src="/assets/browslium-wordmark-emerald.webp" width="224" height="54" alt="" aria-hidden="true"></a><p>${e(cc.slogan)}</p></div>
+  return `${closingBands(l)}<footer class="site-footer"><div class="wrap footer-grid">
+    <div><a class="footer-logo-slot" href="${L(l.slug)}" aria-label="Browslium">Browslium</a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
     <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
@@ -154,14 +157,14 @@ function sceneChoices(names, alts, kind) {
 
 function policyChoices(l, kind) {
   const s=showcase[l.code], items=policies[l.code][kind], labels=consumer[l.code][kind==='image'?'imageLevels':'videoLevels'];
-  return `<button type="button" data-showcase-level="0" aria-pressed="true"><span class="level-index" aria-hidden="true">○</span><span class="level-copy">${e(labels[0])}</span></button>${items.map((description,index)=>`<button type="button" data-showcase-level="${index+1}" data-description="${e(description)}" aria-pressed="false"><span class="level-index" aria-hidden="true">${index+1}</span><span class="level-copy">${e(labels[index+1])}</span></button>`).join('')}`;
+  return `<button type="button" data-showcase-level="0" aria-pressed="true"><span class="level-index" aria-hidden="true">○</span><span class="level-copy"><strong>${e(labels[0])}</strong></span></button>${items.map((description,index)=>`<button type="button" data-showcase-level="${index+1}" aria-pressed="false"><span class="level-index" aria-hidden="true">${index+1}</span><span class="level-copy"><strong>${e(labels[index+1])}</strong><small>${e(description)}</small></span></button>`).join('')}`;
 }
 
 function photoShowcase(l, id='levels', number='01', link=true) {
   const s=showcase[l.code], cc=consumer[l.code], first=mediaPath('images','photo-1-original.webp');
   return `<section class="section showcase-section photo-showcase" id="${id}" data-showcase="image" data-original-note="${e(s.originalImage)}" data-original-label="${e(s.original)}" data-level-word="${e(s.level)}" data-result-word="${e(s.after)}"><div class="wrap">
     ${id==='levels'?'<span id="how" class="section-anchor" aria-hidden="true"></span>':''}
-    <div class="section-intro showcase-intro"><p class="eyebrow">${e(cc.imageEyebrow)}</p><h2>${e(s.imageTitle)}</h2><p>${e(s.imageIntro)}</p></div>
+    <div class="section-intro showcase-intro"><h2>${accentHeading(s.imageTitle)}</h2></div>
     <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage compare-stage" data-compare-stage data-original="true" style="--split:50%" dir="ltr">
       <img class="compare-result" data-result-image src="${first}" width="1600" height="1067" alt="" decoding="sync">
       <div class="compare-source" data-compare-source><img data-original-image src="${first}" width="1600" height="1067" alt="${e(s.photoAlts[0])}" decoding="sync"></div>
@@ -169,45 +172,81 @@ function photoShowcase(l, id='levels', number='01', link=true) {
       <span class="compare-handle" data-compare-handle aria-hidden="true">↔</span>
       <input class="compare-range" data-compare-range type="range" min="0" max="100" value="15" aria-label="${e(s.drag)}" hidden disabled>
       <span class="showcase-loading" data-showcase-loading hidden role="status">${e(s.loading)}</span>
-    </div><p class="showcase-compare-hint">${e(cc.compareHint)}</p></div>
-    <div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(cc.sceneGuide)}</legend><div class="showcase-scene-list">${sceneChoices(s.photoScenes,s.photoAlts,'image')}</div></fieldset><div class="showcase-readout" aria-live="polite"><strong data-showcase-selection>${e(s.original)}</strong><p data-showcase-description>${e(s.originalImage)}</p></div><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><p class="control-help">${e(cc.levelGuide)}</p><div class="showcase-level-list">${policyChoices(l,'image')}</div></fieldset></div></div>
-    <div class="showcase-foot"><a class="button button-primary" href="${id==='levels'?'#video-levels':'#next-step'}">${e(cc.afterImages)} <span aria-hidden="true">↓</span></a>${link?`<a class="text-link" href="${L(l.slug,'image-filtering')}">${e(s.imageLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
+    </div><p class="showcase-compare-hint" data-compare-hint hidden>${e(cc.compareHint)}</p></div>
+    <div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(cc.sceneGuide)}</legend><div class="showcase-scene-list">${sceneChoices(s.photoScenes,s.photoAlts,'image')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'image')}</div></fieldset><span class="visually-hidden" aria-live="polite" data-showcase-announcement></span></div></div>
+    <div class="showcase-foot"><a class="text-link" href="${id==='levels'?'#video-levels':L(l.slug,'video-filtering')}">${e(cc.afterImages)} <span aria-hidden="true">${id==='levels'?'↓':'↗'}</span></a>${link?`<a class="text-link" href="${L(l.slug,'image-filtering')}">${e(s.imageLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
 }
 
 function videoShowcase(l, id='video-levels', number='02', link=true) {
   const s=showcase[l.code], cc=consumer[l.code], first=mediaPath('videos','video-1-original.mp4');
   return `<section class="section showcase-section video-showcase" id="${id}" data-showcase="video" data-locale-slug="${l.slug}" data-original-note="${e(s.originalVideo)}" data-original-label="${e(s.original)}" data-level-word="${e(s.level)}" data-result-word="${e(s.after)}"><div class="wrap">
-    <div class="section-intro showcase-intro"><p class="eyebrow">${e(cc.videoEyebrow)}</p><h2>${e(s.videoTitle)}</h2><p>${e(s.videoIntro)}</p></div>
+    <div class="section-intro showcase-intro"><h2>${accentHeading(s.videoTitle)}</h2></div>
     <div class="showcase-shell"><div class="showcase-main"><div class="showcase-stage video-stage"><video controls playsinline preload="metadata" width="1280" height="720" src="${first}" poster="${mediaPath('posters','video-1-original.webp')}" aria-label="${e(s.videoAlts[0])}" data-showcase-video></video><span class="video-stage-tag" data-video-stage-tag>${e(s.original)}</span></div>
       <div class="video-view-switch" role="group" aria-label="${e(cc.videoEyebrow)}"><button type="button" data-video-view="original" aria-pressed="true">${e(s.playOriginal)}</button><button type="button" data-video-view="result" aria-pressed="false" disabled>${e(s.playFiltered)}</button></div>
-    </div><div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(cc.sceneGuide)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset><div class="showcase-readout" aria-live="polite"><strong data-showcase-selection>${e(s.original)}</strong><p data-showcase-description>${e(s.originalVideo)}</p></div><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><p class="control-help">${e(cc.levelGuide)}</p><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset></div></div>
-    <div class="showcase-foot"><a class="button button-primary" href="${id==='video-levels'?'#audio-text':'#next-step'}">${e(cc.afterVideos)} <span aria-hidden="true">↓</span></a>${link?`<a class="text-link" href="${L(l.slug,'video-filtering')}">${e(s.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
+    </div><div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(cc.sceneGuide)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset><span class="visually-hidden" aria-live="polite" data-showcase-announcement></span></div></div>
+    <div class="showcase-foot"><a class="text-link" href="${id==='video-levels'?'#text-future':`${L(l.slug)}#text-future`}">${e(cc.afterVideos)} <span aria-hidden="true">${id==='video-levels'?'↓':'↗'}</span></a>${link?`<a class="text-link" href="${L(l.slug,'video-filtering')}">${e(s.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
 }
 
+function textVisual(l) {
+  const r = redesign[l.code];
+  const [opening, hiddenSentence, closing] = r.textPassage;
+  const masked = maskSentence(l.code, hiddenSentence);
+  const textPosition = l.dir === 'rtl' ? 'x="412" text-anchor="start" direction="rtl"' : 'x="49"';
+  const resultPosition = l.dir === 'rtl' ? 'x="400" text-anchor="start" direction="rtl"' : 'x="59"';
+  return `<svg class="text-concept-svg" viewBox="0 0 720 430" role="img" aria-label="${e(r.textTitle)}: ${e(r.textWritten)}" data-demo-original="${e(hiddenSentence)}" data-demo-masked="${e(masked)}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="tablet-grad" x2="1" y2="1"><stop stop-color="#e6fbff"/><stop offset="1" stop-color="#ded0ff"/></linearGradient><linearGradient id="photo-grad" x2="1" y2="1"><stop stop-color="#d9e7ff"/><stop offset="1" stop-color="#a9d9d8"/></linearGradient></defs>
+    <rect x="12" y="62" width="452" height="316" rx="29" fill="#06131a" stroke="#49788b" stroke-width="3"/><rect x="27" y="77" width="422" height="286" rx="19" fill="url(#tablet-grad)"/>
+    <circle cx="238" cy="69" r="3" fill="#21b8ff"/><rect x="49" y="99" width="169" height="9" rx="5" fill="#8d4dff" opacity=".65"/>
+    <text ${textPosition} y="138" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(opening)}</text>
+    <text ${textPosition} y="164" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(hiddenSentence)}</text>
+    <text ${textPosition} y="190" fill="#253955" font-size="17" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(closing)}</text>
+    <rect x="43" y="207" width="365" height="96" rx="13" fill="#fff" opacity=".85"/>
+    <text ${resultPosition} y="231" fill="#2a4575" font-size="16" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(opening)}</text>
+    <text ${resultPosition} y="257" fill="#2a61f7" font-size="17" font-weight="700" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(masked)}</text>
+    <text ${resultPosition} y="283" fill="#2a4575" font-size="16" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(closing)}</text>
+    <rect x="49" y="324" width="277" height="6" rx="3" fill="#8ba0bd" opacity=".5"/><rect x="49" y="342" width="330" height="6" rx="3" fill="#8ba0bd" opacity=".35"/>
+    <rect x="484" y="12" width="222" height="406" rx="38" fill="#06131a" stroke="#6682a2" stroke-width="3"/><rect x="496" y="43" width="198" height="354" rx="25" fill="#f5faff"/><rect x="557" y="22" width="76" height="9" rx="5" fill="#172a38"/>
+    <rect x="507" y="65" width="176" height="245" rx="19" fill="url(#photo-grad)"/><circle cx="632" cy="108" r="31" fill="#f8e5ae" opacity=".9"/><path d="M507 240 Q558 157 596 222 T683 201 V310 H507Z" fill="#6a90ae"/><path d="M507 262 Q544 223 577 251 T683 226 V310 H507Z" fill="#43777e"/>
+    <rect x="528" y="187" width="136" height="35" rx="5" fill="#e7baf8" opacity=".94"/><rect x="507" y="328" width="131" height="8" rx="4" fill="#829abb" opacity=".55"/><rect x="507" y="345" width="169" height="7" rx="4" fill="#829abb" opacity=".35"/>
+  </svg>`;
+}
+
+function audioVisual(l) {
+  const r = redesign[l.code];
+  return `<svg class="audio-concept-svg" viewBox="0 0 720 380" role="img" aria-label="${e(r.audioTitle)}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="audio-grad" x2="1" y2="1"><stop stop-color="#192e50"/><stop offset="1" stop-color="#101d36"/></linearGradient><linearGradient id="wave-grad"><stop stop-color="#21b8ff"/><stop offset=".52" stop-color="#8d4dff"/><stop offset="1" stop-color="#19dfa6"/></linearGradient></defs>
+    <rect x="10" y="22" width="700" height="338" rx="27" fill="url(#audio-grad)" stroke="#4b6385" stroke-width="2"/>
+    <path d="M35 177 L55 177 65 143 75 207 90 125 104 227 118 155 130 177 149 177 161 102 174 254 188 140 201 211 214 171 233 171 246 95 259 260 270 135 285 223 300 169 315 169 329 111 344 237 359 153 370 190 384 173 400 173 414 91 430 263 444 129 455 223 469 171 483 171 496 119 512 232 524 145 540 193 555 174 572 174 586 122 601 230 613 145 628 198 642 169 655 169 669 143 681 200" fill="none" stroke="url(#wave-grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="209" y="65" width="116" height="226" rx="13" fill="#d4b4f5" opacity=".36" stroke="#d4b4f5" stroke-width="2"/><rect x="468" y="65" width="114" height="226" rx="13" fill="#b8fff5" opacity=".25" stroke="#b8fff5" stroke-width="2"/>
+    <path d="M36 305 H682" stroke="#647ea2" stroke-width="2"/><circle cx="36" cy="305" r="4" fill="#21b8ff"/><circle cx="682" cy="305" r="4" fill="#19dfa6"/>
+    <rect x="206" y="317" width="12" height="12" rx="3" fill="#d4b4f5"/><text x="225" y="328" fill="#e6fbff" font-size="15" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[0])}</text>
+    <rect x="466" y="317" width="12" height="12" rx="3" fill="#b8fff5"/><text x="485" y="328" fill="#e6fbff" font-size="15" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[1])}</text>
+  </svg>`;
+}
+
 function home(l) {
-  const c = copy[l.code], cc=consumer[l.code], portal=portalCopy[l.code];
+  const c = copy[l.code], cc=consumer[l.code], portal=portalCopy[l.code], r=redesign[l.code];
   const canonical = L(l.slug);
   const serviceSchema = webPageSchema(l,cc.metaTitle,cc.metaDescription,canonical);
-  return `${head(l,cc.metaTitle,cc.metaDescription,canonical)}<body data-locale="${l.code}">
+  return `${head(l,cc.metaTitle,cc.metaDescription,canonical)}<body data-locale="${l.code}"${sessionAttribute}>
   ${suggestion(l)}${header(l)}<main id="main">
-  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1><span class="hero-gradient">${e(cc.hero[0].split(' ')[0])}</span> ${e(cc.hero[0].split(' ').slice(1).join(' '))}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button button-primary" href="${portalLogin}">${e(portal[0])}<span aria-hidden="true">↗</span></a><a class="button button-outline" href="${portalSetup}">${e(portal[1])}<span aria-hidden="true">↗</span></a></div><p class="portal-pilot-note">${e(portal[2])}</p><div class="hero-explore"><a href="#levels">${e(cc.hero[2])} ↓</a><a href="#video-levels">${e(cc.hero[3])} ↓</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span><span>${e(cc.heroVisual[2])}</span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[1])}</figcaption></figure></div></div></div></div></section>
+  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1>${accentHeading(cc.hero[0])}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button button-primary" href="${portalSetup}">${e(r.addDevice)}<span aria-hidden="true">↗</span></a></div><p class="portal-pilot-note">${e(portal[2])}</p><div class="hero-explore"><a href="#levels">${e(cc.hero[2])} ↓</a><a href="#video-levels">${e(cc.hero[3])} ↓</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[1])}</figcaption></figure></div></div></div></div></section>
   ${photoShowcase(l)}
   ${videoShowcase(l)}
-  <section class="section audio-section" id="audio-text"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.media[6])}</p><h2>${e(cc.audio[0])}</h2><p>${e(cc.audio[1])}</p></div><div class="audio-grid"><article><div class="feature-icon">${lineIcon('<path d="M5 9v6M9 5v14M13 3v18M17 6v12M21 9v6"/>')}</div><h3>${e(cc.audio[2])}</h3><p>${e(cc.audio[3])}</p></article><article><div class="feature-icon">${lineIcon('<path d="M5 4h14M5 9h14M5 14h10M5 19h8"/>')}</div><h3>${e(cc.audio[4])}</h3><p>${e(cc.audio[5])}</p></article></div><a class="button button-primary section-cta" href="#android-apps">${e(cc.audio[6])}<span aria-hidden="true">↓</span></a></div></section>
-  <section class="section android-section" id="android-apps"><div class="wrap android-grid"><div class="android-copy"><p class="eyebrow">Android</p><h2>${e(cc.android[0])}</h2><p class="lead">${e(cc.android[1])}</p><ul>${cc.android.slice(2,5).map(x=>`<li><span aria-hidden="true">✓</span>${e(x)}</li>`).join('')}</ul><a class="button button-primary" href="#platforms">${e(cc.android[5])}<span aria-hidden="true">↓</span></a></div><div class="android-visual" aria-hidden="true"><div class="android-phone"><div class="phone-top"></div><img src="${mediaPath('images','photo-2-2.webp')}" width="440" height="700" alt=""><span>${e(cc.heroVisual[1])}</span></div><div class="android-app-icon"><img src="/assets/icons/android.svg" width="46" height="46" alt=""></div></div></div></section>
-  <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(c.nav[2])}</p><h2>${e(cc.platforms[0])}</h2><p>${e(cc.platforms[1])}</p></div><div class="platform-grid">${cc.platforms[2].map(([name,description],i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true"><img src="/assets/icons/${['android','ios','macos','windows'][i]}.svg" width="30" height="30" alt=""></span></div><h3>${e(name)}</h3><p>${e(description)}</p></article>`).join('')}</div><a class="button button-primary section-cta" href="#for-you">${e(cc.platforms[3])}<span aria-hidden="true">↓</span></a></div></section>
-  <section class="section audiences-section" id="for-you"><div class="wrap audience-grid"><div><p class="eyebrow">Browslium</p><h2>${e(cc.audiences[0])}</h2><p>${e(cc.audiences[1])}</p><p class="audience-account-note">${e(adultAccountNote[l.code])}</p><a class="button button-primary section-cta" href="#faq">${e(cc.audiences[3])}<span aria-hidden="true">↓</span></a></div><div class="audience-list">${cc.audiences[2].map((x,i)=>`<div><span class="audience-icon">${lineIcon(audienceIcons[i])}</span><strong>${e(x)}</strong></div>`).join('')}</div></div></section>
-  <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><p class="eyebrow">FAQ</p><h2>${e(c.faq[0])}</h2><p>${e(cc.faqIntro)}</p></div><div class="faq-list">${faqs[l.code].filter((_,i)=>![19,20,21].includes(i)).map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
-  <section class="section donate-section" id="donate"><div class="wrap donate-grid"><div><p class="eyebrow">Browslium</p><h2>${e(cc.donate[0])}</h2><p class="lead">${e(cc.donate[1])}</p></div><div class="donate-box"><strong>${e(cc.donate[2])}</strong><p>${e(c.donate[3])}</p><a class="button button-primary" href="${donateUrl}" target="_blank" rel="noopener noreferrer">${e(c.donate[4])}<span aria-hidden="true">↗</span></a></div></div></section>
+  <section class="section future-text-section" id="text-future"><div class="wrap future-grid"><div class="future-copy"><h2>${accentHeading(r.textTitle)}</h2><p class="lead">${e(r.textIntro)}</p><div class="future-points"><p>${e(r.textWritten)}</p><p>${e(r.textOcr)}</p></div></div><div class="future-visual">${textVisual(l)}<p class="small-note text-demo-note">${e(r.textDemoNote)}</p></div></div></section>
+  <section class="section future-audio-section" id="audio-text"><div class="wrap future-grid future-grid-reverse"><div class="future-visual">${audioVisual(l)}</div><div class="future-copy"><h2>${accentHeading(r.audioTitle)}</h2><p class="lead">${e(r.audioIntro)}</p><p class="small-note">${e(r.audioNote)}</p></div></div></section>
+  <section class="section android-section" id="android-apps"><div class="wrap android-grid"><div class="android-copy"><h2>${accentHeading(cc.android[0])}</h2><p class="lead">${e(cc.android[1])}</p><ul>${cc.android.slice(2,5).map(x=>`<li><span aria-hidden="true">✓</span>${e(x)}</li>`).join('')}</ul><a class="button button-soft" href="#platforms">${e(cc.android[5])}<span aria-hidden="true">↓</span></a></div><div class="android-visual" aria-hidden="true"><div class="android-phone"><div class="phone-top"></div><img src="${mediaPath('images','photo-2-2.webp')}" width="440" height="700" alt=""><span>${e(cc.heroVisual[1])}</span></div><div class="android-app-icon"><img src="/assets/icons/android.svg" width="46" height="46" alt=""></div></div></div></section>
+  <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><h2>${accentHeading(cc.platforms[0])}</h2></div><div class="platform-grid">${cc.platforms[2].map(([name],i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true"><img src="/assets/icons/${['android','ios','macos','windows'][i]}.svg" width="54" height="54" alt=""></span></div><h3>${e(name)}</h3><p class="platform-status">${e(r.platformStatus[i])}</p></article>`).join('')}</div></div></section>
+  <section class="section faq-section" id="faq"><div class="wrap faq-grid"><div class="faq-heading"><h2>${accentHeading(c.faq[0])}</h2></div><div class="faq-list">${faqs[l.code].filter((_,i)=>![19,20,21].includes(i)).map(([q,a])=>`<details><summary>${e(q)}<span aria-hidden="true">+</span></summary><p>${e(a)}</p></details>`).join('')}</div></div></section>
   </main>${footer(l)}<script type="application/ld+json">${json(serviceSchema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function support(l) {
   const c=copy[l.code], title=`${c.support[0]} | Browslium`, canonical=L(l.slug,'support');
   const schema = webPageSchema(l,title,c.support[1],canonical);
-  return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support">${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
+  return `${head(l,title,c.support[1],canonical,'support')}<body data-locale="${l.code}" data-page="support"${sessionAttribute}>${suggestion(l)}${header(l,'support')}<main id="main" class="simple-main"><section class="section simple-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(c.footer[5])}</p><h1>${e(c.support[0])}</h1><p class="lead">${e(c.support[1])}</p><a class="button button-primary" href="mailto:admin@browslium.com">${e(c.support[2])}</a><p class="small-note">${e(c.support[3])}</p></div></section></main>${footer(l,'support')}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
 function explainerPage(l, kind) {
@@ -217,13 +256,11 @@ function explainerPage(l, kind) {
   const otherPage = isImage ? 'video-filtering' : 'image-filtering';
   const canonical = L(l.slug,page);
   const schema = webPageSchema(l,d.title,d.description,canonical);
-  const list = policies[l.code][kind];
-  return `${head(l,d.title,d.description,canonical,page)}<body data-locale="${l.code}" data-page="${page}">${suggestion(l)}${header(l,page)}<main id="main" class="explainer-main">
-  <section class="explainer-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(isImage?u.imageLabel:u.videoLabel)}</p><h1>${e(d.h1)}</h1><p class="lead">${e(d.lead)}</p><div class="button-row"><a class="button button-primary" href="#examples">${e(u.levelsLink)} <span aria-hidden="true">↓</span></a><a class="button button-light-outline" href="${L(l.slug)}#platforms">${e(c.nav[2])}</a></div></div></section>
+  return `${head(l,d.title,d.description,canonical,page)}<body data-locale="${l.code}" data-page="${page}"${sessionAttribute}>${suggestion(l)}${header(l,page)}<main id="main" class="explainer-main">
+  <section class="explainer-hero"><div class="wrap narrow"><h1>${accentHeading(d.h1)}</h1><div class="button-row"><a class="button button-primary" href="${portalSetup}">${e(redesign[l.code].addDevice)} <span aria-hidden="true">↗</span></a><a class="text-link" href="#examples">${e(u.levelsLink)} <span aria-hidden="true">↓</span></a></div><p class="portal-pilot-note">${e(portalCopy[l.code][2])}</p></div></section>
   <section class="section explainer-story"><div class="wrap story-grid"><article><h2>${e(d.whyH)}</h2><p>${e(d.whyP)}</p></article><article><h2>${e(d.processH)}</h2><p>${e(d.processP)}</p></article></div></section>
-  <section class="section explainer-levels" id="levels"><div class="wrap"><div class="section-intro"><p class="eyebrow">${e(isImage?u.imageLabel:u.videoLabel)}</p><h2>${e(d.levelsH)}</h2><p>${e(d.levelsP)}</p></div><ol class="policy-grid">${list.map((policy,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><p>${e(policy)}</p></li>`).join('')}</ol></div></section>
   ${isImage?photoShowcase(l,'examples','',false):videoShowcase(l,'examples','',false)}
-  <section class="section explainer-status" id="next-step"><div class="wrap status-grid"><div><p class="eyebrow">Browslium</p><h2>${e(d.statusH)}</h2><p>${e(d.statusP)}</p><p class="small-note">${e(consumer[l.code].audio[1])}</p></div><a class="button button-primary" href="${L(l.slug)}#platforms">${e(c.nav[2])} <span aria-hidden="true">↗</span></a></div></section>
+  <section class="section explainer-status" id="next-step"><div class="wrap status-grid"><div><h2>${accentHeading(d.statusH)}</h2><p>${e(d.statusP)}</p><p class="small-note">${e(consumer[l.code].audio[1])}</p></div><a class="button button-soft" href="${L(l.slug)}#platforms">${e(c.nav[2])} <span aria-hidden="true">↗</span></a></div></section>
   <section class="section related-section"><div class="wrap"><h2>${e(u.relatedH)}</h2><p>${e(u.relatedP)}</p><div class="related-links"><a href="${L(l.slug,otherPage)}">${e(isImage?u.videoLink:u.imageLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#levels">${e(u.levelsLink)} <span aria-hidden="true">↗</span></a><a href="${L(l.slug)}#faq">${e(c.nav[3])} <span aria-hidden="true">↗</span></a></div></div></section>
   </main>${footer(l,page)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
@@ -237,12 +274,13 @@ function legalPage(l, type) {
       ? `<a href="${L(l.slug,'privacy')}">${e(d.websitePolicy)} <span aria-hidden="true">↗</span></a>`
       : '';
   const schema = webPageSchema(l,`${d.title} | Browslium`,d.description,canonical);
-  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}">${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${related ? `<p class="legal-related">${related}</p>` : ''}${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
+  return `${head(l,`${d.title} | Browslium`,d.description,canonical,type)}<body data-locale="${l.code}" data-page="${type}"${sessionAttribute}>${suggestion(l)}${header(l,type)}<main id="main" class="legal-main"><section class="legal-hero"><div class="wrap narrow"><p class="eyebrow">Browslium / ${e(d.title)}</p><h1>${e(d.title)}</h1><p class="lead">${e(d.intro)}</p><p class="legal-updated">${e(d.updated)}</p></div></section><div class="wrap legal-layout"><nav class="legal-toc" aria-label="${e(d.title)}">${d.sections.map(([h],i)=>`<a href="#section-${i+1}"><span>${String(i+1).padStart(2,'0')}</span>${e(h)}</a>`).join('')}</nav><div class="legal-content">${related ? `<p class="legal-related">${related}</p>` : ''}${d.sections.map(([h,b],i)=>`<section id="section-${i+1}"><h2>${e(h)}</h2><p>${e(b)}</p></section>`).join('')}<div class="legal-contact"><strong>${e(c.footer[2])}</strong><a href="mailto:admin@browslium.com">admin@browslium.com</a></div></div></div></main>${footer(l,type)}<script type="application/ld+json">${json(schema)}</script><script src="${script}" defer></script></body></html>`;
 }
 
-function gateway() {
+function gateway(redirect = false) {
   const l=locale('en');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/assets/favicon-64.png" sizes="64x64"><link rel="stylesheet" href="${stylesheet}"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-wordmark-white.webp" width="320" height="77" alt="Browslium"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}"><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav><a class="gateway-portal" href="${portalLogin}">Client portal (pilot) ↗</a><p class="gateway-portal-note">${e(portalCopy.en[2])}</p></div></main><script src="${script}" defer></script></body></html>`;
+  const rootRedirect = redirect ? `<script>(function(){if(!['/','/index.html'].includes(location.pathname))return;var supported={en:'en',es:'es',ru:'ru',yi:'yi',he:'he',fr:'fr',pt:'pt-br'};var saved;try{saved=localStorage.getItem('browslium_language_manual')}catch(e){}var choices=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language];if(saved&&supported[String(saved).toLowerCase().split('-')[0]])choices=[saved];var target='en';for(var value of choices){var code=String(value||'').toLowerCase().split('-')[0];if(code==='iw')code='he';if(code==='ji')code='yi';if(supported[code]){target=supported[code];break}}location.replace('/'+target+'/'+location.search+location.hash)}())</script>` : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browslium — Choose your language</title><meta name="description" content="Explore Browslium in English, Español, Русский, ייִדיש, עברית, Português (Brasil) or Français."><link rel="canonical" href="${origin}/">${altLinks('',true)}<meta name="theme-color" content="#030509"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/assets/favicon-64.png" sizes="64x64">${rootRedirect}<link rel="stylesheet" href="${stylesheet}"></head><body data-locale="en" data-gateway="true">${suggestion(l)}<main class="gateway"><div class="gateway-card"><img src="/assets/browslium-wordmark-white.webp" width="320" height="77" alt="Browslium"><h1>Browslium</h1><p>Choose your language to explore Browslium.</p><p class="preferred-message" data-preferred-message hidden></p><nav aria-label="Choose your language">${languages.map(x=>`<a href="${L(x.slug)}" lang="${x.code}" dir="${x.dir}" data-language-choice="${x.code}"><span class="language-mark ${x.code==='yi'?'yiddish-mark':''}" aria-hidden="true">${languageMarks[x.code]}</span>${e(x.name)} <span aria-hidden="true">↗</span></a>`).join('')}</nav><a class="gateway-portal" href="${portalLogin}">Client portal (pilot) ↗</a><p class="gateway-portal-note">${e(portalCopy.en[2])}</p></div></main>${footer(l)}<script src="${script}" defer></script></body></html>`;
 }
 
 await rm(output,{recursive:true,force:true});
@@ -252,7 +290,7 @@ await cp(path.join(sourceRoot,'assets','favicon.ico'),path.join(output,'favicon.
 await cp(path.join(sourceRoot,'CNAME'),path.join(output,'CNAME'));
 await cp(path.join(sourceRoot,'google80ba342909e82f35.html'),path.join(output,'google80ba342909e82f35.html'));
 await writeFile(path.join(output,'.nojekyll'),'');
-await writeFile(path.join(output,'index.html'),gateway());
+await writeFile(path.join(output,'index.html'),gateway(true));
 for (const l of languages) {
   const dir=path.join(output,l.slug); await mkdir(dir,{recursive:true});
   await writeFile(path.join(dir,'index.html'),home(l));
