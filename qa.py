@@ -238,8 +238,9 @@ for code,slug in LOCALES.items():
                 errors.append(f'tablet and photographic text demo {route}')
             audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
             if ('data-muted-regions="2"' not in audio_section or
-                'stroke="#ff788b"' not in audio_section or
-                'stroke="#c994ff"' not in audio_section or
+                audio_section.count('stroke="#ff7890"') != 2 or
+                'fill="#bd9aff"' not in audio_section or
+                'textLength=' in audio_section or
                 'audio-wave-grad' in audio_section):
                 errors.append(f'two outlined audio mute regions {route}')
             android_section=text.split('id="android-apps"',1)[1].split('id="platforms"',1)[0]
