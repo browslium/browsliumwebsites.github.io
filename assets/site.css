@@ -672,3 +672,4 @@ html,body{background:#030509}
 .newsletter-form button:disabled{border:0;background:#7486a3;color:#edf2fb;box-shadow:none;opacity:1}
 @media(max-width:850px){.hero-display{width:min(100%,720px)}.hero .hero-display figure img{aspect-ratio:.9;object-position:68% center}.platform-icon{width:110px;height:110px}}
 @media(max-width:600px){.hero .hero-display figure img{aspect-ratio:.92;object-position:66% center}.platform-icon{width:110px;height:110px}}
+.platform-card .platform-status{font-size:12.5px}

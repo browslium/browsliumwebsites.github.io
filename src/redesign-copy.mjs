@@ -17,7 +17,7 @@ export const redesign = {
     audioIntro: "A future audio setting could mute selected moments, such as prohibited audio or a woman singing. Audio filtering is still in development.",
     audioNote: 'Concept illustration only. No live audio coverage is claimed.',
     audioLabels: ['Prohibited audio', 'Woman singing'],
-    platformStatus: ["Compatible", "Compatible", "Compatible", "Compatible"],
+    platformStatus: ["Compatibility being tested", "Compatibility being tested", "Compatibility being tested", "Compatibility being tested"],
     newsletter: ['Subscribe to our newsletter', 'Email address', 'Subscribe', 'Subscriptions will open after a provider and consent flow are ready.'],
   },
   es: {
@@ -36,7 +36,7 @@ export const redesign = {
     audioIntro: "Una opción futura podría silenciar momentos elegidos, como audio prohibido o canto de una mujer. El filtrado de audio sigue en desarrollo.",
     audioNote: 'Ilustración conceptual. No se afirma cobertura de audio activa.',
     audioLabels: ['Audio prohibido', 'Canto de mujer'],
-    platformStatus: ["Compatible", "Compatible", "Compatible", "Compatible"],
+    platformStatus: ["Compatibilidad en pruebas", "Compatibilidad en pruebas", "Compatibilidad en pruebas", "Compatibilidad en pruebas"],
     newsletter: ['Suscríbete a nuestro boletín', 'Correo electrónico', 'Suscribirme', 'Las suscripciones abrirán cuando estén listos el proveedor y el consentimiento.'],
   },
   ru: {
@@ -55,7 +55,7 @@ export const redesign = {
     audioIntro: "Будущая функция могла бы заглушать выбранные отрезки, например запрещённый звук или женское пение. Фильтрация аудио ещё разрабатывается.",
     audioNote: 'Только концепция. Работающая защита аудио не заявляется.',
     audioLabels: ['Запрещённый звук', 'Женское пение'],
-    platformStatus: ["Совместимо", "Совместимо", "Совместимо", "Совместимо"],
+    platformStatus: ["Совместимость тестируется", "Совместимость тестируется", "Совместимость тестируется", "Совместимость тестируется"],
     newsletter: ['Подпишитесь на рассылку', 'Адрес электронной почты', 'Подписаться', 'Подписка откроется после выбора провайдера и настройки согласия.'],
   },
   yi: {
@@ -74,7 +74,7 @@ export const redesign = {
     audioIntro: "אַ צוקונפֿטיקע אָפּציע וואָלט געקענט שטיל מאַכן באַזונדערע טיילן, ווי פֿאַרבאָטענעם קלאַנג אָדער אַ פֿרוי וואָס זינגט. אוידיאָ־פֿילטערונג איז נאָך אין אַנטוויקלונג.",
     audioNote: 'נאָר אַ באַגריף־בילד. קיין אַקטיווע אוידיאָ־שוץ ווערט נישט צוגעזאָגט.',
     audioLabels: ['פֿאַרבאָטענער קלאַנג', 'אַ פֿרוי זינגט'],
-    platformStatus: ["קאָמפּאַטיבל", "קאָמפּאַטיבל", "קאָמפּאַטיבל", "קאָמפּאַטיבל"],
+    platformStatus: ["קאָמפּאַטיביליטעט אין פּרוּוון", "קאָמפּאַטיביליטעט אין פּרוּוון", "קאָמפּאַטיביליטעט אין פּרוּוון", "קאָמפּאַטיביליטעט אין פּרוּוון"],
     newsletter: ['שרײַבט זיך אײַן אין אונדזער נײַעס־בריוו', 'בליצפּאָסט־אַדרעס', 'אײַנשרײַבן', 'אײַנשרײַבן וועט זיך עפֿענען ווען דער צושטעלער און דער הסכמה־וועג זענען גרייט.'],
   },
   he: {
@@ -93,7 +93,7 @@ export const redesign = {
     audioIntro: "אפשרות עתידית תוכל להשתיק קטעים נבחרים, למשל שמע אסור או שירת אישה. סינון השמע עדיין בפיתוח.",
     audioNote: 'איור רעיוני בלבד. אין כאן טענה לכיסוי שמע פעיל.',
     audioLabels: ['שמע אסור', 'שירת אישה'],
-    platformStatus: ["תואם", "תואם", "תואם", "תואם"],
+    platformStatus: ["תאימות בבדיקה", "תאימות בבדיקה", "תאימות בבדיקה", "תאימות בבדיקה"],
     newsletter: ['הירשמו לניוזלטר שלנו', 'כתובת דוא״ל', 'הרשמה', 'ההרשמה תיפתח לאחר בחירת ספק והשלמת תהליך ההסכמה.'],
   },
   'pt-BR': {
@@ -112,7 +112,7 @@ export const redesign = {
     audioIntro: "Uma opção futura poderia silenciar momentos escolhidos, como áudio proibido ou canto feminino. A filtragem de áudio ainda está em desenvolvimento.",
     audioNote: 'Ilustração conceitual. Não há promessa de cobertura de áudio ativa.',
     audioLabels: ['Áudio proibido', 'Canto feminino'],
-    platformStatus: ["Compatível", "Compatível", "Compatível", "Compatível"],
+    platformStatus: ["Compatibilidade em testes", "Compatibilidade em testes", "Compatibilidade em testes", "Compatibilidade em testes"],
     newsletter: ['Assine nossa newsletter', 'E-mail', 'Assinar', 'As inscrições abrirão após a escolha do provedor e a configuração do consentimento.'],
   },
   fr: {
@@ -131,7 +131,7 @@ export const redesign = {
     audioIntro: "Une option future pourrait couper certains moments, comme un son interdit ou le chant d’une femme. Le filtrage audio est encore en développement.",
     audioNote: 'Illustration conceptuelle uniquement. Aucune couverture audio active n’est annoncée.',
     audioLabels: ['Son interdit', 'Chant féminin'],
-    platformStatus: ["Compatible", "Compatible", "Compatible", "Compatible"],
+    platformStatus: ["Compatibilité en cours de test", "Compatibilité en cours de test", "Compatibilité en cours de test", "Compatibilité en cours de test"],
     newsletter: ['Abonnez-vous à notre newsletter', 'Adresse e-mail', 'S’abonner', 'Les inscriptions ouvriront après le choix du fournisseur et la mise en place du consentement.'],
   },
 };
