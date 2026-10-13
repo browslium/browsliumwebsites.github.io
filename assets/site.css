@@ -633,3 +633,24 @@ html,body{background:#030509}
 @media(max-width:850px){.hero-display{width:min(100%,690px)}.hero .hero-display figure img{aspect-ratio:.95}}
 @media(max-width:600px){.hero .hero-display figure img{aspect-ratio:.98}.hero-display{box-shadow:-3px 3px 0 #19dfa6,5px 6px 0 #078d70,0 24px 48px rgba(0,0,0,.34)}}
 @media(max-width:1439px){.desktop-nav{display:none}.menu-toggle{display:flex}}
+
+/* Final visual polish: one light-green hero backing, faithful device ratios, and clearer status. */
+.hero-display{box-shadow:9px 10px 0 #19dfa6,0 32px 80px rgba(0,0,0,.38),0 0 55px rgba(33,184,255,.12)}
+.tablet-copy{height:auto;overflow:visible}
+.android-phone>span{background:#7659e7;color:#fff;border:1px solid rgba(255,255,255,.5);box-shadow:0 6px 18px rgba(38,18,92,.32)}
+.platform-icon{width:108px;height:108px}
+.platform-icon img{width:94px;height:94px;object-fit:contain}
+.platform-card .platform-status{align-items:center;gap:8px;background:#dff7e4;color:#116a36;border:1px solid #94dfaa;font-weight:800}
+.platform-card .platform-status::before{content:"";display:block;flex:none;width:8px;height:8px;border-radius:50%;background:#19a957;box-shadow:0 0 0 3px rgba(25,169,87,.13)}
+.closing-band{background:linear-gradient(115deg,#293c52,#253a4f 55%,#30415a);color:#fff}
+.donation-band{background:linear-gradient(135deg,#38516a,#314762 75%)}
+.newsletter-band{background:linear-gradient(135deg,#314d61,#33465f 78%)}
+.site-footer{border-block-start:0;background:#09111e}
+.footer-logo-slot{position:relative}
+.footer-logo-slot .footer-logo-default{position:relative;opacity:1;transition:opacity .22s ease}
+.footer-logo-slot .footer-logo-hover{position:absolute;inset:0;opacity:0;transition:opacity .22s ease}
+.footer-logo-slot:hover .footer-logo-default,.footer-logo-slot:focus-visible .footer-logo-default{opacity:0}
+.footer-logo-slot:hover .footer-logo-hover,.footer-logo-slot:focus-visible .footer-logo-hover{opacity:1}
+.site-footer .footer-grid>div:first-child p{color:#fff}
+@media(max-width:850px){.platform-icon{width:96px;height:96px}.platform-icon img{width:83px;height:83px}}
+@media(max-width:600px){.hero-display{box-shadow:5px 6px 0 #19dfa6,0 24px 48px rgba(0,0,0,.34)}.platform-icon{width:96px;height:96px}.platform-icon img{width:83px;height:83px}}
