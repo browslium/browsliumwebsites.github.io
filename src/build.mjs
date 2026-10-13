@@ -11,6 +11,7 @@ import { explainers } from './explainers.mjs';
 import { showcase } from './showcase.mjs';
 import { consumer } from './consumer-copy.mjs';
 import { redesign } from './redesign-copy.mjs';
+import { textVisual, audioVisual } from './concept-visuals.mjs';
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(sourceRoot, 'dist');
@@ -47,10 +48,6 @@ const accentHeading = value => {
   const [first, ...rest] = String(value).split(' ');
   return `<span class="headline-accent">${e(first)}</span>${rest.length ? ` ${e(rest.join(' '))}` : ''}`;
 };
-const maskSentence = (locale, value) => Array.from(
-  new Intl.Segmenter(locale, { granularity: 'grapheme' }).segment(value),
-  part => /\s/u.test(part.segment) ? part.segment : '*',
-).join('');
 const L = (slug, page = '') => `/${slug}/${page ? `${page}/` : ''}`;
 const locale = slug => languages.find(x => x.slug === slug);
 const pageLanguages = page => page === 'product-privacy' ? languages.filter(l => ['en','es'].includes(l.code)) : languages;
@@ -187,52 +184,6 @@ function videoShowcase(l, id='video-levels', number='02', link=true) {
     </div><div class="showcase-controls"><fieldset class="showcase-scenes"><legend>${e(cc.sceneGuide)}</legend><div class="showcase-scene-list">${sceneChoices(s.videoScenes,s.videoAlts,'video')}</div></fieldset><fieldset class="showcase-policies"><legend>${e(s.policy)}</legend><div class="showcase-level-list">${policyChoices(l,'video')}</div></fieldset><span class="visually-hidden" aria-live="polite" data-showcase-announcement></span></div></div>
     <div class="showcase-foot"><a class="text-link" href="${id==='video-levels'?'#text-future':`${L(l.slug)}#text-future`}">${e(cc.afterVideos)} <span aria-hidden="true">${id==='video-levels'?'↓':'↗'}</span></a>${link?`<a class="text-link" href="${L(l.slug,'video-filtering')}">${e(s.videoLink)} <span aria-hidden="true">↗</span></a>`:''}</div>
   </div></section>`;
-}
-
-function textVisual(l) {
-  const r = redesign[l.code];
-  const hidden = [r.textPassage[4], r.textPassage[7]];
-  const masked = hidden.map(sentence => maskSentence(l.code, sentence));
-  const y = [103, 127, 151, 190, 214, 238, 277, 301, 325];
-  const position = l.dir === 'rtl' ? 'x="409" text-anchor="start" direction="rtl"' : 'x="49"';
-  const pageLines = r.textPassage.map((line, i) => {
-    const hiddenIndex = i === 4 ? 0 : i === 7 ? 1 : -1;
-    const content = hiddenIndex < 0 ? line : masked[hiddenIndex];
-    return `<text ${position} y="${y[i]}" fill="${hiddenIndex < 0 ? '#263b51' : '#6252bd'}" font-size="15" font-weight="${hiddenIndex < 0 ? 500 : 750}" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(content)}</text>`;
-  }).join('');
-  return `<svg class="text-concept-svg" viewBox="0 0 720 440" role="img" aria-label="${e(r.textTitle)}: ${e(r.textWritten)}" data-demo-original="${e(hidden.join(' '))}" data-demo-masked="${e(masked.join(' '))}" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="text-paper-grad" x2="1" y2="1"><stop stop-color="#fffefa"/><stop offset="1" stop-color="#e9f1f7"/></linearGradient><linearGradient id="text-mask-grad"><stop stop-color="#d6b8f5"/><stop offset=".58" stop-color="#d5c2f0"/><stop offset="1" stop-color="#b4d7ed"/></linearGradient><clipPath id="text-phone-screen"><rect x="465" y="36" width="226" height="384" rx="30"/></clipPath></defs>
-    <rect x="16" y="41" width="426" height="358" rx="22" fill="#b8c5d5" opacity=".25"/><rect x="12" y="35" width="426" height="358" rx="22" fill="url(#text-paper-grad)" stroke="#d8e0e8" stroke-width="2"/>
-    <path d="M30 35 V393" stroke="#d6e0e9" stroke-width="2" opacity=".7"/><path d="M406 35 Q432 47 438 72 V369 Q432 386 408 393" fill="none" stroke="#e0e9ee" stroke-width="3"/>
-    ${pageLines}
-    <rect x="453" y="8" width="252" height="426" rx="46" fill="#1c2731" stroke="#6d7b8d" stroke-width="3"/><rect x="459" y="14" width="240" height="414" rx="42" fill="#090e15"/>
-    <g clip-path="url(#text-phone-screen)"><image href="/assets/text-page-photo.png" x="465" y="36" width="226" height="384" preserveAspectRatio="xMidYMid slice"/>
-      <path d="M482 194 Q503 190 522 192 L594 191 Q609 191 610 197 Q610 203 594 204 L521 205 Q501 205 482 203 Q476 199 482 194Z" fill="url(#text-mask-grad)" opacity=".98"/>
-      <path d="M483 211 Q497 207 516 209 L647 208 Q664 209 664 215 Q662 220 647 221 L516 222 Q497 222 483 219 Q477 216 483 211Z" fill="url(#text-mask-grad)" opacity=".98"/>
-      <path d="M485 226 Q501 223 519 225 L571 224 Q584 225 583 231 Q582 235 570 236 L518 237 Q501 236 485 234 Q480 231 485 226Z" fill="url(#text-mask-grad)" opacity=".98"/>
-    </g><rect x="544" y="41" width="68" height="12" rx="6" fill="#0b1118" opacity=".96"/><rect x="701" y="105" width="3" height="48" rx="2" fill="#8794a5"/><rect x="451" y="107" width="3" height="36" rx="2" fill="#8794a5"/>
-  </svg>`;
-}
-
-function audioVisual(l) {
-  const r = redesign[l.code];
-  const muted = x => (x >= 204 && x <= 294) || (x >= 426 && x <= 599);
-  const bars = Array.from({length:123}, (_,i) => {
-    const x = 42 + i * 5.2;
-    if (muted(x)) return '';
-    const height = 15 + Math.abs(Math.sin(i*.63)*24 + Math.sin(i*.17)*22 + Math.cos(i*.39)*18);
-    return `<rect x="${x.toFixed(1)}" y="${(178-height).toFixed(1)}" width="3.3" height="${(height*2).toFixed(1)}" rx="1.65" fill="url(#wave-grad)" opacity=".92"/>`;
-  }).join('');
-  const dots = (start,end,color) => Array.from({length:Math.floor((end-start)/12)},(_,i) => `<circle cx="${start+i*12}" cy="${178+Math.sin(i*1.2)*4}" r="${i%3===0?3.4:2.6}" fill="${color}"/>`).join('');
-  return `<svg class="audio-concept-svg" viewBox="0 0 720 380" role="img" aria-label="${e(r.audioTitle)}" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="audio-grad" x2="1" y2="1"><stop stop-color="#192e50"/><stop offset="1" stop-color="#101d36"/></linearGradient><linearGradient id="wave-grad"><stop stop-color="#21b8ff"/><stop offset=".52" stop-color="#8d4dff"/><stop offset="1" stop-color="#19dfa6"/></linearGradient><marker id="audio-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 1 L7 4 0 7" fill="none" stroke="#b7c9e9" stroke-width="1.5"/></marker></defs>
-    <rect x="10" y="22" width="700" height="338" rx="27" fill="url(#audio-grad)" stroke="#4b6385" stroke-width="2"/>
-    <path d="M194 128 Q220 112 248 123 T302 128 L302 225 Q267 239 236 226 T194 226Z" fill="#a781ed" opacity=".13"/><path d="M417 131 Q452 110 507 125 T610 130 L610 226 Q561 239 510 225 T417 227Z" fill="#5cd9d0" opacity=".11"/>
-    <path d="M40 178 H680" stroke="#7b91b8" stroke-width="1" opacity=".23"/>${bars}${dots(211,292,'#d4b4f5')}${dots(435,594,'#9cf0e1')}
-    <path d="M243 298 Q240 269 243 246" fill="none" stroke="#b7c9e9" stroke-width="1.5" marker-end="url(#audio-arrow)"/><path d="M515 298 Q518 271 515 247" fill="none" stroke="#b7c9e9" stroke-width="1.5" marker-end="url(#audio-arrow)"/>
-    <text x="243" y="325" text-anchor="middle" direction="${l.dir}" fill="#e8d8ff" font-size="14" font-weight="650" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[0])}</text>
-    <text x="515" y="325" text-anchor="middle" direction="${l.dir}" fill="#c0f7eb" font-size="14" font-weight="650" font-family="Inter,NotoHebrew,Arial,sans-serif">${e(r.audioLabels[1])}</text>
-  </svg>`;
 }
 
 function home(l) {

@@ -201,8 +201,9 @@ for code,slug in LOCALES.items():
                 if source.count(' ')<2 or not any(char in source for char in ',.!?،؛') or masked!=expected:
                     errors.append(f'full-sentence character mask {route}')
                 svg_block=text.split('class="text-concept-svg"',1)[1].split('</svg>',1)[0]
-                if svg_block.count('<text ')!=9 or svg_block.count('*')<15:
-                    errors.append(f'book passage with masked sentences {route}')
+                if (svg_block.count('<p>') != 4 or svg_block.count('class="tablet-masked"') != 2 or
+                    svg_block.count('*') < 15):
+                    errors.append(f'tablet paragraphs with masked sentences {route}')
             faq_block=text.split('class="section faq-section"',1)[1].split('</main>',1)[0]
             if faq_block.count('<details>')!=20:errors.append(f'FAQ count {route}')
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
@@ -228,8 +229,13 @@ for code,slug in LOCALES.items():
             if 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
                 errors.append(f'honest future concept demo {route}')
             text_section=text.split('id="text-future"',1)[1].split('id="audio-text"',1)[0]
-            if 'GPU' in text_section or 'text-page-photo.png' not in text_section:
-                errors.append(f'customer text demo wording and image {route}')
+            if ('GPU' in text_section or 'text-street-sign-v2.png' not in text_section or
+                'blog-photo-window' not in text_section or
+                'tablet-copy' not in text_section or text_section.count('class="phone-mask"') != 2):
+                errors.append(f'tablet and photographic text demo {route}')
+            audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
+            if 'data-muted-regions="2"' not in audio_section or audio_section.count('stroke="#ff6676"') != 2:
+                errors.append(f'two outlined audio mute regions {route}')
             if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
                 errors.append(f'outdated visible product copy {route}')
             ids={x.get('id') for _,x in p.tags if x.get('id')}
