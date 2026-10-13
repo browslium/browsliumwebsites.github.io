@@ -29,22 +29,13 @@ TEXT_POLICY = {
     'fr': ('Le texte visible passe intact', 'sans analyse sémantique'),
 }
 HOME_TEXT_POLICY = {
-    'en': 'Today, written text passes through unchanged.',
+    'en': 'Written text passes through unchanged today.',
     'es': 'Hoy el texto escrito pasa intacto.',
     'ru': 'Сейчас написанный текст проходит без изменений.',
     'yi': 'הײַנט גייט געשריבן טעקסט דורך אומגעענדערט.',
     'he': 'כיום טקסט כתוב עובר ללא שינוי.',
     'pt-BR': 'Hoje o texto escrito passa intacto.',
     'fr': 'Aujourd’hui, le texte écrit passe intact.',
-}
-HOME_GPU_POLICY = {
-    'en': 'It will stay intact even when GPU processing is active.',
-    'es': 'Seguirá intacto incluso cuando esté activo el procesamiento GPU.',
-    'ru': 'Он останется неизменным даже при активной обработке на GPU.',
-    'yi': 'ער וועט בלײַבן אומגעענדערט אַפֿילו ווען GPU־פּראָצעסירונג איז אַקטיוו.',
-    'he': 'הוא יישאר ללא שינוי גם כאשר עיבוד GPU יהיה פעיל.',
-    'pt-BR': 'Ele continuará intacto mesmo quando o processamento por GPU estiver ativo.',
-    'fr': 'Il restera intact même lorsque le traitement GPU sera actif.',
 }
 HOME_FUTURE_DEMO = {
     'en': ('future Text/Audio concepts', 'visible text passes through unchanged', 'Illustrative future demo · Not available today', 'Text and audio: future concepts'),
@@ -188,11 +179,11 @@ for code,slug in LOCALES.items():
                 if target and target not in all_paths:errors.append(f'broken internal link {route}: {href}')
         if not page:
             text=filename.read_text()
-            if not all(marker in ' '.join(p.text) for marker in (HOME_TEXT_POLICY[code], HOME_GPU_POLICY[code])):
+            if HOME_TEXT_POLICY[code] not in ' '.join(p.text):
                 errors.append(f'current text pass-through policy missing {route}')
             future_meta, unchanged_meta, demo_note, future_link = HOME_FUTURE_DEMO[code]
             description=desc[0].get('content','') if desc else ''
-            if (not all(marker in description for marker in (future_meta, unchanged_meta, 'GPU')) or
+            if (not all(marker in description for marker in (future_meta, unchanged_meta)) or
                 not p.find('meta',property='og:description',content=description) or
                 not any(x.get('description')==description for x in p.scripts)):
                 errors.append(f'future text metadata missing {route}')
@@ -210,8 +201,8 @@ for code,slug in LOCALES.items():
                 if source.count(' ')<2 or not any(char in source for char in ',.!?،؛') or masked!=expected:
                     errors.append(f'full-sentence character mask {route}')
                 svg_block=text.split('class="text-concept-svg"',1)[1].split('</svg>',1)[0]
-                if svg_block.count('<text ')!=6:
-                    errors.append(f'book passage before and after {route}')
+                if svg_block.count('<text ')!=9 or svg_block.count('*')<15:
+                    errors.append(f'book passage with masked sentences {route}')
             faq_block=text.split('class="section faq-section"',1)[1].split('</main>',1)[0]
             if faq_block.count('<details>')!=20:errors.append(f'FAQ count {route}')
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
@@ -231,11 +222,14 @@ for code,slug in LOCALES.items():
             if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
             if not (text.index('id="text-future"') < text.index('id="audio-text"') < text.index('id="android-apps"')):errors.append(f'text then audio then Android {route}')
             if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
-            if 'footer-logo-slot' not in text or 'brand-hover' in text:errors.append(f'new footer logo slot {route}')
+            if 'footer-logo-slot' not in text or 'browslium-wordmark-emerald.webp' not in text:errors.append(f'footer logo {route}')
             if 'audiences-section' in text or 'id="for-you"' in text:errors.append(f'removed audience section {route}')
             if 'Fully supported' in text:errors.append(f'unsupported platform claim {route}')
-            if 'GPU' not in text or 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
+            if 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
                 errors.append(f'honest future concept demo {route}')
+            text_section=text.split('id="text-future"',1)[1].split('id="audio-text"',1)[0]
+            if 'GPU' in text_section or 'text-page-photo.png' not in text_section:
+                errors.append(f'customer text demo wording and image {route}')
             if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
                 errors.append(f'outdated visible product copy {route}')
             ids={x.get('id') for _,x in p.tags if x.get('id')}
