@@ -3,7 +3,7 @@
 export const consumer = {
   en: {
     metaTitle: 'Filter images and video with a policy that fits you | Browslium',
-    metaDescription: 'Explore image and video policy examples and future Text/Audio concepts. Today, visible text passes through unchanged, even with GPU processing.',
+    metaDescription: 'Explore image and video policy examples and future Text/Audio concepts. Today, visible text passes through unchanged.',
     hero: ['Choose what you see online.', 'Browslium is developing image and video filtering at selectable levels. Explore what each policy would change in these examples.', 'Explore image levels', 'See video levels'],
     heroVisual: ['The original image', 'With a filter', 'Your choice, a clearer view'],
     imageEyebrow: 'Image filtering', videoEyebrow: 'Video filtering',
@@ -21,7 +21,7 @@ export const consumer = {
   },
   es: {
     metaTitle: 'Filtra imágenes y videos a tu manera | Browslium',
-    metaDescription: 'Explora políticas de imagen y video y conceptos futuros de texto y audio. Hoy el texto visible pasa intacto, incluso con procesamiento GPU.',
+    metaDescription: 'Explora políticas de imagen y video y conceptos futuros de texto y audio. Hoy el texto visible pasa intacto.',
     hero: ['Elige lo que quieres ver en internet.', 'Browslium desarrolla filtrado de imágenes y video con niveles seleccionables. Explora qué cambiaría cada política en estos ejemplos.', 'Explorar niveles de imagen', 'Ver niveles de video'],
     heroVisual: ['Imagen original', 'Con el filtro', 'Tu elección, una vista más clara'],
     imageEyebrow: 'Filtrado de imágenes', videoEyebrow: 'Filtrado de video',
@@ -39,7 +39,7 @@ export const consumer = {
   },
   ru: {
     metaTitle: 'Фильтрация изображений и видео по вашим правилам | Browslium',
-    metaDescription: 'Изучите правила для изображений и видео и будущие концепции для текста и аудио. Сейчас видимый текст проходит без изменений, даже при обработке на GPU.',
+    metaDescription: 'Изучите правила для изображений и видео и будущие концепции для текста и аудио. Сейчас видимый текст проходит без изменений.',
     hero: ['Выбирайте, что видеть в интернете.', 'Browslium разрабатывает фильтрацию изображений и видео с разными уровнями. Посмотрите, что меняет каждое правило в этих примерах.', 'Уровни для изображений', 'Уровни для видео'],
     heroVisual: ['Исходное изображение', 'С фильтром', 'Ваш выбор — яснее экран'],
     imageEyebrow: 'Фильтрация изображений', videoEyebrow: 'Фильтрация видео',
@@ -57,7 +57,7 @@ export const consumer = {
   },
   yi: {
     metaTitle: 'פֿילטערן בילדער און ווידעאָס לויט אײַער אויסוואַל | Browslium',
-    metaDescription: 'זעט בילד־ און ווידעאָ־כללים און צוקונפֿטיקע באַגריפֿן פֿאַר טעקסט און אוידיאָ. דער זעבאַרער טעקסט גייט איצט דורך אומגעענדערט, אויך מיט GPU.',
+    metaDescription: 'זעט בילד־ און ווידעאָ־כללים און צוקונפֿטיקע באַגריפֿן פֿאַר טעקסט און אוידיאָ. דער זעבאַרער טעקסט גייט איצט דורך אומגעענדערט.',
     hero: ['קלײַבט אויס וואָס איר ווילט זען אָנליין.', 'Browslium אַנטוויקלט פֿילטערונג פֿון בילדער און ווידעאָ מיט פֿאַרשיידענע שטאַפּלען. זעט אין די בײַשפּילן וואָס יעדער כלל וואָלט געביטן.', 'זען בילד־שטאַפּלען', 'זען ווידעאָ־שטאַפּלען'],
     heroVisual: ['דאָס אָריגינעלע בילד', 'מיט אַ פֿילטער', 'אײַער אויסוואַל, אַ קלאָרער בליק'],
     imageEyebrow: 'בילד־פֿילטערונג', videoEyebrow: 'ווידעאָ־פֿילטערונג',
@@ -75,7 +75,7 @@ export const consumer = {
   },
   he: {
     metaTitle: 'סינון תמונות וסרטונים לפי הבחירה שלך | Browslium',
-    metaDescription: 'גלו מדיניות תמונות ווידאו והמחשות עתידיות לטקסט ולשמע. טקסט גלוי עובר כיום ללא שינוי, גם עם עיבוד GPU.',
+    metaDescription: 'גלו מדיניות תמונות ווידאו והמחשות עתידיות לטקסט ולשמע. טקסט גלוי עובר כיום ללא שינוי.',
     hero: ['לבחור מה לראות ברשת.', 'Browslium מפתחת סינון תמונות ווידאו ברמות לבחירה. בדוגמאות אפשר לראות מה כל מדיניות עשויה לשנות.', 'לראות רמות לתמונות', 'לראות רמות לווידאו'],
     heroVisual: ['התמונה המקורית', 'עם סינון', 'הבחירה שלך, תצוגה ברורה יותר'],
     imageEyebrow: 'סינון תמונות', videoEyebrow: 'סינון וידאו',
@@ -93,7 +93,7 @@ export const consumer = {
   },
   'pt-BR': {
     metaTitle: 'Filtre imagens e vídeos do seu jeito | Browslium',
-    metaDescription: 'Explore políticas para imagens e vídeos e conceitos futuros de texto e áudio. Hoje o texto visível passa intacto, mesmo com processamento por GPU.',
+    metaDescription: 'Explore políticas para imagens e vídeos e conceitos futuros de texto e áudio. Hoje o texto visível passa intacto.',
     hero: ['Escolha o que você quer ver na internet.', 'O Browslium está desenvolvendo filtragem de imagens e vídeos com níveis à escolha. Veja nos exemplos o que cada política mudaria.', 'Explorar níveis de imagem', 'Ver níveis de vídeo'],
     heroVisual: ['Imagem original', 'Com filtro', 'Sua escolha, uma visão mais clara'],
     imageEyebrow: 'Filtro de imagens', videoEyebrow: 'Filtro de vídeos',
@@ -111,7 +111,7 @@ export const consumer = {
   },
   fr: {
     metaTitle: 'Filtrez les images et les vidéos selon vos choix | Browslium',
-    metaDescription: 'Découvrez les règles pour images et vidéos et les concepts futurs pour le texte et l’audio. Aujourd’hui, le texte visible passe intact, même avec le traitement GPU.',
+    metaDescription: 'Découvrez les règles pour images et vidéos et les concepts futurs pour le texte et l’audio. Aujourd’hui, le texte visible passe intact.',
     hero: ['Choisissez ce que vous voyez en ligne.', 'Browslium développe le filtrage des images et vidéos avec plusieurs niveaux au choix. Découvrez dans ces exemples ce que chaque règle changerait.', 'Explorer les niveaux d’image', 'Voir les niveaux vidéo'],
     heroVisual: ['Image d’origine', 'Avec filtrage', 'Votre choix, une vue plus claire'],
     imageEyebrow: 'Filtrage des images', videoEyebrow: 'Filtrage des vidéos',
