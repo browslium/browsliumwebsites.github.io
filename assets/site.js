@@ -29,6 +29,53 @@
     link.addEventListener('click', () => safeSet(choiceKey,target));
   });
 
+  // The public site has no session authority. Restore Sign In before every
+  // check and show Dashboard only for the latest exact server confirmation.
+  const sessionLinks = [...document.querySelectorAll('[data-session-link]')];
+  const signInState = sessionLinks.map(link => ({ href:link.getAttribute('href'), label:link.textContent }));
+  const resetSessionLinks = () => sessionLinks.forEach((link, index) => {
+    link.setAttribute('href', signInState[index].href);
+    link.textContent = signInState[index].label;
+  });
+  resetSessionLinks();
+  const sessionEndpoint = document.body.dataset.sessionEndpoint;
+  const dashboardDestination = document.body.dataset.dashboardUrl;
+  if (sessionEndpoint && dashboardDestination) {
+    try {
+      const url = new URL(sessionEndpoint, location.origin);
+      const dashboard = new URL(dashboardDestination, location.origin);
+      if (url.origin === 'https://app.browslium.com' && dashboard.origin === 'https://app.browslium.com' &&
+          sessionLinks.length && sessionLinks.every(link => link.dataset.dashboardLabel)) {
+        let latestCheck = 0;
+        const invalidate = () => { latestCheck++; resetSessionLinks(); };
+        const recheck = () => {
+          const check = ++latestCheck;
+          resetSessionLinks();
+          if (document.visibilityState === 'hidden') return;
+          fetch(url.href, { credentials:'include', mode:'cors', cache:'no-store' })
+            .then(response => check === latestCheck && response.status === 200 ? response.json() : null)
+            .then(session => {
+              if (check !== latestCheck || document.visibilityState === 'hidden') return;
+              if (!session || typeof session !== 'object' || Array.isArray(session) ||
+                  Object.keys(session).length !== 1 || session.authenticated !== true) return;
+              sessionLinks.forEach(link => {
+                link.href = dashboard.href;
+                link.textContent = link.dataset.dashboardLabel;
+              });
+            }).catch(() => { if (check === latestCheck) resetSessionLinks(); });
+        };
+        window.addEventListener('focus', recheck);
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') invalidate();
+          else recheck();
+        });
+        window.addEventListener('pageshow', recheck);
+        window.addEventListener('pagehide', invalidate);
+        recheck();
+      }
+    } catch {}
+  }
+
   const suggestion = document.querySelector('[data-language-suggestion]');
   const manual = safeGet(choiceKey);
   const detected = manual && slug[manual] ? manual : ((navigator.languages || [navigator.language]).map(languageOf).find(Boolean) || 'en');
@@ -85,8 +132,6 @@
     const kind = root.dataset.showcase;
     const scenes = [...root.querySelectorAll('[data-showcase-scene]')];
     const levels = [...root.querySelectorAll('[data-showcase-level]')];
-    const selection = root.querySelector('[data-showcase-selection]');
-    const description = root.querySelector('[data-showcase-description]');
     let scene = 1;
     let level = 0;
     let view = 'original';
@@ -105,8 +150,8 @@
       const sceneButton = scenes[scene - 1];
       const levelButton = levels[level];
       const alt = sceneButton.dataset.sceneAlt;
-      selection.textContent = level ? `${root.dataset.levelWord} ${level}` : root.dataset.originalLabel;
-      description.textContent = level ? levelButton.dataset.description : root.dataset.originalNote;
+      const announcement = root.querySelector('[data-showcase-announcement]');
+      announcement.textContent = level ? `${levelButton.querySelector('strong').textContent}. ${levelButton.querySelector('small').textContent}` : root.dataset.originalLabel;
       press(scenes, sceneButton);
       press(levels, levelButton);
       if (kind === 'image') {
@@ -114,6 +159,7 @@
         const result = root.querySelector('[data-result-image]');
         const stage = root.querySelector('[data-compare-stage]');
         const range = root.querySelector('[data-compare-range]');
+        root.querySelector('[data-compare-hint]').hidden = level === 0;
         const loading = root.querySelector('[data-showcase-loading]');
         const sourceUrl = media(`images/photo-${scene}-original.webp`);
         const resultUrl = media(`images/photo-${scene}-${level || 'original'}.webp`);
