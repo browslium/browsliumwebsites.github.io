@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node src/build.mjs",
-    "qa": "python3 qa.py"
+    "qa": "node scripts/test-root-redirect.mjs && python3 qa.py",
+    "qa:browser": "node scripts/test-session-browser.cjs"
   }
 }
