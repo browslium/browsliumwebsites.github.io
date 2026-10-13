@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).parent / 'dist'
@@ -27,7 +28,34 @@ TEXT_POLICY = {
     'pt-BR': ('O texto visível passa intacto', 'sem análise semântica'),
     'fr': ('Le texte visible passe intact', 'sans analyse sémantique'),
 }
-LOGIN_LABELS = {'en':'Sign in','es':'Iniciar sesión','ru':'Войти',
+HOME_TEXT_POLICY = {
+    'en': 'Today, written text passes through unchanged.',
+    'es': 'Hoy el texto escrito pasa intacto.',
+    'ru': 'Сейчас написанный текст проходит без изменений.',
+    'yi': 'הײַנט גייט געשריבן טעקסט דורך אומגעענדערט.',
+    'he': 'כיום טקסט כתוב עובר ללא שינוי.',
+    'pt-BR': 'Hoje o texto escrito passa intacto.',
+    'fr': 'Aujourd’hui, le texte écrit passe intact.',
+}
+HOME_GPU_POLICY = {
+    'en': 'It will stay intact even when GPU processing is active.',
+    'es': 'Seguirá intacto incluso cuando esté activo el procesamiento GPU.',
+    'ru': 'Он останется неизменным даже при активной обработке на GPU.',
+    'yi': 'ער וועט בלײַבן אומגעענדערט אַפֿילו ווען GPU־פּראָצעסירונג איז אַקטיוו.',
+    'he': 'הוא יישאר ללא שינוי גם כאשר עיבוד GPU יהיה פעיל.',
+    'pt-BR': 'Ele continuará intacto mesmo quando o processamento por GPU estiver ativo.',
+    'fr': 'Il restera intact même lorsque le traitement GPU sera actif.',
+}
+HOME_FUTURE_DEMO = {
+    'en': ('future Text/Audio concepts', 'visible text passes through unchanged', 'Illustrative future demo · Not available today', 'Text and audio: future concepts'),
+    'es': ('conceptos futuros de texto y audio', 'texto visible pasa intacto', 'Demo futura ilustrativa · No disponible hoy', 'Texto y audio: conceptos futuros'),
+    'ru': ('будущие концепции для текста и аудио', 'видимый текст проходит без изменений', 'Иллюстрация будущей функции · Сейчас недоступна', 'Текст и аудио: будущие идеи'),
+    'yi': ('צוקונפֿטיקע באַגריפֿן פֿאַר טעקסט און אוידיאָ', 'זעבאַרער טעקסט גייט איצט דורך אומגעענדערט', 'צוקונפֿטיקער בײַשפּיל · איצט נישט פֿאַראַן', 'טעקסט און אוידיאָ: צוקונפֿטיקע באַגריפֿן'),
+    'he': ('המחשות עתידיות לטקסט ולשמע', 'טקסט גלוי עובר כיום ללא שינוי', 'הדגמה עתידית להמחשה · אינה זמינה כיום', 'טקסט ושמע: רעיונות לעתיד'),
+    'pt-BR': ('conceitos futuros de texto e áudio', 'texto visível passa intacto', 'Demonstração futura ilustrativa · Indisponível hoje', 'Texto e áudio: conceitos futuros'),
+    'fr': ('concepts futurs pour le texte et l’audio', 'texte visible passe intact', 'Démo future illustrative · Indisponible aujourd’hui', 'Texte et audio : concepts futurs'),
+}
+LOGIN_LABELS = {'en':'Sign In','es':'Iniciar sesión','ru':'Войти',
                 'yi':'זיך אָנמעלדן','he':'כניסה','pt-BR':'Entrar',
                 'fr':'Se connecter'}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
@@ -91,6 +119,8 @@ if gateway.find('link',rel='canonical')[0].get('href')!=ORIGIN+'/':errors.append
 if {x['hreflang']:x.get('href') for x in gateway.find('link',rel='alternate')} != {**{lang:ORIGIN+f'/{slug}/' for lang,slug in LOCALES.items()},'x-default':ORIGIN+'/'}:errors.append('gateway hreflang')
 if not (ROOT/'favicon.ico').is_file() or not (ROOT/'assets/favicon-64.png').is_file():errors.append('hostname favicon files')
 if not gateway.find('link',rel='icon',href='/favicon.ico'):errors.append('gateway favicon link')
+if 'location.replace' not in (ROOT/'index.html').read_text() or 'location.replace' in (ROOT/'404.html').read_text():
+    errors.append('root-only locale redirect')
 for asset in ('browslium-wordmark-white.webp','browslium-wordmark-emerald.webp'):
     if not (ROOT/'assets'/asset).is_file():errors.append(f'missing brand asset {asset}')
 for icon in ('android','ios','macos','windows','x','instagram','youtube','tiktok'):
@@ -102,24 +132,30 @@ for code,slug in LOCALES.items():
         filename=ROOT/slug/page/'index.html' if page else ROOT/slug/'index.html'
         if not filename.exists():errors.append(f'missing {route}');continue
         p=Page();p.feed(filename.read_text())
-        if page in ('', 'image-filtering', 'video-filtering'):
+        if page in ('image-filtering', 'video-filtering'):
             visible_text=' '.join(p.text)
             if not all(marker in visible_text for marker in (*TEXT_POLICY[code], 'GPU')):
                 errors.append(f'text pass-through policy missing {route}')
         portal_links=[a for a in p.find('a') if a.get('href','').startswith('https://app.browslium.com/')]
         if any(a.get('href') not in (PORTAL_LOGIN,PORTAL_SETUP) for a in portal_links):
             errors.append(f'unexpected portal route {route}')
-        if len([a for a in portal_links if a.get('href')==PORTAL_LOGIN]) != (2 if not page else 1):
+        if len([a for a in portal_links if a.get('href')==PORTAL_LOGIN]) < 2:
             errors.append(f'login route {route}')
-        if len([a for a in portal_links if a.get('href')==PORTAL_SETUP]) != (1 if not page else 0):
+        if len([a for a in portal_links if a.get('href')==PORTAL_SETUP]) != (2 if page in ('','image-filtering','video-filtering') else 1):
             errors.append(f'setup route {route}')
+        if len([a for a in p.find('a') if 'data-session-link' in a]) != 2:
+            errors.append(f'verified-session navigation contract {route}')
+        if any('data-session-endpoint' in attrs or 'data-dashboard-url' in attrs for attrs in p.find('body')):
+            errors.append(f'unverified session integration emitted {route}')
         if not page and (LOGIN_LABELS[code] not in p.text or
                          not p.find('p', **{'class':'portal-pilot-note'}) or
-                         not any(a.get('href')==PORTAL_LOGIN and
-                                 'button-primary' in a.get('class','').split() for a in portal_links) or
-                         not any(a.get('href')==PORTAL_SETUP and
-                                 'button-outline' in a.get('class','').split() for a in portal_links)):
+                         len([a for a in portal_links if a.get('href')==PORTAL_SETUP and 'button-primary' in a.get('class','').split()]) != 1 or
+                         any(a.get('href')==PORTAL_LOGIN and 'button-primary' in a.get('class','').split() for a in portal_links)):
             errors.append(f'homepage pilot actions or notice {route}')
+        if len(p.find('section',**{'class':'donation-band'}))!=1 or len(p.find('section',**{'class':'newsletter-band'}))!=1:
+            errors.append(f'shared closing bands {route}')
+        if len([x for x in p.find('input',type='email') if 'disabled' in x])!=1 or len([x for x in p.find('button') if x.get('type')=='submit' and 'disabled' in x])!=1:
+            errors.append(f'newsletter must not collect email yet {route}')
         if not p.find('link',rel='stylesheet',href=CSS_URL) or not p.find('script',src=JS_URL):errors.append(f'asset versions {route}')
         html=p.find('html')
         if len(html)!=1 or html[0].get('lang')!=code or html[0].get('dir')!=('rtl' if code in ('he','yi') else 'ltr'):errors.append(f'lang/dir {route}')
@@ -152,12 +188,38 @@ for code,slug in LOCALES.items():
                 if target and target not in all_paths:errors.append(f'broken internal link {route}: {href}')
         if not page:
             text=filename.read_text()
-            faq_block=text.split('class="section faq-section"',1)[1].split('class="section donate-section"',1)[0]
+            if not all(marker in ' '.join(p.text) for marker in (HOME_TEXT_POLICY[code], HOME_GPU_POLICY[code])):
+                errors.append(f'current text pass-through policy missing {route}')
+            future_meta, unchanged_meta, demo_note, future_link = HOME_FUTURE_DEMO[code]
+            description=desc[0].get('content','') if desc else ''
+            if (not all(marker in description for marker in (future_meta, unchanged_meta, 'GPU')) or
+                not p.find('meta',property='og:description',content=description) or
+                not any(x.get('description')==description for x in p.scripts)):
+                errors.append(f'future text metadata missing {route}')
+            if demo_note not in p.text or not p.find('p', **{'class':'small-note text-demo-note'}):
+                errors.append(f'illustrative future text demo label missing {route}')
+            if future_link not in p.text:
+                errors.append(f'future text CTA missing {route}')
+            concept=p.find('svg',**{'class':'text-concept-svg'})
+            if len(concept)!=1:
+                errors.append(f'future text SVG missing {route}')
+            else:
+                source=concept[0].get('data-demo-original','')
+                masked=concept[0].get('data-demo-masked','')
+                expected=''.join(char if char.isspace() else '*' for char in source if not unicodedata.combining(char))
+                if source.count(' ')<2 or not any(char in source for char in ',.!?،؛') or masked!=expected:
+                    errors.append(f'full-sentence character mask {route}')
+                svg_block=text.split('class="text-concept-svg"',1)[1].split('</svg>',1)[0]
+                if svg_block.count('<text ')!=6:
+                    errors.append(f'book passage before and after {route}')
+            faq_block=text.split('class="section faq-section"',1)[1].split('</main>',1)[0]
             if faq_block.count('<details>')!=20:errors.append(f'FAQ count {route}')
             if text.index('id="faq"')>text.index('id="donate"'):errors.append(f'FAQ after donate {route}')
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
             if len(p.find('section',**{'data-showcase':'image'}))!=1 or len(p.find('section',**{'data-showcase':'video'}))!=1:
                 errors.append(f'photo/video showcases missing {route}')
+            if text.count('class="showcase-foot"><a class="text-link"')!=2:
+                errors.append(f'showcase navigation must stay secondary {route}')
             if 'problem-section' in text or 'how-section' in text:
                 errors.append(f'outdated opening sections present {route}')
             if text.index('data-showcase="image"') > text.index('data-showcase="video"'):
@@ -167,10 +229,13 @@ for code,slug in LOCALES.items():
             if 'id="demo"' in text or 'Choose the filtering policy' in text:
                 errors.append(f'outdated illustrative demo {route}')
             if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
-            if 'id="audio-text"' not in text or 'id="android-apps"' not in text:errors.append(f'new content sections {route}')
+            if not (text.index('id="text-future"') < text.index('id="audio-text"') < text.index('id="android-apps"')):errors.append(f'text then audio then Android {route}')
             if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
-            if 'browslium-wordmark-white.webp' not in text or 'browslium-wordmark-emerald.webp' not in text:errors.append(f'official brand wordmarks {route}')
-            if 'audience-account-note' not in text:errors.append(f'adult account note missing {route}')
+            if 'footer-logo-slot' not in text or 'brand-hover' in text:errors.append(f'new footer logo slot {route}')
+            if 'audiences-section' in text or 'id="for-you"' in text:errors.append(f'removed audience section {route}')
+            if 'Fully supported' in text:errors.append(f'unsupported platform claim {route}')
+            if 'GPU' not in text or 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
+                errors.append(f'honest future concept demo {route}')
             if 'Test result' in text or 'SAM 3.1' in text or 'Silent clips from controlled' in text or 'Under development and testing' in text:
                 errors.append(f'outdated visible product copy {route}')
             ids={x.get('id') for _,x in p.tags if x.get('id')}
@@ -178,10 +243,22 @@ for code,slug in LOCALES.items():
                 if 'button-primary' in link.get('class','') and link.get('href','').startswith('#') and link['href'][1:] not in ids:
                     errors.append(f'broken scroll CTA {route}: {link["href"]}')
         if page in ('image-filtering','video-filtering'):
+            text=filename.read_text()
             expected_levels=7 if page=='image-filtering' else 6
-            if len(p.find('li')) < expected_levels:errors.append(f'explainer levels missing {route}')
+            if len([b for b in p.find('button') if 'data-showcase-level' in b]) != expected_levels+1:
+                errors.append(f'explainer levels missing {route}')
             kind='image' if page=='image-filtering' else 'video'
             if len(p.find('section',**{'data-showcase':kind}))!=1:errors.append(f'explainer showcase missing {route}')
+            next_href=f'/{slug}/video-filtering/' if kind=='image' else f'/{slug}/#text-future'
+            if not any(a.get('href')==next_href and 'text-link' in a.get('class','').split() for a in p.find('a')):
+                errors.append(f'explainer next-step CTA {route}')
+            if kind=='video' and HOME_FUTURE_DEMO[code][3] not in p.text:
+                errors.append(f'explainer future text CTA missing {route}')
+            hero=text.split('class="explainer-hero"',1)[1].split('</section>',1)[0]
+            if (f'class="button button-primary" href="{PORTAL_SETUP}"' not in hero or
+                'class="text-link" href="#examples"' not in hero or
+                'class="portal-pilot-note"' not in hero):
+                errors.append(f'explainer pilot action and examples {route}')
         if page==PRODUCT_PAGE:
             text=filename.read_text()
             if len(p.find('section'))<12:errors.append(f'product notice sections missing {route}')
