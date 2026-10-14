@@ -128,6 +128,8 @@ for code,slug in LOCALES.items():
             if not all(marker in visible_text for marker in (*TEXT_POLICY[code], 'GPU')):
                 errors.append(f'text pass-through policy missing {route}')
         portal_links=[a for a in p.find('a') if a.get('href','').startswith('https://app.browslium.com/')]
+        if p.find('a',href='https://managers.browslium.com'):
+            errors.append(f'unavailable manager destination in public release {route}')
         if any(a.get('href') not in (PORTAL_LOGIN,PORTAL_SETUP) for a in portal_links):
             errors.append(f'unexpected portal route {route}')
         if len([a for a in portal_links if a.get('href')==PORTAL_LOGIN]) < 2:
@@ -139,10 +141,10 @@ for code,slug in LOCALES.items():
         if any('data-session-endpoint' in attrs or 'data-dashboard-url' in attrs for attrs in p.find('body')):
             errors.append(f'unverified session integration emitted {route}')
         if not page and (LOGIN_LABELS[code] not in p.text or
-                         not p.find('p', **{'class':'portal-pilot-note'}) or
+                         p.find('p', **{'class':'portal-pilot-note'}) or
                          len([a for a in portal_links if a.get('href')==PORTAL_SETUP and 'button-primary' in a.get('class','').split()]) != 1 or
                          any(a.get('href')==PORTAL_LOGIN and 'button-primary' in a.get('class','').split() for a in portal_links)):
-            errors.append(f'homepage pilot actions or notice {route}')
+            errors.append(f'homepage actions or removed pilot note {route}')
         if len(p.find('section',**{'class':'donation-band'}))!=1 or len(p.find('section',**{'class':'newsletter-band'}))!=1:
             errors.append(f'shared closing bands {route}')
         if len([x for x in p.find('input',type='email') if 'disabled' in x])!=1 or len([x for x in p.find('button') if x.get('type')=='submit' and 'disabled' in x])!=1:
@@ -187,10 +189,10 @@ for code,slug in LOCALES.items():
                 not p.find('meta',property='og:description',content=description) or
                 not any(x.get('description')==description for x in p.scripts)):
                 errors.append(f'future text metadata missing {route}')
-            if demo_note not in p.text or not p.find('p', **{'class':'small-note text-demo-note'}):
-                errors.append(f'illustrative future text demo label missing {route}')
-            if future_link not in p.text:
-                errors.append(f'future text CTA missing {route}')
+            if demo_note in p.text or p.find('p', **{'class':'small-note text-demo-note'}):
+                errors.append(f'removed future text caption returned {route}')
+            if future_link in p.text:
+                errors.append(f'removed showcase text CTA returned {route}')
             concept=p.find('svg',**{'class':'text-concept-svg'})
             if len(concept)!=1:
                 errors.append(f'future text SVG missing {route}')
@@ -210,8 +212,12 @@ for code,slug in LOCALES.items():
             if 'FAQPage' in text:errors.append(f'unsupported FAQPage markup {route}')
             if len(p.find('section',**{'data-showcase':'image'}))!=1 or len(p.find('section',**{'data-showcase':'video'}))!=1:
                 errors.append(f'photo/video showcases missing {route}')
-            if text.count('class="showcase-foot"><a class="text-link"')!=2:
-                errors.append(f'showcase navigation must stay secondary {route}')
+            if 'class="showcase-foot"' in text:
+                errors.append(f'removed showcase footer links returned {route}')
+            if 'class="hero-explore"' in text or 'class="portal-pilot-note"' in text:
+                errors.append(f'removed hero links or note returned {route}')
+            if 'id="faq"' in text.split('class="desktop-nav"',1)[1].split('</nav>',1)[0]:
+                errors.append(f'FAQ returned to desktop navigation {route}')
             if 'problem-section' in text or 'how-section' in text:
                 errors.append(f'outdated opening sections present {route}')
             if text.index('data-showcase="image"') > text.index('data-showcase="video"'):
@@ -239,10 +245,12 @@ for code,slug in LOCALES.items():
             audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
             if ('data-muted-regions="2"' not in audio_section or
                 audio_section.count('stroke="#ff7890"') != 2 or
-                'fill="#bd9aff"' not in audio_section or
+                'fill="#9063d8"' not in audio_section or
                 'textLength=' in audio_section or
                 'audio-wave-grad' in audio_section):
                 errors.append(f'two outlined audio mute regions {route}')
+            if 'class="small-note"' in audio_section:
+                errors.append(f'removed audio concept caption returned {route}')
             android_section=text.split('id="android-apps"',1)[1].split('id="platforms"',1)[0]
             if 'button-soft' in android_section:errors.append(f'unwanted Android CTA {route}')
             if text.count('class="platform-status"') != 4:errors.append(f'compatibility badges {route}')
@@ -259,16 +267,13 @@ for code,slug in LOCALES.items():
                 errors.append(f'explainer levels missing {route}')
             kind='image' if page=='image-filtering' else 'video'
             if len(p.find('section',**{'data-showcase':kind}))!=1:errors.append(f'explainer showcase missing {route}')
-            next_href=f'/{slug}/video-filtering/' if kind=='image' else f'/{slug}/#text-future'
-            if not any(a.get('href')==next_href and 'text-link' in a.get('class','').split() for a in p.find('a')):
-                errors.append(f'explainer next-step CTA {route}')
-            if kind=='video' and HOME_FUTURE_DEMO[code][3] not in p.text:
-                errors.append(f'explainer future text CTA missing {route}')
+            if 'class="showcase-foot"' in text:
+                errors.append(f'removed explainer showcase links returned {route}')
             hero=text.split('class="explainer-hero"',1)[1].split('</section>',1)[0]
             if (f'class="button button-primary" href="{PORTAL_SETUP}"' not in hero or
-                'class="text-link" href="#examples"' not in hero or
-                'class="portal-pilot-note"' not in hero):
-                errors.append(f'explainer pilot action and examples {route}')
+                'class="text-link" href="#examples"' in hero or
+                'class="portal-pilot-note"' in hero):
+                errors.append(f'explainer primary action or removed note {route}')
         if page==PRODUCT_PAGE:
             text=filename.read_text()
             if len(p.find('section'))<12:errors.append(f'product notice sections missing {route}')
