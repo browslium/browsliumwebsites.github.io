@@ -12,7 +12,7 @@ export const copy = {
   en: {
     title: 'Content filtering for a safer internet | Browslium',
     description: 'Explore Browslium, a content filter in development for images, video and audio. Visible text passes through unchanged, without semantic analysis.',
-    nav: ['How it works', 'Filtering levels', 'Platforms', 'FAQ', 'Support Browslium'],
+    nav: ['How it works', 'Filtering levels', 'Platforms', 'FAQ', 'Support OS'],
     menu: 'Open menu', language: 'Language', switchLanguage: 'Choose language', skip: 'Skip to content', logoAlt: 'Browslium logo with a luminous emerald, blue and violet B',
     hero: ['A more thoughtful way to filter online content', 'Browslium is building content-level protection for the things people actually see and hear, with policies that can be chosen for different needs.', 'Explore how it works', 'See filtering levels', 'Under development and testing'],
     problem: ['A website is more than its address', 'Allowing a site does not mean every image, video or audio item on it is right for every person. Browslium is designed to evaluate supported media inside a page, rather than deciding only at the domain level. Visible text passes through unchanged.', 'More precise decisions', 'Policies that fit different needs', 'Designed for real-world content'],
@@ -33,7 +33,7 @@ export const copy = {
   es: {
     title: 'Filtro de contenido para una internet más segura | Browslium',
     description: 'Conoce Browslium, un filtro en desarrollo para imágenes, video y audio. El texto visible pasa intacto, sin análisis semántico.',
-    nav: ['Cómo funciona', 'Niveles de filtrado', 'Plataformas', 'Preguntas frecuentes', 'Apoyar Browslium'],
+    nav: ['Cómo funciona', 'Niveles de filtrado', 'Plataformas', 'Preguntas frecuentes', 'Apóyanos'],
     menu: 'Abrir menú', language: 'Idioma', switchLanguage: 'Elegir idioma', skip: 'Ir al contenido', logoAlt: 'Logotipo de Browslium con una B luminosa en verde esmeralda, azul y violeta',
     hero: ['Un filtro de contenido que mira más allá del sitio web', 'Browslium desarrolla protección para el contenido que las personas realmente ven y escuchan, con políticas que pueden adaptarse a distintas necesidades.', 'Descubre cómo funciona', 'Ver niveles de filtrado', 'En desarrollo y pruebas'],
     problem: ['Un sitio web es más que su dirección', 'Permitir una página no significa que cada imagen, video o audio sea adecuado para todos. Browslium está diseñado para evaluar medios compatibles dentro de la página, en vez de decidir solo por dominio. El texto visible pasa intacto.', 'Decisiones más precisas', 'Políticas para distintas necesidades', 'Pensado para contenido real'],
@@ -54,7 +54,7 @@ export const copy = {
   ru: {
     title: 'Фильтрация контента и безопасный интернет | Browslium',
     description: 'Browslium — разрабатываемая система фильтрации изображений, видео и аудио. Видимый текст проходит без изменений и семантического анализа.',
-    nav: ['Как это работает', 'Уровни фильтрации', 'Платформы', 'Вопросы и ответы', 'Поддержать проект'],
+    nav: ['Как это работает', 'Уровни фильтрации', 'Платформы', 'Вопросы и ответы', 'Поддержать'],
     menu: 'Открыть меню', language: 'Язык', switchLanguage: 'Выбрать язык', skip: 'Перейти к содержимому', logoAlt: 'Логотип Browslium: светящаяся буква B в изумрудных, синих и фиолетовых тонах',
     hero: ['Фильтрация контента с учётом того, что видит человек', 'Browslium разрабатывает защиту на уровне отдельных материалов: изображений, видео и другого содержимого. Правила можно подбирать под разные потребности.', 'Как это работает', 'Уровни фильтрации', 'В разработке и тестировании'],
     problem: ['На одном сайте бывает разный контент', 'Разрешённый сайт не означает, что каждое изображение, видео или аудио подходит всем. Browslium задуман для проверки поддерживаемых медиа внутри страницы, а не только её адреса. Видимый текст проходит без изменений.', 'Более точные решения', 'Правила под разные задачи', 'Учёт реального содержимого'],
@@ -75,7 +75,7 @@ export const copy = {
   he: {
     title: 'סינון תכנים לאינטרנט בטוח יותר | Browslium',
     description: 'הכירו את Browslium: מערכת סינון בפיתוח לתמונות, וידאו ושמע. טקסט גלוי עובר ללא שינוי וללא ניתוח סמנטי.',
-    nav: ['איך זה עובד', 'רמות סינון', 'פלטפורמות', 'שאלות נפוצות', 'תמיכה ב־Browslium'],
+    nav: ['איך זה עובד', 'רמות סינון', 'פלטפורמות', 'שאלות נפוצות', 'תמכו בנו'],
     menu: 'פתיחת תפריט', language: 'שפה', switchLanguage: 'בחירת שפה', skip: 'דילוג לתוכן', logoAlt: 'הלוגו של Browslium: האות B זוהרת בגווני ירוק אמרלד, כחול וסגול',
     hero: ['סינון תכנים שמתמקד במה שרואים ושומעים', 'Browslium מפתחת הגנה ברמת התוכן עצמו — תמונות, וידאו וחומרים נוספים — עם מדיניות שאפשר להתאים לצרכים שונים.', 'איך זה עובד', 'לרמות הסינון', 'בפיתוח ובבדיקות'],
     problem: ['אתר אחד יכול להכיל תכנים שונים', 'אתר שמותר לגלוש אליו עשוי להכיל תמונות, סרטונים או שמע שלא מתאימים לכל אחד. Browslium נועדה לבדוק מדיה נתמכת בתוך העמוד, ולא להסתמך רק על כתובת האתר. טקסט גלוי עובר ללא שינוי.', 'החלטות מדויקות יותר', 'מדיניות לצרכים שונים', 'התייחסות לתוכן עצמו'],
@@ -96,7 +96,7 @@ export const copy = {
   yi: {
     title: 'אינטערנעט־פילטער און זיכערער אינהאַלט | Browslium',
     description: 'Browslium איז אַן אינהאַלט־פילטער אין אַנטוויקלונג פֿאַר בילדער, ווידעאָ און אוידיאָ. דער זעבאַרער טעקסט גייט דורך אומגעענדערט, אָן סעמאַנטישע אַנאַליז.',
-    nav: ['ווי עס אַרבעט', 'פילטער־שטאַפּלען', 'פּלאַטפאָרמעס', 'אָפֿט געשטעלטע פֿראַגעס', 'העלפֿט Browslium'],
+    nav: ['ווי עס אַרבעט', 'פילטער־שטאַפּלען', 'פּלאַטפאָרמעס', 'אָפֿט געשטעלטע פֿראַגעס', 'העלפֿט אונדז'],
     menu: 'עפֿענען מעניו', language: 'שפּראַך', switchLanguage: 'אויסקלײַבן אַ שפּראַך', skip: 'גיין צום אינהאַלט', logoAlt: 'דער Browslium־לאָגאָ מיט אַ ליכטיקער B אין שמאַראַגד־גרין, בלוי און פֿיאָלעט',
     hero: ['אַן אינטערנעט־פילטער וואָס קוקט אויפֿן אינהאַלט אַליין', 'Browslium בויט אַ שוץ־סיסטעם פֿאַר די זאַכן וואָס מענטשן זען און הערן, מיט פילטער־כללים וואָס מע קען אויסקלײַבן לויטן באַדערפֿן.', 'ווי עס אַרבעט', 'זען די שטאַפּלען', 'אין אַנטוויקלונג און פּרוּוון'],
     problem: ['אַ וועבזײַט איז מער ווי אַן אַדרעס', 'אויב אַ זײַט איז דערלויבט, מיינט עס נאָך נישט אַז יעדער בילד, ווידעאָ אָדער אוידיאָ פּאַסט פֿאַר יעדן. Browslium איז אויסגעטראַכט צו קאָנטראָלירן געשטיצטע מעדיע אינעם בלאט, נישט נאָר דעם וועב־אַדרעס. דער זעבאַרער טעקסט גייט דורך אומגעענדערט.', 'פּינקטלעכערע באַשלוסן', 'כללים פֿאַר פֿאַרשיידענע באַדערפֿענישן', 'אויפֿמערקזאַמקייט צום אינהאַלט'],
@@ -117,7 +117,7 @@ export const copy = {
   'pt-BR': {
     title: 'Filtro de conteúdo para uma internet mais segura | Browslium',
     description: 'Conheça o Browslium, filtro em desenvolvimento para imagens, vídeos e áudio. O texto visível passa intacto, sem análise semântica.',
-    nav: ['Como funciona', 'Níveis de filtragem', 'Plataformas', 'Perguntas frequentes', 'Apoie o Browslium'],
+    nav: ['Como funciona', 'Níveis de filtragem', 'Plataformas', 'Perguntas frequentes', 'Apoie-nos'],
     menu: 'Abrir menu', language: 'Idioma', switchLanguage: 'Escolher idioma', skip: 'Ir para o conteúdo', logoAlt: 'Logo do Browslium com um B luminoso em verde esmeralda, azul e violeta',
     hero: ['Filtro de conteúdo que olha além do site', 'O Browslium está desenvolvendo proteção para o que as pessoas realmente veem e ouvem, com políticas que podem atender a necessidades diferentes.', 'Entenda como funciona', 'Ver níveis de filtragem', 'Em desenvolvimento e testes'],
     problem: ['Um site é mais do que seu endereço', 'Permitir um site não significa que toda imagem, vídeo ou áudio seja adequado para todos. O Browslium foi pensado para avaliar mídias compatíveis dentro da página, em vez de decidir apenas pelo domínio. O texto visível passa intacto.', 'Decisões mais precisas', 'Políticas para cada necessidade', 'Atenção ao conteúdo real'],
@@ -138,7 +138,7 @@ export const copy = {
   fr: {
     title: 'Filtrage de contenu pour un Internet plus sûr | Browslium',
     description: 'Découvrez Browslium, un filtre en développement pour les images, vidéos et sons. Le texte visible passe intact, sans analyse sémantique.',
-    nav: ['Fonctionnement', 'Niveaux de filtrage', 'Plateformes', 'Questions fréquentes', 'Soutenir Browslium'],
+    nav: ['Fonctionnement', 'Niveaux de filtrage', 'Plateformes', 'Questions fréquentes', 'Soutenez-nous'],
     menu: 'Ouvrir le menu', language: 'Langue', switchLanguage: 'Choisir une langue', skip: 'Aller au contenu', logoAlt: 'Logo Browslium avec un B lumineux vert émeraude, bleu et violet',
     hero: ['Un filtre de contenu qui va au-delà du site web', 'Browslium développe une protection portant sur ce que les personnes voient et entendent réellement, avec des règles adaptées à différents besoins.', 'Comprendre le fonctionnement', 'Voir les niveaux', 'En développement et en test'],
     problem: ['Un site ne se résume pas à son adresse', 'Autoriser un site ne signifie pas que chaque image, vidéo ou piste audio convient à tout le monde. Browslium vise à examiner les médias compatibles dans la page, au-delà du seul domaine. Le texte visible passe intact.', 'Des décisions plus fines', 'Des règles selon les besoins', 'Une attention au contenu réel'],

@@ -86,7 +86,7 @@ export function audioVisual(locale) {
     const envelope = Math.max(...bursts.map(([center, spread, peak]) => peak * Math.exp(-(((i - center) / spread) ** 2))));
     const texture = .32 + .68 * Math.min(1, Math.abs(Math.sin(i * .73) + .24 * Math.cos(i * 1.31)));
     const height = Math.round(5 + 76 * envelope * texture);
-    return `<rect x="${x.toFixed(1)}" y="${177 - height}" width="3" height="${height * 2}" rx="1.5" fill="#bd9aff"/>`;
+    return `<rect x="${x.toFixed(1)}" y="${177 - height}" width="3" height="${height * 2}" rx="1.5" fill="#9063d8"/>`;
   }).join('');
   const label = (value, x, color) => {
     const size = Array.from(value).length > 20 ? 19 : Array.from(value).length > 16 ? 22 : 25;
@@ -94,7 +94,7 @@ export function audioVisual(locale) {
   };
   return `<svg class="audio-concept-svg" viewBox="0 0 720 380" role="img" aria-label="${e(r.audioTitle)}: ${e(r.audioLabels.join(', '))}" data-muted-regions="2" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="audio-card-grad" x2="1" y2="1"><stop stop-color="#172b49"/><stop offset="1" stop-color="#101b32"/></linearGradient>
+      <linearGradient id="audio-card-grad" x2="1" y2="1"><stop stop-color="#1d2948"/><stop offset="1" stop-color="#171934"/></linearGradient>
     </defs>
     <rect x="10" y="22" width="700" height="338" rx="27" fill="url(#audio-card-grad)" stroke="#516a90" stroke-width="2"/>
     <rect x="174" y="56" width="171" height="232" rx="18" fill="#a52f4b" fill-opacity=".44" stroke="#ff7890" stroke-width="3"/>
