@@ -745,25 +745,26 @@ html[dir=rtl] .hero-waves{transform:scaleX(-1)}
 .hero-light-cyan{top:10%;left:-5%;width:60%;height:75%;background:radial-gradient(ellipse,rgba(0,231,242,.4),rgba(0,115,227,.17) 58%,transparent 76%)}
 .hero-light-violet{top:3%;right:-20%;width:70%;height:100%;background:radial-gradient(ellipse,rgba(86,38,255,.36),rgba(0,135,247,.18) 45%,transparent 76%)}
 .hero-display{position:relative;z-index:2;width:100%;max-width:none;margin:0;padding:16px;border:2px solid transparent;border-radius:29px;background:linear-gradient(#06111e,#06111e) padding-box,linear-gradient(111deg,#09f5eb 0%,#096cff 54%,#a135ff 100%) border-box;box-shadow:0 0 9px rgba(0,245,232,.9),0 0 28px rgba(0,124,255,.7),0 0 45px rgba(114,45,255,.58),0 35px 75px rgba(0,0,0,.55);transform-origin:center center;transform:perspective(1050px) rotateY(-9deg) rotateX(1deg) rotateZ(-2deg)}
-.hero-display-top{height:71px;min-height:0;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 9px 13px;color:#eaf6ff}
-.display-dots{display:flex;gap:8px;flex:none}
+.hero-display-top{height:71px;min-height:0;display:flex;align-items:center;gap:18px;padding:0 9px 13px;color:#eaf6ff}
+.display-dots{display:flex;gap:8px;flex:none;margin-inline-end:clamp(20px,6.2vw,90px)}
 .display-dots i{width:18px;height:18px;border-radius:50%}
 .display-dots i:first-child{background:#ff555b}.display-dots i:nth-child(2){background:#ffd83e}.display-dots i:last-child{background:#00d963}
 .hero-address{display:flex;align-items:center;gap:8px;min-width:0;min-height:43px;flex:1;padding:0 13px;border:1px solid rgba(127,187,216,.34);border-radius:11px;background:linear-gradient(130deg,#092539,#132638);font-size:16px;font-weight:500;line-height:1;white-space:nowrap}
 .hero-address svg{width:18px;height:18px;flex:none}
-.hero-browser-more{flex:none;margin-inline:0 4px;font-size:16px;line-height:1;letter-spacing:2px}
-.hero-display-images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.hero-browser-more{position:absolute;inset-block-start:40px;inset-inline-end:25px;font-size:16px;line-height:1;letter-spacing:2px}
+.hero-display-images{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:13px}
 .hero-display figure{position:relative;margin:0;overflow:hidden;border-radius:16px;background:#e3edf3}
 .hero .hero-display figure img{display:block;position:static;z-index:auto;width:100%;max-width:none;height:480px;aspect-ratio:auto;object-fit:cover;object-position:66% center;border:0;border-radius:0;filter:none;animation:none}
 .hero-display figcaption{position:absolute;z-index:4;inset:auto auto auto 14px;top:14px;display:flex;align-items:center;gap:9px;max-width:calc(100% - 28px);padding:10px 15px;border-radius:11px;background:rgba(18,28,40,.96);color:#fff;font-family:Inter,NotoHebrew,Arial,sans-serif;font-size:16px;font-weight:650;line-height:1.2;white-space:nowrap}
 .hero-display .hero-filtered-label{background:#007d56;color:#fff;box-shadow:0 4px 15px rgba(0,93,66,.28)}
+.hero-filter-wash{position:absolute;z-index:1;inset:0;background:linear-gradient(120deg,rgba(95,145,186,.12),rgba(106,153,192,.22));mix-blend-mode:multiply;pointer-events:none}
 .hero-filter-check{display:grid;place-items:center;width:29px;height:29px;flex:none;border-radius:50%;background:#0ce4a5;color:#fff;font-size:22px;font-weight:800;line-height:1}
 .hero-reflection{position:absolute;z-index:0;top:87%;left:4%;width:92%;height:200px;border-radius:50%;background:linear-gradient(100deg,rgba(111,37,255,.38),rgba(0,184,244,.6),rgba(86,30,236,.36));filter:blur(27px);transform:scaleY(.48)}
 .hero .hero-visual:after{content:"";position:absolute;z-index:0;top:95%;left:13%;width:90%;height:90px;border-radius:50%;background:linear-gradient(90deg,rgba(135,38,255,.25),rgba(0,192,245,.55) 48%,rgba(49,84,255,.3) 78%,transparent);filter:blur(21px);transform:rotate(3deg) scaleY(.55)}
 html[dir=rtl] .hero-display{transform:perspective(1050px) rotateY(9deg) rotateX(1deg) rotateZ(2deg)}
 html[dir=rtl] .hero-display figcaption{inset-inline-start:14px;left:auto}
 /* Map the four corners of the desktop browser to the reference's tilted outline. */
-@media(min-width:1400px){html:not([dir=rtl]) .hero-display{transform-origin:0 0;transform:matrix3d(.85516734,-.07624561,0,-.000232468,-.00340716,.91355298,0,-.000008202,0,0,1,0,2,31,0,1)}}
+@media(min-width:1400px){html:not([dir=rtl]) .hero-display{width:calc(100% + 6px);margin-inline-start:16px;transform-origin:0 0;transform:matrix3d(.85516734,-.07624561,0,-.000232468,-.00340716,.91355298,0,-.000008202,0,0,1,0,2,31,0,1)}}
 @media(min-width:851px){
   html[lang=es] .hero h1,html[lang=pt-BR] .hero h1{font-size:clamp(72px,7.3vw,106px)}
   html[lang=fr] .hero h1,html[lang=ru] .hero h1{font-size:clamp(67px,6.8vw,99px)}
@@ -783,7 +784,7 @@ html[dir=rtl] .hero-display figcaption{inset-inline-start:14px;left:auto}
   .hero .hero-visual{min-height:0}
   .hero-display{padding:10px;border-radius:20px}
   .hero-display-top{height:clamp(43px,5vw,61px);gap:9px;padding:0 4px 9px}
-  .display-dots{gap:5px}.display-dots i{width:12px;height:12px}
+  .display-dots{gap:5px;margin-inline-end:clamp(12px,2.5vw,28px)}.display-dots i{width:12px;height:12px}
   .hero-address{min-height:34px;font-size:13px}.hero-address svg{width:15px;height:15px}
   .hero-display-images{gap:9px}
   .hero .hero-display figure img{height:clamp(300px,37vw,410px)}
@@ -818,10 +819,10 @@ html[dir=rtl] .hero-display figcaption{inset-inline-start:14px;left:auto}
   .hero-display{padding:7px;border-radius:18px;transform:rotate(-2deg)}
   html[dir=rtl] .hero-display{transform:rotate(2deg)}
   .hero-display-top{height:43px;gap:6px;padding:0 2px 7px}
-  .display-dots{gap:4px}.display-dots i{width:9px;height:9px}
+  .display-dots{gap:4px;margin-inline-end:0}.display-dots i{width:9px;height:9px}
   .hero-address{min-height:27px;padding:0 6px;font-size:11px;border-radius:7px}.hero-address svg{width:12px;height:12px}
-  .hero-browser-more{font-size:10px;letter-spacing:0}
-  .hero-display-images{gap:6px}
+  .hero-browser-more{inset-block-start:13px;inset-inline-end:12px;font-size:10px;letter-spacing:0}
+  .hero-display-images{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
   .hero-display figure{border-radius:8px}
   .hero .hero-display figure img{height:clamp(205px,61vw,320px);object-position:66% center}
   .hero-display figcaption{top:6px;inset-inline-start:6px;gap:3px;max-width:calc(100% - 12px);padding:4px 6px;border-radius:6px;font-size:9px}
