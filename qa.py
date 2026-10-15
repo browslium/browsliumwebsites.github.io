@@ -81,6 +81,8 @@ class Page(HTMLParser):
         return [x for t,x in self.tags if t==tag and all(x.get(k)==v for k,v in attrs.items())]
 
 errors=[]
+if 'hero-neon-reference.png' in (ROOT/'assets/site.css').read_text():
+    errors.append('hero reference screenshot must not be used in CSS')
 app_privacy_alias=ROOT/'privacy/index.html'
 english_product_notice=ROOT/'en/product-privacy/index.html'
 if not app_privacy_alias.is_file() or app_privacy_alias.read_bytes()!=english_product_notice.read_bytes():
@@ -228,10 +230,13 @@ for code,slug in LOCALES.items():
                 errors.append(f'outdated illustrative demo {route}')
             if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
             if not (text.index('id="text-future"') < text.index('id="audio-text"') < text.index('id="android-apps"')):errors.append(f'text then audio then Android {route}')
-            if ('class="hero-reference-mobile-art"' not in text or
-                'class="hero-reference-mobile-labels"' not in text or
-                'class="hero-reference-labels"' not in text):
-                errors.append(f'hero comparison {route}')
+            if ('class="hero-waves"' not in text or
+                'class="hero-display"' not in text or
+                'class="hero-display-images"' not in text or
+                'photo-2-original.webp' not in text or
+                'photo-2-2.webp' not in text or
+                'hero-neon-reference.png' in text):
+                errors.append(f'hero must use separate live elements {route}')
             if ('footer-logo-slot' not in text or 'class="footer-logo-default"' not in text or
                 'class="footer-logo-hover"' not in text or
                 'browslium-wordmark-white.webp' not in text or
