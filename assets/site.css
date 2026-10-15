@@ -799,6 +799,55 @@ html[dir=rtl] .hero:before{transform:scaleX(-1)}
 }
 .hero-display .hero-filtered-label{background:#007d56;color:#fff;box-shadow:0 4px 15px rgba(0,93,66,.28)}
 .hero-filter-check{display:grid;place-items:center;width:29px;height:29px;flex:none;border-radius:50%;background:#0ce4a5;color:#fff;font-size:22px;font-weight:800;line-height:1}
+.hero-reference-labels{display:none}
+@media(min-width:1101px){
+  /* Use the supplied artwork at its original proportions. The copy and actions remain live HTML. */
+  .hero{background:#02050b url('/assets/hero-neon-waves.svg') center top/cover no-repeat}
+  .hero:before{
+    z-index:1;
+    background:url('/assets/hero-neon-reference.png') calc(50% + 20px) -10.91vw/100% auto no-repeat;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0 44%,#000 45.4%),linear-gradient(180deg,transparent 0 2%,#000 4%);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(90deg,transparent 0 44%,#000 45.4%),linear-gradient(180deg,transparent 0 2%,#000 4%);
+    mask-composite:intersect;
+  }
+  .hero:after{
+    display:block;content:"";position:absolute;z-index:0;inset:0;width:100%;height:100%;pointer-events:none;
+    background:url('/assets/hero-neon-reference.png') calc(50% + 20px) -10.91vw/100% auto no-repeat;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0 3%,#000 5% 10%,transparent 14% 76%,#000 82%);
+    mask-image:linear-gradient(180deg,transparent 0 3%,#000 5% 10%,transparent 14% 76%,#000 82%);
+  }
+  html[dir=rtl] .hero:after{transform:scaleX(-1)}
+  .hero .wrap{width:min(1328px,calc(100% - 120px))}
+  .hero .hero-grid{z-index:2;min-height:max(780px,calc(100svh - 158px))}
+  .hero-copy{transform:translateY(-15px)}
+  .hero .hero-visual{display:none}
+  .hero .hero-copy>p{font-size:clamp(20px,1.9vw,27px)}
+  html[lang=en] .hero .hero-copy>p{white-space:pre-line}
+  .hero .button-row{gap:21px}
+  .hero .hero-secondary{min-width:285px;font-weight:500}
+  .hero .hero-primary{min-width:246px}
+  .header-add-device{min-width:175px;font-size:16px}
+  html[lang=en] .hero h1{transform:scaleX(1.055);transform-origin:left center}
+  .hero-reference-labels{position:absolute;z-index:3;inset:0;display:block;pointer-events:none}
+  .hero-reference-address{display:none}
+  .hero-reference-original,.hero-reference-filtered{
+    position:absolute;display:flex;align-items:center;gap:9px;padding:10px 15px;
+    border-radius:11px;color:#fff;font:650 clamp(13px,1.105vw,17px)/1.2 Inter,NotoHebrew,Arial,sans-serif;
+    white-space:nowrap;transform:rotate(-2.5deg);
+  }
+  .hero-reference-original{left:calc(46.6vw + 20px);top:15.195vw;background:#202a35}
+  .hero-reference-filtered{left:calc(69.85vw + 20px);top:14.295vw;background:#007d56}
+  html[dir=rtl] .hero-reference-address{
+    position:absolute;left:4vw;top:7.2vw;display:flex;align-items:center;gap:9px;
+    width:37.5vw;height:62px;padding-inline:14px;border:1px solid rgba(127,187,216,.38);
+    border-radius:11px;background:linear-gradient(130deg,#092539,#132638);color:#eaf6ff;
+    font:500 16px/1 Inter,Arial,sans-serif;transform:rotate(3.2deg);
+  }
+  html[dir=rtl] .hero-reference-address svg{width:18px;height:18px;flex:none}
+  html[dir=rtl] .hero-reference-original{left:auto;right:calc(46.6vw + 20px);min-width:96px;justify-content:center;transform:rotate(2.5deg)}
+  html[dir=rtl] .hero-reference-filtered{left:auto;right:calc(69.85vw + 20px);min-width:140px;justify-content:center;transform:rotate(2.5deg)}
+}
 @media(min-width:851px){
   html[lang=es] .hero h1,html[lang=pt-BR] .hero h1{font-size:clamp(73px,7.3vw,106px)}
   html[lang=fr] .hero h1,html[lang=ru] .hero h1{font-size:clamp(68px,6.8vw,99px)}
