@@ -17,7 +17,6 @@ if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification:
     raise SystemExit('Google Search Console verification file missing or changed')
 ORIGIN = 'https://browslium.com'
 PORTAL_LOGIN = 'https://app.browslium.com/login'
-PORTAL_SETUP = 'https://app.browslium.com/setup'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
 TEXT_POLICY = {
     'en': ('Visible text passes through unchanged', 'without semantic analysis'),
@@ -144,19 +143,21 @@ for code,slug in LOCALES.items():
         if (len(p.find('p', **{'class':'footer-manager-pending'})) != 1 or
             not all(item in p.text for item in MANAGER_PENDING[code])):
             errors.append(f'localized pending manager portal {route}')
-        if any(a.get('href') not in (PORTAL_LOGIN,PORTAL_SETUP) for a in portal_links):
+        if any(a.get('href') != PORTAL_LOGIN for a in portal_links):
             errors.append(f'unexpected portal route {route}')
         if len([a for a in portal_links if a.get('href')==PORTAL_LOGIN]) < 2:
             errors.append(f'login route {route}')
-        if len([a for a in portal_links if a.get('href')==PORTAL_SETUP]) != (2 if page in ('','image-filtering','video-filtering') else 1):
-            errors.append(f'setup route {route}')
+        availability=f'/{slug}/#platforms'
+        availability_links=[a for a in p.find('a') if a.get('href') in (availability,'#platforms') and ('header-add-device' in a.get('class','').split() or 'button-primary' in a.get('class','').split())]
+        if len(availability_links) != (2 if page in ('','image-filtering','video-filtering') else 1):
+            errors.append(f'availability route {route}')
         if len([a for a in p.find('a') if 'data-session-link' in a]) != 2:
             errors.append(f'verified-session navigation contract {route}')
         if any('data-session-endpoint' in attrs or 'data-dashboard-url' in attrs for attrs in p.find('body')):
             errors.append(f'unverified session integration emitted {route}')
         if not page and (LOGIN_LABELS[code] not in p.text or
                          p.find('p', **{'class':'portal-pilot-note'}) or
-                         len([a for a in portal_links if a.get('href')==PORTAL_SETUP and 'button-primary' in a.get('class','').split()]) != 1 or
+                         len([a for a in availability_links if a.get('href')=='#platforms' and 'button-primary' in a.get('class','').split()]) != 1 or
                          any(a.get('href')==PORTAL_LOGIN and 'button-primary' in a.get('class','').split() for a in portal_links)):
             errors.append(f'homepage actions or removed pilot note {route}')
         if len(p.find('section',**{'class':'donation-band'}))!=1 or len(p.find('section',**{'class':'newsletter-band'}))!=1:
@@ -291,7 +292,7 @@ for code,slug in LOCALES.items():
             if 'class="showcase-foot"' in text:
                 errors.append(f'removed explainer showcase links returned {route}')
             hero=text.split('class="explainer-hero"',1)[1].split('</section>',1)[0]
-            if (f'class="button button-primary" href="{PORTAL_SETUP}"' not in hero or
+            if (f'class="button button-primary" href="{availability}"' not in hero or
                 'class="text-link" href="#examples"' in hero or
                 'class="portal-pilot-note"' in hero):
                 errors.append(f'explainer primary action or removed note {route}')

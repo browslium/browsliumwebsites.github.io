@@ -2,7 +2,7 @@
 // concepts for future capabilities; current visible text is passed through.
 export const redesign = {
   en: {
-    signIn: 'Sign In', getStarted: 'Get Started', dashboard: 'Dashboard',
+    signIn: 'Sign In', getStarted: 'Get Started', availabilityCta: 'Check availability', availabilityShort: 'Availability', dashboard: 'Dashboard',
     textTitle: 'Text, with a future choice',
     textIntro: "Written text passes through unchanged today. This is a preview of a possible future setting.",
     textWritten: "A future choice could replace a whole sentence with asterisks, keeping its spaces.",
@@ -19,7 +19,7 @@ export const redesign = {
     newsletter: ['Subscribe to our newsletter', 'Email address', 'Subscribe', 'Subscriptions will open after a provider and consent flow are ready.'],
   },
   es: {
-    signIn: 'Iniciar sesión', getStarted: 'Comenzar', dashboard: 'Panel',
+    signIn: 'Iniciar sesión', getStarted: 'Comenzar', availabilityCta: 'Ver disponibilidad', availabilityShort: 'Disponibilidad', dashboard: 'Panel',
     textTitle: 'Texto, una opción futura',
     textIntro: "Hoy el texto escrito pasa intacto. Esta es una vista de una posible función futura.",
     textWritten: "Una opción futura podría sustituir una frase completa por asteriscos, conservando los espacios.",
@@ -36,7 +36,7 @@ export const redesign = {
     newsletter: ['Suscríbete a nuestro boletín', 'Correo electrónico', 'Suscribirme', 'Las suscripciones abrirán cuando estén listos el proveedor y el consentimiento.'],
   },
   ru: {
-    signIn: 'Войти', getStarted: 'Начать', dashboard: 'Панель',
+    signIn: 'Войти', getStarted: 'Начать', availabilityCta: 'Проверить доступность', availabilityShort: 'Доступность', dashboard: 'Панель',
     textTitle: 'Текст: возможная функция в будущем',
     textIntro: "Сейчас написанный текст проходит без изменений. Это пример возможной будущей функции.",
     textWritten: "Будущая функция могла бы скрывать целое предложение звёздочками, сохраняя пробелы.",
@@ -53,7 +53,7 @@ export const redesign = {
     newsletter: ['Подпишитесь на рассылку', 'Адрес электронной почты', 'Подписаться', 'Подписка откроется после выбора провайдера и настройки согласия.'],
   },
   yi: {
-    signIn: 'זיך אָנמעלדן', getStarted: 'אָנהייבן', dashboard: 'קאָנטראָל־פּאַנעל',
+    signIn: 'זיך אָנמעלדן', getStarted: 'אָנהייבן', availabilityCta: 'זען צי עס איז פֿאַראַן', availabilityShort: 'צוטריט', dashboard: 'קאָנטראָל־פּאַנעל',
     textTitle: 'טעקסט: אַן אָפּציע פֿאַר דער צוקונפֿט',
     textIntro: "הײַנט גייט געשריבן טעקסט דורך אומגעענדערט. דאָס איז אַ בײַשפּיל פֿון אַ מעגלעכער צוקונפֿטיקער פֿונקציע.",
     textWritten: "אַ צוקונפֿטיקע אָפּציע וואָלט געקענט באַהאַלטן אַ גאַנצן זאַץ מיט שטערנדלעך, מיט די רווחים אויפֿן אָרט.",
@@ -70,7 +70,7 @@ export const redesign = {
     newsletter: ['שרײַבט זיך אײַן אין אונדזער נײַעס־בריוו', 'בליצפּאָסט־אַדרעס', 'אײַנשרײַבן', 'אײַנשרײַבן וועט זיך עפֿענען ווען דער צושטעלער און דער הסכמה־וועג זענען גרייט.'],
   },
   he: {
-    signIn: 'כניסה', getStarted: 'מתחילים', dashboard: 'לוח בקרה',
+    signIn: 'כניסה', getStarted: 'מתחילים', availabilityCta: 'בדיקת זמינות', availabilityShort: 'זמינות', dashboard: 'לוח בקרה',
     textTitle: 'טקסט, אפשרות לעתיד',
     textIntro: "כיום טקסט כתוב עובר ללא שינוי. זו המחשה של אפשרות עתידית.",
     textWritten: "אפשרות עתידית תוכל להסתיר משפט שלם בכוכביות, תוך שמירה על הרווחים.",
@@ -87,7 +87,7 @@ export const redesign = {
     newsletter: ['הירשמו לניוזלטר שלנו', 'כתובת דוא״ל', 'הרשמה', 'ההרשמה תיפתח לאחר בחירת ספק והשלמת תהליך ההסכמה.'],
   },
   'pt-BR': {
-    signIn: 'Entrar', getStarted: 'Começar', dashboard: 'Painel',
+    signIn: 'Entrar', getStarted: 'Começar', availabilityCta: 'Ver disponibilidade', availabilityShort: 'Disponibilidade', dashboard: 'Painel',
     textTitle: 'Texto, uma escolha futura',
     textIntro: "Hoje o texto escrito passa intacto. Esta é uma prévia de uma possível função futura.",
     textWritten: "Uma opção futura poderia ocultar uma frase inteira com asteriscos, mantendo os espaços.",
@@ -104,7 +104,7 @@ export const redesign = {
     newsletter: ['Assine nossa newsletter', 'E-mail', 'Assinar', 'As inscrições abrirão após a escolha do provedor e a configuração do consentimento.'],
   },
   fr: {
-    signIn: 'Se connecter', getStarted: 'Commencer', dashboard: 'Tableau de bord',
+    signIn: 'Se connecter', getStarted: 'Commencer', availabilityCta: 'Voir la disponibilité', availabilityShort: 'Disponibilité', dashboard: 'Tableau de bord',
     textTitle: 'Le texte, une option future',
     textIntro: "Aujourd’hui, le texte écrit passe intact. Voici un aperçu d’une fonction future possible.",
     textWritten: "Une option future pourrait masquer une phrase entière par des astérisques, en gardant les espaces.",

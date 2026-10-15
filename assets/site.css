@@ -908,3 +908,34 @@ html[dir=rtl] .hero-display figcaption{inset-inline-start:14px;left:auto}
 .footer-logo-slot .footer-logo-default,.footer-logo-slot .footer-logo-hover{transition:none}
 .footer-logo-slot:hover .footer-logo-default,.footer-logo-slot:focus-visible .footer-logo-default{opacity:1}
 .footer-logo-slot:hover .footer-logo-hover,.footer-logo-slot:focus-visible .footer-logo-hover{opacity:1}
+
+/* The hero uses real text, photos inside each card, and separate SVG/CSS light layers. */
+.availability-short{display:none}
+.platform-availability{max-width:740px;margin:16px auto 0;color:#405866;font-size:17px;line-height:1.5}
+.hero:after{opacity:.2}
+.hero-waves>path:nth-of-type(4){opacity:.38}
+.hero-display-images{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}
+@media(min-width:1101px){
+  .hero .hero-grid{min-height:max(950px,calc(100svh - 78px))}
+  .hero h1{font-size:clamp(78px,7.7vw,110px);margin-block-end:19px}
+  .hero-display-top{height:82px}
+  .hero .hero-display figure img{height:483px}
+}
+@media(max-width:850px){
+  .hero:after{opacity:.16}
+  .hero-waves>path:nth-of-type(4){opacity:.33}
+}
+@media(max-width:600px){
+  .header-add-device .availability-full{display:none}
+  .header-add-device .availability-short{display:inline}
+  .platform-availability{font-size:16px}
+}
+.footer-logo-slot:hover .footer-logo-default,.footer-logo-slot:focus-visible .footer-logo-default{opacity:0}
+@media(min-width:851px) and (max-width:1250px){
+  .desktop-nav{display:none}
+  .menu-toggle{display:flex}
+}
+@media(min-width:851px) and (max-width:1100px){
+  .hero .button-row{flex-wrap:wrap}
+  .hero .button{max-width:100%}
+}
