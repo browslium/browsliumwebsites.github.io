@@ -1,9 +1,9 @@
 // Consumer-facing copy shared by the homepage and the two filtering explainers.
 export const consumer = {
   en: {
-    metaTitle: 'Filter images and video with a policy that fits you | Browslium',
+    metaTitle: 'Image and video filtering in development | Browslium',
     metaDescription: 'Explore image and video policy examples and future Text/Audio concepts. Today, visible text passes through unchanged.',
-    hero: ['Choose what you see online.', 'Browslium lets you filter images and\nvideos before they appear, with selectable\nprotection levels for a cleaner browsing\nexperience.', 'Explore image levels', 'See video levels'],
+    hero: ['Choose what you see online.', 'Browslium is developing filters for\nimages and videos before they appear,\nwith selectable protection levels for a\ncleaner browsing experience.', 'Explore image levels', 'See video levels'],
     heroSecondary: 'See How It Works', heroCompare: ['Original', 'Filtered'],
     heroVisual: ['The original image', 'With a filter', 'Your choice, a clearer view'],
     imageEyebrow: 'Image filtering', videoEyebrow: 'Video filtering',
@@ -20,9 +20,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   es: {
-    metaTitle: 'Filtra imágenes y videos a tu manera | Browslium',
+    metaTitle: 'Filtrado de imágenes y videos en desarrollo | Browslium',
     metaDescription: 'Explora políticas de imagen y video y conceptos futuros de texto y audio. Hoy el texto visible pasa intacto.',
-    hero: ['Elige lo que quieres ver en internet.', 'Browslium te permite filtrar imágenes y videos antes de que aparezcan, con niveles de protección seleccionables para navegar con mayor claridad.', 'Explorar niveles de imagen', 'Ver niveles de video'],
+    hero: ['Elige lo que quieres ver en internet.', 'Browslium desarrolla filtros para imágenes y videos, diseñados para actuar antes de que aparezcan, con niveles de protección para elegir.', 'Explorar niveles de imagen', 'Ver niveles de video'],
     heroSecondary: 'Ver cómo funciona', heroCompare: ['Original', 'Filtrado'],
     heroVisual: ['Imagen original', 'Con el filtro', 'Tu elección, una vista más clara'],
     imageEyebrow: 'Filtrado de imágenes', videoEyebrow: 'Filtrado de video',
@@ -39,9 +39,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   ru: {
-    metaTitle: 'Фильтрация изображений и видео по вашим правилам | Browslium',
+    metaTitle: 'Фильтрация изображений и видео в разработке | Browslium',
     metaDescription: 'Изучите правила для изображений и видео и будущие концепции для текста и аудио. Сейчас видимый текст проходит без изменений.',
-    hero: ['Выбирайте, что видеть в интернете.', 'Browslium позволяет фильтровать изображения и видео до их появления на экране, с выбираемыми уровнями защиты для более чистого просмотра.', 'Уровни для изображений', 'Уровни для видео'],
+    hero: ['Выбирайте, что видеть в интернете.', 'Browslium разрабатывает фильтрацию изображений и видео до их появления на экране с возможностью выбора уровня защиты.', 'Уровни для изображений', 'Уровни для видео'],
     heroSecondary: 'Как это работает', heroCompare: ['Оригинал', 'После фильтра'],
     heroVisual: ['Исходное изображение', 'С фильтром', 'Ваш выбор — яснее экран'],
     imageEyebrow: 'Фильтрация изображений', videoEyebrow: 'Фильтрация видео',
@@ -58,9 +58,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   yi: {
-    metaTitle: 'פֿילטערן בילדער און ווידעאָס לויט אײַער אויסוואַל | Browslium',
+    metaTitle: 'בילד־ און ווידעאָ־פֿילטערונג אין אַנטוויקלונג | Browslium',
     metaDescription: 'זעט בילד־ און ווידעאָ־כללים און צוקונפֿטיקע באַגריפֿן פֿאַר טעקסט און אוידיאָ. דער זעבאַרער טעקסט גייט איצט דורך אומגעענדערט.',
-    hero: ['קלײַבט אויס וואָס איר ווילט זען אָנליין.', 'מיט Browslium קענט איר פֿילטערן בילדער און ווידעאָ איידער זיי דערשײַנען, מיט אויסקלײַבבאַרע שוץ־שטאַפּלען פֿאַר אַ קלאָרערן בליק אָנליין.', 'זען בילד־שטאַפּלען', 'זען ווידעאָ־שטאַפּלען'],
+    hero: ['קלײַבט אויס וואָס איר ווילט זען אָנליין.', 'Browslium אַנטוויקלט פֿילטערונג פֿון בילדער און ווידעאָ איידער זיי דערשײַנען, מיט שוץ־שטאַפּלען וואָס מע וועט קענען אויסקלײַבן.', 'זען בילד־שטאַפּלען', 'זען ווידעאָ־שטאַפּלען'],
     heroSecondary: 'זעט ווי עס אַרבעט', heroCompare: ['אָריגינעל', 'געפֿילטערט'],
     heroVisual: ['דאָס אָריגינעלע בילד', 'מיט אַ פֿילטער', 'אײַער אויסוואַל, אַ קלאָרער בליק'],
     imageEyebrow: 'בילד־פֿילטערונג', videoEyebrow: 'ווידעאָ־פֿילטערונג',
@@ -77,9 +77,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   he: {
-    metaTitle: 'סינון תמונות וסרטונים לפי הבחירה שלך | Browslium',
+    metaTitle: 'סינון תמונות וסרטונים בפיתוח | Browslium',
     metaDescription: 'גלו מדיניות תמונות ווידאו והמחשות עתידיות לטקסט ולשמע. טקסט גלוי עובר כיום ללא שינוי.',
-    hero: ['לבחור מה לראות ברשת.', 'Browslium מאפשרת לסנן תמונות ווידאו לפני שהם מופיעים, עם רמות הגנה לבחירה לחוויית גלישה נקייה יותר.', 'לראות רמות לתמונות', 'לראות רמות לווידאו'],
+    hero: ['לבחור מה לראות ברשת.', 'Browslium מפתחת סינון תמונות וסרטונים לפני הצגתם, עם רמות הגנה שאפשר יהיה לבחור.', 'לראות רמות לתמונות', 'לראות רמות לווידאו'],
     heroSecondary: 'לראות איך זה עובד', heroCompare: ['מקור', 'מסונן'],
     heroVisual: ['התמונה המקורית', 'עם סינון', 'הבחירה שלך, תצוגה ברורה יותר'],
     imageEyebrow: 'סינון תמונות', videoEyebrow: 'סינון וידאו',
@@ -96,9 +96,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   'pt-BR': {
-    metaTitle: 'Filtre imagens e vídeos do seu jeito | Browslium',
+    metaTitle: 'Filtragem de imagens e vídeos em desenvolvimento | Browslium',
     metaDescription: 'Explore políticas para imagens e vídeos e conceitos futuros de texto e áudio. Hoje o texto visível passa intacto.',
-    hero: ['Escolha o que você quer ver na internet.', 'O Browslium permite filtrar imagens e vídeos antes de aparecerem, com níveis de proteção à escolha para uma navegação mais limpa.', 'Explorar níveis de imagem', 'Ver níveis de vídeo'],
+    hero: ['Escolha o que você quer ver na internet.', 'O Browslium está desenvolvendo filtros de imagens e vídeos para atuar antes da exibição, com níveis de proteção à escolha.', 'Explorar níveis de imagem', 'Ver níveis de vídeo'],
     heroSecondary: 'Veja como funciona', heroCompare: ['Original', 'Filtrada'],
     heroVisual: ['Imagem original', 'Com filtro', 'Sua escolha, uma visão mais clara'],
     imageEyebrow: 'Filtro de imagens', videoEyebrow: 'Filtro de vídeos',
@@ -115,9 +115,9 @@ export const consumer = {
     slogan: 'Intelligent Protection for Safer Browsing',
   },
   fr: {
-    metaTitle: 'Filtrez les images et les vidéos selon vos choix | Browslium',
+    metaTitle: 'Filtrage des images et vidéos en développement | Browslium',
     metaDescription: 'Découvrez les règles pour images et vidéos et les concepts futurs pour le texte et l’audio. Aujourd’hui, le texte visible passe intact.',
-    hero: ['Choisissez ce que vous voyez en ligne.', 'Browslium vous permet de filtrer les images et les vidéos avant leur affichage, avec des niveaux de protection au choix pour une navigation plus sereine.', 'Explorer les niveaux d’image', 'Voir les niveaux vidéo'],
+    hero: ['Choisissez ce que vous voyez en ligne.', 'Browslium développe des filtres pour les images et les vidéos, conçus pour agir avant leur affichage, avec des niveaux de protection au choix.', 'Explorer les niveaux d’image', 'Voir les niveaux vidéo'],
     heroSecondary: 'Voir comment ça marche', heroCompare: ['Originale', 'Filtrée'],
     heroVisual: ['Image d’origine', 'Avec filtrage', 'Votre choix, une vue plus claire'],
     imageEyebrow: 'Filtrage des images', videoEyebrow: 'Filtrage des vidéos',
