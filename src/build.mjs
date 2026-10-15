@@ -51,8 +51,10 @@ const managerPortalCopy = {
   'pt-BR': ['Portal de gestores', 'Acesso ainda não disponível'],
   fr: ['Portail des gestionnaires', 'Accès pas encore ouvert'],
 };
-const upRightArrow = '<svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19 19 5M7 5h12v12" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 9 6-9 6z" fill="currentColor"/></svg>';
+// Font Awesome Free 7.3.1, CC BY 4.0 icons: https://fontawesome.com/license/free
+const upRightArrow = '<svg class="action-arrow" viewBox="0 0 640 640" aria-hidden="true" focusable="false"><path d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z" fill="currentColor"/></svg>';
+// Font Awesome Free 7.3.1, CC BY 4.0 icons: https://fontawesome.com/license/free
+const playIcon = '<svg viewBox="0 0 640 640" aria-hidden="true" focusable="false"><path d="M64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM252.3 211.1C244.7 215.3 240 223.4 240 232L240 408C240 416.7 244.7 424.7 252.3 428.9C259.9 433.1 269.1 433 276.6 428.4L420.6 340.4C427.7 336 432.1 328.3 432.1 319.9C432.1 311.5 427.7 303.8 420.6 299.4L276.6 211.4C269.2 206.9 259.9 206.7 252.3 210.9z" fill="currentColor"/></svg>';
 const lockIcon = '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="4.5" y="8.5" width="11" height="9" rx="1.5" fill="currentColor"/><path d="M7 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 // Set both only after the private portal's credentialed session endpoint and
 // dashboard destination work from a new tab. Empty values keep Sign In.
@@ -215,10 +217,9 @@ function heroVisual(cc) {
     <div class="hero-light hero-light-cyan"></div>
     <div class="hero-light hero-light-violet"></div>
     <div class="hero-display">
-      <div class="hero-display-top">
+      <div class="hero-display-top" dir="ltr">
         <span class="display-dots"><i></i><i></i><i></i></span>
-        <span class="hero-address" dir="ltr">${lockIcon}<span>example.com</span></span>
-        <span class="hero-browser-more">•••</span>
+        <span class="hero-address">${lockIcon}<span>example.com</span><span class="hero-browser-more">•••</span></span>
       </div>
       <div class="hero-display-images">
         <figure class="hero-original-photo">
