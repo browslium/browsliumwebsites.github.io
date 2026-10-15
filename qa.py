@@ -258,8 +258,9 @@ for code,slug in LOCALES.items():
             if 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
                 errors.append(f'honest future concept demo {route}')
             text_section=text.split('id="text-future"',1)[1].split('id="audio-text"',1)[0]
-            if ('GPU' in text_section or 'text-street-sign-v2.png' not in text_section or
-                'blog-photo-window' not in text_section or
+            if ('GPU' in text_section or
+                '<image href="/assets/text-street-sign-v2.png" x="489" y="17" width="225" height="418"' not in text_section or
+                'blog-photo-window' in text_section or 'future-points' in text_section or
                 'tablet-copy' not in text_section or text_section.count('class="phone-mask"') != 2):
                 errors.append(f'tablet and photographic text demo {route}')
             audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
