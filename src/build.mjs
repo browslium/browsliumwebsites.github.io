@@ -38,8 +38,23 @@ const portalCopy = {
 };
 const portalLogin = 'https://app.browslium.com/login';
 const portalSetup = 'https://app.browslium.com/setup';
-const upRightArrow = '<svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19 19 5M7 5h12v12" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 9 6-9 6z" fill="currentColor"/></svg>';
+const managerPortalUrl = 'https://managers.browslium.com/';
+// Keep the link inactive until the manager host resolves and its restricted
+// sign-in route has been verified in the Codex browser.
+const managerPortalVerified = false;
+const managerPortalCopy = {
+  en: ['Manager portal', 'Access pending activation'],
+  es: ['Portal de managers', 'Acceso pendiente de activación'],
+  ru: ['Портал менеджеров', 'Доступ ещё не открыт'],
+  yi: ['פּאָרטאַל פֿאַר מאַנאַדזשערס', 'דער צוטריט איז נאָך נישט אָפֿן'],
+  he: ['פורטל מנהלים', 'הגישה עדיין אינה פתוחה'],
+  'pt-BR': ['Portal de gestores', 'Acesso ainda não disponível'],
+  fr: ['Portail des gestionnaires', 'Accès pas encore ouvert'],
+};
+// Font Awesome Free 7.3.1, CC BY 4.0 icons: https://fontawesome.com/license/free
+const upRightArrow = '<svg class="action-arrow" viewBox="0 0 640 640" aria-hidden="true" focusable="false"><path d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z" fill="currentColor"/></svg>';
+// Font Awesome Free 7.3.1, CC BY 4.0 icons: https://fontawesome.com/license/free
+const playIcon = '<svg viewBox="0 0 640 640" aria-hidden="true" focusable="false"><path d="M64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM252.3 211.1C244.7 215.3 240 223.4 240 232L240 408C240 416.7 244.7 424.7 252.3 428.9C259.9 433.1 269.1 433 276.6 428.4L420.6 340.4C427.7 336 432.1 328.3 432.1 319.9C432.1 311.5 427.7 303.8 420.6 299.4L276.6 211.4C269.2 206.9 259.9 206.7 252.3 210.9z" fill="currentColor"/></svg>';
 const lockIcon = '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="4.5" y="8.5" width="11" height="9" rx="1.5" fill="currentColor"/><path d="M7 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 // Set both only after the private portal's credentialed session endpoint and
 // dashboard destination work from a new tab. Empty values keep Sign In.
@@ -139,12 +154,16 @@ function closingBands(l) {
 
 function footer(l, page = '') {
   const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code], portal=portalCopy[l.code];
+  const [managerLabel, managerPending] = managerPortalCopy[l.code];
+  const managerEntry = managerPortalVerified
+    ? `<a class="footer-manager-link" href="${managerPortalUrl}">${e(managerLabel)}</a>`
+    : `<p class="footer-manager-pending"><span>${e(managerLabel)}</span><small>${e(managerPending)}</small></p>`;
   const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
   const productSlug = l.code === 'es' ? 'es' : 'en';
   return `${closingBands(l)}<footer class="site-footer"><div class="wrap footer-grid">
     <div><a class="footer-logo-slot" href="${L(l.slug)}" aria-label="Browslium"><img class="footer-logo-default" src="/assets/browslium-wordmark-white.webp" width="212" height="51" alt="Browslium"><img class="footer-logo-hover" src="/assets/browslium-wordmark-emerald.webp" width="212" height="51" alt="" aria-hidden="true"></a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
-    <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
+    <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a>${managerEntry}<a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span></div></footer>`;
 }
@@ -198,10 +217,9 @@ function heroVisual(cc) {
     <div class="hero-light hero-light-cyan"></div>
     <div class="hero-light hero-light-violet"></div>
     <div class="hero-display">
-      <div class="hero-display-top">
+      <div class="hero-display-top" dir="ltr">
         <span class="display-dots"><i></i><i></i><i></i></span>
-        <span class="hero-address" dir="ltr">${lockIcon}<span>example.com</span></span>
-        <span class="hero-browser-more">•••</span>
+        <span class="hero-address">${lockIcon}<span>example.com</span><span class="hero-browser-more">•••</span></span>
       </div>
       <div class="hero-display-images">
         <figure class="hero-original-photo">
@@ -228,7 +246,7 @@ function home(l) {
   <section class="hero"><svg class="hero-waves" viewBox="0 0 1448 940" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="hero-upper" x1="0" y1="0" x2="1" y2=".15"><stop stop-color="#001019" stop-opacity="0"/><stop offset=".34" stop-color="#001019" stop-opacity="0"/><stop offset=".58" stop-color="#04cddd" stop-opacity=".27"/><stop offset=".78" stop-color="#085eeb" stop-opacity=".31"/><stop offset="1" stop-color="#8618ee" stop-opacity=".34"/></linearGradient><linearGradient id="hero-lower" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#00e9e5" stop-opacity=".09"/><stop offset=".42" stop-color="#035ca3" stop-opacity=".04"/><stop offset=".73" stop-color="#00cbef" stop-opacity=".13"/><stop offset="1" stop-color="#6033ef" stop-opacity=".2"/></linearGradient><linearGradient id="hero-stroke" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#05dbdc" stop-opacity="0"/><stop offset=".53" stop-color="#00f8ff"/><stop offset=".77" stop-color="#146fff"/><stop offset="1" stop-color="#b137ff"/></linearGradient><filter id="hero-wave-blur"><feGaussianBlur stdDeviation="22"/></filter><filter id="hero-wave-halo"><feGaussianBlur stdDeviation="12"/></filter></defs><path d="M0 300 C310 285 440 155 650 123 C887 78 1114 190 1448 403 L1448 480 C1215 293 990 214 759 200 C497 183 344 338 0 418Z" fill="url(#hero-upper)"/><path d="M0 300 C310 285 440 155 650 123 C887 78 1114 190 1448 403" fill="none" stroke="url(#hero-stroke)" stroke-width="20" opacity=".4" filter="url(#hero-wave-halo)"/><path d="M0 300 C310 285 440 155 650 123 C887 78 1114 190 1448 403" fill="none" stroke="url(#hero-stroke)" stroke-width="2" opacity=".7"/><path d="M0 718 C255 901 458 924 749 796 C968 696 1198 784 1448 876 L1448 940 H0Z" fill="url(#hero-lower)"/><path d="M0 718 C255 901 458 924 749 796 C968 696 1198 784 1448 876" fill="none" stroke="url(#hero-stroke)" stroke-width="36" opacity=".45" filter="url(#hero-wave-blur)"/><path d="M0 718 C255 901 458 924 749 796 C968 696 1198 784 1448 876" fill="none" stroke="url(#hero-stroke)" stroke-width="1.5"/></svg><div class="wrap hero-grid"><div class="hero-copy"><h1>${heroHeading(cc.hero[0])}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button hero-secondary" href="#how"><span class="hero-play">${playIcon}</span>${e(cc.heroSecondary)}</a><a class="button button-primary hero-primary" href="${portalSetup}">${e(r.getStarted)}${upRightArrow}</a></div></div>${heroVisual(cc)}</div></section>
   ${photoShowcase(l)}
   ${videoShowcase(l)}
-  <section class="section future-text-section" id="text-future"><div class="wrap future-grid"><div class="future-copy"><h2>${accentHeading(r.textTitle)}</h2><p class="lead">${e(r.textIntro)}</p><div class="future-points"><p>${e(r.textWritten)}</p><p>${e(r.textOcr)}</p></div></div><div class="future-visual">${textVisual(l)}</div></div></section>
+  <section class="section future-text-section" id="text-future"><div class="wrap future-grid"><div class="future-copy"><h2>${accentHeading(r.textTitle)}</h2><p class="lead">${e(r.textIntro)}</p></div><div class="future-visual">${textVisual(l)}</div></div></section>
   <section class="section future-audio-section" id="audio-text"><div class="wrap future-grid future-grid-reverse"><div class="future-visual">${audioVisual(l)}</div><div class="future-copy"><h2>${accentHeading(r.audioTitle)}</h2><p class="lead">${e(r.audioIntro)}</p></div></div></section>
   <section class="section android-section" id="android-apps"><div class="wrap android-grid"><div class="android-copy"><h2>${accentHeading(cc.android[0])}</h2><p class="lead">${e(cc.android[1])}</p><ul>${cc.android.slice(2,5).map(x=>`<li><span aria-hidden="true">✓</span>${e(x)}</li>`).join('')}</ul></div><div class="android-visual" aria-hidden="true"><div class="android-phone"><div class="phone-top"></div><img src="${mediaPath('images','photo-2-2.webp')}" width="440" height="700" alt=""><span>${e(cc.heroVisual[1])}</span></div><div class="android-app-icon"><img src="/assets/icons/android.svg" width="46" height="46" alt=""></div></div></div></section>
   <section class="section platforms-section" id="platforms"><div class="wrap"><div class="section-intro"><h2>${accentHeading(cc.platforms[0])}</h2></div><div class="platform-grid">${cc.platforms[2].map(([name],i)=>`<article class="platform-card"><div class="platform-heading"><span class="platform-icon" aria-hidden="true"><img src="/assets/icons/${['android','ios','macos','windows'][i]}.svg" width="54" height="54" alt=""></span></div><h3>${e(name)}</h3><p class="platform-status">${e(r.platformStatus[i])}</p></article>`).join('')}</div></div></section>

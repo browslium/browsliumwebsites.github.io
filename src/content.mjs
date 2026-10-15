@@ -12,7 +12,7 @@ export const copy = {
   en: {
     title: 'Content filtering for a safer internet | Browslium',
     description: 'Explore Browslium, a content filter in development for images, video and audio. Visible text passes through unchanged, without semantic analysis.',
-    nav: ['How it works', 'Filtering levels', 'Platforms', 'FAQ', 'Support OS'],
+    nav: ['How it works', 'Filtering levels', 'Platforms', 'FAQ', 'Support us'],
     menu: 'Open menu', language: 'Language', switchLanguage: 'Choose language', skip: 'Skip to content', logoAlt: 'Browslium logo with a luminous emerald, blue and violet B',
     hero: ['A more thoughtful way to filter online content', 'Browslium is building content-level protection for the things people actually see and hear, with policies that can be chosen for different needs.', 'Explore how it works', 'See filtering levels', 'Under development and testing'],
     problem: ['A website is more than its address', 'Allowing a site does not mean every image, video or audio item on it is right for every person. Browslium is designed to evaluate supported media inside a page, rather than deciding only at the domain level. Visible text passes through unchanged.', 'More precise decisions', 'Policies that fit different needs', 'Designed for real-world content'],

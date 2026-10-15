@@ -49,6 +49,15 @@ HOME_FUTURE_DEMO = {
 LOGIN_LABELS = {'en':'Sign In','es':'Iniciar sesión','ru':'Войти',
                 'yi':'זיך אָנמעלדן','he':'כניסה','pt-BR':'Entrar',
                 'fr':'Se connecter'}
+MANAGER_PENDING = {
+    'en': ('Manager portal', 'Access pending activation'),
+    'es': ('Portal de managers', 'Acceso pendiente de activación'),
+    'ru': ('Портал менеджеров', 'Доступ ещё не открыт'),
+    'yi': ('פּאָרטאַל פֿאַר מאַנאַדזשערס', 'דער צוטריט איז נאָך נישט אָפֿן'),
+    'he': ('פורטל מנהלים', 'הגישה עדיין אינה פתוחה'),
+    'pt-BR': ('Portal de gestores', 'Acesso ainda não disponível'),
+    'fr': ('Portail des gestionnaires', 'Accès pas encore ouvert'),
+}
 PAGES = ('', 'image-filtering', 'video-filtering', 'support', 'privacy', 'terms')
 PRODUCT_PAGE = 'product-privacy'
 PRODUCT_LOCALES = {'en':'en', 'es':'es'}
@@ -130,8 +139,11 @@ for code,slug in LOCALES.items():
             if not all(marker in visible_text for marker in (*TEXT_POLICY[code], 'GPU')):
                 errors.append(f'text pass-through policy missing {route}')
         portal_links=[a for a in p.find('a') if a.get('href','').startswith('https://app.browslium.com/')]
-        if p.find('a',href='https://managers.browslium.com'):
+        if any(a.get('href','').startswith('https://managers.browslium.com') for a in p.find('a')):
             errors.append(f'unavailable manager destination in public release {route}')
+        if (len(p.find('p', **{'class':'footer-manager-pending'})) != 1 or
+            not all(item in p.text for item in MANAGER_PENDING[code])):
+            errors.append(f'localized pending manager portal {route}')
         if any(a.get('href') not in (PORTAL_LOGIN,PORTAL_SETUP) for a in portal_links):
             errors.append(f'unexpected portal route {route}')
         if len([a for a in portal_links if a.get('href')==PORTAL_LOGIN]) < 2:
@@ -246,8 +258,9 @@ for code,slug in LOCALES.items():
             if 'text-concept-svg' not in text or 'audio-concept-svg' not in text:
                 errors.append(f'honest future concept demo {route}')
             text_section=text.split('id="text-future"',1)[1].split('id="audio-text"',1)[0]
-            if ('GPU' in text_section or 'text-street-sign-v2.png' not in text_section or
-                'blog-photo-window' not in text_section or
+            if ('GPU' in text_section or
+                '<image href="/assets/text-street-sign-v2.png" x="489" y="17" width="225" height="418"' not in text_section or
+                'blog-photo-window' in text_section or 'future-points' in text_section or
                 'tablet-copy' not in text_section or text_section.count('class="phone-mask"') != 2):
                 errors.append(f'tablet and photographic text demo {route}')
             audio_section=text.split('id="audio-text"',1)[1].split('id="android-apps"',1)[0]
