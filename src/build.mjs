@@ -38,6 +38,9 @@ const portalCopy = {
 };
 const portalLogin = 'https://app.browslium.com/login';
 const portalSetup = 'https://app.browslium.com/setup';
+const upRightArrow = '<svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19 19 5M7 5h12v12" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 9 6-9 6z" fill="currentColor"/></svg>';
+const lockIcon = '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="4.5" y="8.5" width="11" height="9" rx="1.5" fill="currentColor"/><path d="M7 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 // Set both only after the private portal's credentialed session endpoint and
 // dashboard destination work from a new tab. Empty values keep Sign In.
 const verifiedSessionEndpoint = '';
@@ -47,6 +50,10 @@ const sessionAttribute = verifiedSessionEndpoint && verifiedDashboardUrl ? ` dat
 const accentHeading = value => {
   const [first, ...rest] = String(value).split(' ');
   return `<span class="headline-accent">${e(first)}</span>${rest.length ? ` ${e(rest.join(' '))}` : ''}`;
+};
+const heroHeading = value => {
+  const [first, ...rest] = String(value).split(' ');
+  return `<span class="headline-accent">${e(first)}</span>${rest.length ? ` <span class="hero-heading-rest">${e(rest.join(' '))}</span>` : ''}`;
 };
 const L = (slug, page = '') => `/${slug}/${page ? `${page}/` : ''}`;
 const locale = slug => languages.find(x => x.slug === slug);
@@ -120,7 +127,7 @@ function header(l, page = '') {
   <header class="site-header"><div class="wrap header-inner">
     <a class="brand brand-wordmark" href="${L(l.slug)}" aria-label="Browslium"><img src="/assets/browslium-wordmark-white.webp" width="212" height="51" alt="Browslium"></a>
     <nav class="desktop-nav" aria-label="${e(c.footer[0])}">${links.map(([anchor,i]) => `<a href="${L(l.slug)}#${anchor}">${e(c.nav[i])}</a>`).join('')}</nav>
-    <div class="header-actions">${languageMenu(l, 'header-language', page)}<a class="header-sign-in" data-session-link data-dashboard-label="${e(r.dashboard)}" href="${portalLogin}">${e(r.signIn)}</a><a class="header-add-device" href="${portalSetup}">${e(r.getStarted)}</a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="${e(c.menu)}"><span></span><span></span><span></span></button></div>
+    <div class="header-actions">${languageMenu(l, 'header-language', page)}<a class="header-sign-in" data-session-link data-dashboard-label="${e(r.dashboard)}" href="${portalLogin}">${e(r.signIn)}</a><a class="header-add-device" href="${portalSetup}">${e(r.getStarted)}${upRightArrow}</a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="${e(c.menu)}"><span></span><span></span><span></span></button></div>
   </div><nav id="mobile-nav" class="mobile-nav" aria-label="${e(c.footer[0])}" hidden><div class="wrap">${links.map(([anchor,i]) => `<a href="${L(l.slug)}#${anchor}">${e(c.nav[i])}</a>`).join('')}<a class="mobile-sign-in" data-session-link data-dashboard-label="${e(r.dashboard)}" href="${portalLogin}">${e(r.signIn)}</a>${languageMenu(l, 'mobile-language', page)}</div></nav></header>`;
 }
 
@@ -190,7 +197,7 @@ function home(l) {
   const serviceSchema = webPageSchema(l,cc.metaTitle,cc.metaDescription,canonical);
   return `${head(l,cc.metaTitle,cc.metaDescription,canonical)}<body data-locale="${l.code}"${sessionAttribute}>
   ${suggestion(l)}${header(l)}<main id="main">
-  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1>${accentHeading(cc.hero[0])}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button button-primary" href="${portalSetup}">${e(r.getStarted)}<span aria-hidden="true">↗</span></a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="480" height="320" alt=""><figcaption>${e(cc.heroVisual[1])}</figcaption></figure></div></div></div></div></section>
+  <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><h1>${heroHeading(cc.hero[0])}</h1><p>${e(cc.hero[1])}</p><div class="button-row"><a class="button hero-secondary" href="#how"><span class="hero-play">${playIcon}</span>${e(cc.heroSecondary)}</a><a class="button button-primary hero-primary" href="${portalSetup}">${e(r.getStarted)}${upRightArrow}</a></div></div><div class="hero-visual" aria-hidden="true"><div class="hero-glow"></div><div class="hero-display" dir="ltr"><div class="hero-display-top"><span class="display-dots"><i></i><i></i><i></i></span><span class="hero-address">${lockIcon}<span>example.com</span></span><span class="hero-browser-more">•••</span></div><div class="hero-display-images"><figure><img src="${mediaPath('images','photo-2-original.webp')}" width="1600" height="1065" alt=""><figcaption dir="auto">${e(cc.heroCompare[0])}</figcaption></figure><figure><img src="${mediaPath('images','photo-2-2.webp')}" width="1600" height="1065" alt=""><figcaption class="hero-filtered-label" dir="auto"><span class="hero-filter-check">✓</span>${e(cc.heroCompare[1])}</figcaption></figure></div></div></div></div></section>
   ${photoShowcase(l)}
   ${videoShowcase(l)}
   <section class="section future-text-section" id="text-future"><div class="wrap future-grid"><div class="future-copy"><h2>${accentHeading(r.textTitle)}</h2><p class="lead">${e(r.textIntro)}</p><div class="future-points"><p>${e(r.textWritten)}</p><p>${e(r.textOcr)}</p></div></div><div class="future-visual">${textVisual(l)}</div></div></section>

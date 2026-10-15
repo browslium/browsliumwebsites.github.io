@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 920" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="top-fill" x1=".08" y1=".5" x2="1" y2=".5" objectBoundingBox="true">
+      <stop stop-color="#00131b" stop-opacity="0"/>
+      <stop offset=".36" stop-color="#006d84" stop-opacity=".47"/>
+      <stop offset=".61" stop-color="#00d7df" stop-opacity=".48"/>
+      <stop offset=".82" stop-color="#1562ee" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#7c2dff" stop-opacity=".24"/>
+    </linearGradient>
+    <linearGradient id="top-line" x1="0" y1="0" x2="1" y2="0" objectBoundingBox="true">
+      <stop stop-color="#05deec" stop-opacity="0"/>
+      <stop offset=".31" stop-color="#05deec" stop-opacity=".45"/>
+      <stop offset=".59" stop-color="#00f5ff"/>
+      <stop offset=".78" stop-color="#2178ff"/>
+      <stop offset="1" stop-color="#a72cff" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="floor-fill" x1=".14" y1="0" x2=".72" y2="1" objectBoundingBox="true">
+      <stop stop-color="#00dce7" stop-opacity=".55"/>
+      <stop offset=".16" stop-color="#00699d" stop-opacity=".35"/>
+      <stop offset=".5" stop-color="#061735" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#061026" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="floor-line" x1="0" y1="0" x2="1" y2="0" objectBoundingBox="true">
+      <stop stop-color="#00e9f0" stop-opacity=".9"/>
+      <stop offset=".43" stop-color="#008ce5" stop-opacity=".2"/>
+      <stop offset=".7" stop-color="#00f5e1" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#6c2cff" stop-opacity=".75"/>
+    </linearGradient>
+    <radialGradient id="horizon">
+      <stop stop-color="#00d6e7" stop-opacity=".47"/>
+      <stop offset=".55" stop-color="#0479e6" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#030509" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="35"/></filter>
+    <filter id="wide"><feGaussianBlur stdDeviation="75"/></filter>
+  </defs>
+  <ellipse cx="960" cy="330" rx="590" ry="265" fill="url(#horizon)" filter="url(#wide)"/>
+  <path d="M245 297C430 276 506 112 720 100c244-14 378 131 589 259 69 42 115 57 190 55v188c-205-97-352-11-581 43-280 67-468-26-673-220Z" fill="url(#top-fill)"/>
+  <path d="M245 297C430 276 506 112 720 100c244-14 378 131 589 259 69 42 115 57 190 55" fill="none" stroke="url(#top-line)" stroke-width="1.6" opacity=".75"/>
+  <path d="M540 444c274-125 569-184 970-130" fill="none" stroke="#008cff" stroke-width="19" opacity=".19" filter="url(#soft)"/>
+  <path d="M1050 201c130 48 269 137 432 311" fill="none" stroke="#7b29ff" stroke-width="24" opacity=".29" filter="url(#soft)"/>
+  <path d="M-30 650C199 862 445 867 689 788c245-80 412-122 789 58l11 115H-30Z" fill="url(#floor-fill)"/>
+  <path d="M-30 650C199 862 445 867 689 788c245-80 412-122 789 58" fill="none" stroke="url(#floor-line)" stroke-width="2" opacity=".72"/>
+  <ellipse cx="1000" cy="765" rx="300" ry="58" fill="#00dfee" opacity=".32" filter="url(#soft)"/>
+  <ellipse cx="1320" cy="805" rx="200" ry="72" fill="#652bff" opacity=".29" filter="url(#soft)"/>
+  <path d="M620 761c228-53 449-45 789 54" fill="none" stroke="#00f2e4" stroke-width="25" opacity=".25" filter="url(#soft)"/>
+</svg>
