@@ -228,7 +228,10 @@ for code,slug in LOCALES.items():
                 errors.append(f'outdated illustrative demo {route}')
             if text.count('class="platform-card"')!=4:errors.append(f'four platform cards {route}')
             if not (text.index('id="text-future"') < text.index('id="audio-text"') < text.index('id="android-apps"')):errors.append(f'text then audio then Android {route}')
-            if 'class="hero-display"' not in text:errors.append(f'hero comparison {route}')
+            if ('class="hero-reference-mobile-art"' not in text or
+                'class="hero-reference-mobile-labels"' not in text or
+                'class="hero-reference-labels"' not in text):
+                errors.append(f'hero comparison {route}')
             if ('footer-logo-slot' not in text or 'class="footer-logo-default"' not in text or
                 'class="footer-logo-hover"' not in text or
                 'browslium-wordmark-white.webp' not in text or
