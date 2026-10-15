@@ -38,6 +38,19 @@ const portalCopy = {
 };
 const portalLogin = 'https://app.browslium.com/login';
 const portalSetup = 'https://app.browslium.com/setup';
+const managerPortalUrl = 'https://managers.browslium.com/';
+// Keep the link inactive until the manager host resolves and its restricted
+// sign-in route has been verified in the Codex browser.
+const managerPortalVerified = false;
+const managerPortalCopy = {
+  en: ['Manager portal', 'Access pending activation'],
+  es: ['Portal de managers', 'Acceso pendiente de activación'],
+  ru: ['Портал менеджеров', 'Доступ ещё не открыт'],
+  yi: ['פּאָרטאַל פֿאַר מאַנאַדזשערס', 'דער צוטריט איז נאָך נישט אָפֿן'],
+  he: ['פורטל מנהלים', 'הגישה עדיין אינה פתוחה'],
+  'pt-BR': ['Portal de gestores', 'Acesso ainda não disponível'],
+  fr: ['Portail des gestionnaires', 'Accès pas encore ouvert'],
+};
 const upRightArrow = '<svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19 19 5M7 5h12v12" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 9 6-9 6z" fill="currentColor"/></svg>';
 const lockIcon = '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="4.5" y="8.5" width="11" height="9" rx="1.5" fill="currentColor"/><path d="M7 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
@@ -139,12 +152,16 @@ function closingBands(l) {
 
 function footer(l, page = '') {
   const c = copy[l.code], u = explainers[l.code].ui, cc=consumer[l.code], portal=portalCopy[l.code];
+  const [managerLabel, managerPending] = managerPortalCopy[l.code];
+  const managerEntry = managerPortalVerified
+    ? `<a class="footer-manager-link" href="${managerPortalUrl}">${e(managerLabel)}</a>`
+    : `<p class="footer-manager-pending"><span>${e(managerLabel)}</span><small>${e(managerPending)}</small></p>`;
   const productLabel = l.code === 'es' ? 'Aviso de privacidad del producto' : l.code === 'en' ? 'Product Privacy Notice' : 'Product Privacy Notice (English)';
   const productSlug = l.code === 'es' ? 'es' : 'en';
   return `${closingBands(l)}<footer class="site-footer"><div class="wrap footer-grid">
     <div><a class="footer-logo-slot" href="${L(l.slug)}" aria-label="Browslium"><img class="footer-logo-default" src="/assets/browslium-wordmark-white.webp" width="212" height="51" alt="Browslium"><img class="footer-logo-hover" src="/assets/browslium-wordmark-emerald.webp" width="212" height="51" alt="" aria-hidden="true"></a><p>${e(cc.slogan)}</p></div>
     <div><h2>${e(c.footer[0])}</h2><a href="${L(l.slug)}#how">${e(c.nav[0])}</a><a href="${L(l.slug,'image-filtering')}">${e(u.imageLink)}</a><a href="${L(l.slug,'video-filtering')}">${e(u.videoLink)}</a><a href="${L(l.slug)}#levels">${e(c.nav[1])}</a><a href="${L(l.slug)}#platforms">${e(c.nav[2])}</a><a href="${L(l.slug)}#faq">${e(c.nav[3])}</a></div>
-    <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a><a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
+    <div><h2>${e(c.footer[1])}</h2><a href="${portalLogin}">${e(portal[3])}</a>${managerEntry}<a href="${L(l.slug, 'privacy')}">${e(c.footer[3])}</a><a href="${L(productSlug, 'product-privacy')}">${e(productLabel)}</a><a href="${L(l.slug, 'terms')}">${e(c.footer[4])}</a><a href="${L(l.slug, 'support')}">${e(c.footer[5])}</a></div>
     <div><h2>${e(c.footer[2])}</h2><a href="mailto:admin@browslium.com">admin@browslium.com</a><nav class="footer-social" aria-label="${e(c.socialHeading)}"><h3>${e(c.socialHeading)}</h3>${socialProfiles.map(([name,url,icon]) => `<a href="${e(url)}" aria-label="${name}" title="${name}" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/${icon}.svg" width="22" height="22" alt="" aria-hidden="true"></a>`).join('')}</nav>${languageMenu(l, 'footer-language', page)}</div>
   </div><div class="wrap footer-bottom"><span>© ${new Date().getUTCFullYear()} Browslium LLC. ${e(c.footer[7])}</span></div></footer>`;
 }
