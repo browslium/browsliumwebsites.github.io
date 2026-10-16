@@ -906,7 +906,7 @@ html[dir=rtl] .hero-display figcaption{inset-inline-start:14px;left:auto}
 .site-footer a.footer-logo-slot{display:inline-block;width:212px;max-width:100%}
 .footer-logo-slot img{width:100%;height:auto}
 .footer-logo-slot .footer-logo-default,.footer-logo-slot .footer-logo-hover{transition:none}
-.footer-logo-slot:hover .footer-logo-default,.footer-logo-slot:focus-visible .footer-logo-default{opacity:1}
+.footer-logo-slot:hover .footer-logo-default,.footer-logo-slot:focus-visible .footer-logo-default{opacity:0}
 .footer-logo-slot:hover .footer-logo-hover,.footer-logo-slot:focus-visible .footer-logo-hover{opacity:1}
 
 /* The hero uses real text, photos inside each card, and separate SVG/CSS light layers. */
