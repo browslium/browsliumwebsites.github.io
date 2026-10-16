@@ -10,6 +10,7 @@ import unicodedata
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).parent / 'dist'
+PUBLISH_ROOT = Path(__file__).parent
 CSS_URL = '/assets/site.css?v=' + hashlib.sha256((ROOT/'assets/site.css').read_bytes()).hexdigest()[:12]
 JS_URL = '/assets/site.js?v=' + hashlib.sha256((ROOT/'assets/site.js').read_bytes()).hexdigest()[:12]
 VERIFICATION_FILE = 'google80ba342909e82f35.html'
@@ -18,6 +19,15 @@ if (ROOT / VERIFICATION_FILE).read_text().strip() != f'google-site-verification:
 ORIGIN = 'https://browslium.com'
 PORTAL_LOGIN = 'https://app.browslium.com/login'
 LOCALES = {'en':'en','es':'es','ru':'ru','yi':'yi','he':'he','pt-BR':'pt-br','fr':'fr'}
+CONTROLLED_TEST_COPY = {
+    'en': 'controlled tests',
+    'es': 'pruebas controladas',
+    'ru': 'контролируемых испытаниях',
+    'yi': 'קאָנטראָלירטע פּרוּוון',
+    'he': 'מבדיקות מבוקרות',
+    'pt-BR': 'testes controlados',
+    'fr': 'tests contrôlés',
+}
 TEXT_POLICY = {
     'en': ('Visible text passes through unchanged', 'without semantic analysis'),
     'es': ('El texto visible pasa intacto', 'sin análisis semántico'),
@@ -39,11 +49,11 @@ HOME_TEXT_POLICY = {
 HOME_FUTURE_DEMO = {
     'en': ('future Text/Audio concepts', 'visible text passes through unchanged', 'Illustrative future demo · Not available today', 'Text and audio: future concepts'),
     'es': ('conceptos futuros de texto y audio', 'texto visible pasa intacto', 'Demo futura ilustrativa · No disponible hoy', 'Texto y audio: conceptos futuros'),
-    'ru': ('будущие концепции для текста и аудио', 'видимый текст проходит без изменений', 'Иллюстрация будущей функции · Сейчас недоступна', 'Текст и аудио: будущие идеи'),
+    'ru': ('будущие идеи для текста и аудио', 'видимый текст проходит без изменений', 'Иллюстрация будущей функции · Сейчас недоступна', 'Текст и аудио: будущие идеи'),
     'yi': ('צוקונפֿטיקע באַגריפֿן פֿאַר טעקסט און אוידיאָ', 'זעבאַרער טעקסט גייט איצט דורך אומגעענדערט', 'צוקונפֿטיקער בײַשפּיל · איצט נישט פֿאַראַן', 'טעקסט און אוידיאָ: צוקונפֿטיקע באַגריפֿן'),
     'he': ('המחשות עתידיות לטקסט ולשמע', 'טקסט גלוי עובר כיום ללא שינוי', 'הדגמה עתידית להמחשה · אינה זמינה כיום', 'טקסט ושמע: רעיונות לעתיד'),
     'pt-BR': ('conceitos futuros de texto e áudio', 'texto visível passa intacto', 'Demonstração futura ilustrativa · Indisponível hoje', 'Texto e áudio: conceitos futuros'),
-    'fr': ('concepts futurs pour le texte et l’audio', 'texte visible passe intact', 'Démo future illustrative · Indisponible aujourd’hui', 'Texte et audio : concepts futurs'),
+    'fr': ('futurs concepts de texte et d’audio', 'texte visible passe intact', 'Démo future illustrative · Indisponible aujourd’hui', 'Texte et audio : concepts futurs'),
 }
 LOGIN_LABELS = {'en':'Sign In','es':'Iniciar sesión','ru':'Войти',
                 'yi':'זיך אָנמעלדן','he':'כניסה','pt-BR':'Entrar',
@@ -89,6 +99,11 @@ class Page(HTMLParser):
         return [x for t,x in self.tags if t==tag and all(x.get(k)==v for k,v in attrs.items())]
 
 errors=[]
+for built in ROOT.rglob('*'):
+    if built.is_file() and (built.suffix == '.html' or built.name in ('sitemap.xml','robots.txt','site.css','site.js')):
+        published = PUBLISH_ROOT / built.relative_to(ROOT)
+        if not published.is_file() or published.read_bytes() != built.read_bytes():
+            errors.append(f'published root differs from build: {built.relative_to(ROOT)}')
 if 'hero-neon-reference.png' in (ROOT/'assets/site.css').read_text():
     errors.append('hero reference screenshot must not be used in CSS')
 app_privacy_alias=ROOT/'privacy/index.html'
@@ -160,6 +175,8 @@ for code,slug in LOCALES.items():
                          len([a for a in availability_links if a.get('href')=='#platforms' and 'button-primary' in a.get('class','').split()]) != 1 or
                          any(a.get('href')==PORTAL_LOGIN and 'button-primary' in a.get('class','').split() for a in portal_links)):
             errors.append(f'homepage actions or removed pilot note {route}')
+        if not page and CONTROLLED_TEST_COPY[code] not in ' '.join(p.text):
+            errors.append(f'controlled-test context missing from homepage {route}')
         if len(p.find('section',**{'class':'donation-band'}))!=1 or len(p.find('section',**{'class':'newsletter-band'}))!=1:
             errors.append(f'shared closing bands {route}')
         if len([x for x in p.find('input',type='email') if 'disabled' in x])!=1 or len([x for x in p.find('button') if x.get('type')=='submit' and 'disabled' in x])!=1:
